@@ -1,0 +1,213 @@
+mp3diags (0.99.05.034) testing; urgency=low
+
+  * drive labels shown in Windows
+  * mp3gain can be started now if it's in a directory containing spaces
+  * configurable invalid characters and replacement for file renamer
+  * automatic check for new versions
+  * text inside square, curly, and angle brackets removed from web queries
+  * improved tracing code
+  * no longer rescan the files if exiting tag editor without changes
+  * replace non-alphanumeric chars with spaces in web queries (issue 2)
+  * better sorting in the tag editor for albums with unusual track numbers
+  * a default .ini name is generated in most cases
+  * (probably) fixed an assert (not sure because couldn't reproduce it)
+  * tracks without a track number are put at the end in the tag editor
+  * let the user know about reporting support notes and about patterns
+  * better detection of exceptions in threads
+  * exceptions that propagate from slots are now caught
+  * default "actions to be taken" no longer shown when applying transforms
+  * file info for StreamWriter
+
+ -- Marian Ciobanu <ciobi@inbox.com>  Mon, 07 Sep 2009 22:00:00 +0200
+
+mp3diags (0.99.05.033) testing; urgency=low
+
+  * fixed crash in Windows when checking a whole drive
+  * fixed crash when saving data from the tag editor
+  * improved trace speed on Windows
+  * fixed potential crash at startup
+  * fixed crash when changing a file that is being used by other program
+  * more details and better formatting in assert messages and trace files
+  * MPEG2 Layer3 streams no longer show Support note
+  * improved temporary file generation, which can result in faster transforms
+  * F1 help now works for the first session dialog
+  * smaller TABs in the "Tag details" area make "Other info" more readable
+  * better HTML paragraph formatting
+
+ -- Marian Ciobanu <ciobi@inbox.com>  Wed, 02 Sep 2009 22:00:00 +0200
+
+mp3diags (0.99.05.032) testing; urgency=low
+
+  * restructured crash detector
+  * fixed Windows issue with rectangles being shown instead of letters
+  * Lyrics partial support
+  * warning that may corrupt data
+  * note about how to change selected files
+  * HTML clean up
+
+ -- Marian Ciobanu <ciobi@inbox.com>  Sun, 23 Aug 2009 22:00:00 +0200
+
+mp3diags (0.99.05.031) testing; urgency=low
+
+  * crash detection
+  * fixed small memory leak in config dialog
+  * fixed small memory leak in the tag editor
+  * content is shown for GEOB frames
+  * .ID3 files are now loaded in addition to .MP3
+  * made the counter shown when applying transforms increment on new file (until now it was incremented for each transform)
+  * "Various artists" no longer set as "artist" when downloading track info from MusicBrainz
+  * fixed "current cell" in the tag editor (until now, when dragging the mouse to select several cells, the current cell was wrong, leading to setting values incorrectly
+  * fixed a bug that didn't allow removal of the track number
+  * slightly improved the normalizer, so a "busy" cursor is shown when the connection to the underlying process is lost (the program seems frozen, but it resumes after about 30 seconds)
+
+ -- Marian Ciobanu <ciobi@inbox.com>  Wed, 19 Aug 2009 22:00:00 +0200
+
+mp3diags (0.99.05.030) testing; urgency=low
+
+  * fixed a bug that caused the tag editor to reserve more space than needed even if the "fast save" option was turned off
+  * fixed a bug that prevented removal of elements from lists
+  * fixed a bug in the ID3V2 tag writer that prevented "Discard invalid ID3V2 data" and other transformations to properly work with ID3V2.4.0 tags that contain UTF8-encoded strings, resulting in a broken ID3V2.3.0 tag
+  * file renamer now accepts patterns with no directory separators, in which case the renamed files are placed in the source directory
+  * pattern dialogs now show the current line and column
+  * fixed an assertion in the code that determines the file list
+  * added tooltips for all the notes in the main file table
+  * improved speed for "Discard invalid ID3V2 data" when no changes are done
+  * transformation name included in the dialog that shows which file is currently processed
+  * broken ID3V2 streams get removed when saving from the tag editor
+  * the tag editor no longer triggers an assertion failure if non-default settings in the file section of the configuration dialog; (e.g. until now saving from the tag editor while original files weren't deleted resulted in this assertion failure)
+  * fixed a bug in the "Change case for ID3V2 text frames" that resulted in a program crash if some fields were missing from the ID3V2 tag
+
+ -- Marian Ciobanu <ciobi@inbox.com>  Tue, 28 Jul 2009 22:00:00 +0200
+
+mp3diags (0.99.05.029) testing; urgency=low
+
+  * fast save in the tag editor
+  * file renamer can work with the list of visible files instead of the current album if the user holds CTRL down when pressing the button
+  * configurable visible transformations
+  * new transform for keeping a single image, as front cover
+  * new transform for removing ID3V1
+  * button to remove image files
+  * improved paste in tag editor (it is possible to paste to multiple cells or to paste file names copied from file browsers)
+  * configurable max image size
+  * tooltips for the transformations menu
+  * more checks + fixed error reporting in file renamer
+  * "sessions" button visible by default for second and later sessions
+  * directory filter no longer shows some directories that don't make sense
+  * fixed loading images from current dir
+  * fixed a bug in tag editor patterns that prevented patterns ending with a static text from working
+  * fixed some bugs in the directory filter
+
+ -- Marian Ciobanu <ciobi@inbox.com>  Sun, 26 Jul 2009 22:00:00 +0200
+
+mp3diags (0.99.04.026) testing; urgency=low
+
+  * non-ASCII file names can now be seen on Windows
+  * tag editor now looks at filter
+  * USLT Lyrics inside ID3V2 are now shown
+  * better alignment for text in note column header on Ubuntu
+  * size grip on most dialogs
+  * F1 help
+  * files changed in the tag editor no longer show up in the main window if a filter is applied and they don't match the filter
+
+ -- Marian Ciobanu <ciobi@inbox.com>  Sat, 18 Jul 2009 22:00:00 +0200
+
+mp3diags (0.99.03.022) testing; urgency=low
+
+  * 2-letter labels
+  * gradient grouping of notes
+  * configurable colors
+  * app no longer crashes when files are changed by external tools
+  * tooltips are shown for the column headers in the file table
+  * more consistent font handling
+
+ -- Marian Ciobanu <ciobi@inbox.com>  Fri, 10 Jul 2009 22:00:00 +0200
+
+mp3diags (0.99.02.020) testing; urgency=low
+
+  * file renamer now replaces invalid characters in file names
+  * duration is now shown for audio streams
+  * fixed assertion caused by files with too many streams
+  * multiple ID3 stream remover no longer included by default in second list
+
+ -- Marian Ciobanu <ciobi@inbox.com>  Sun, 05 Jul 2009 22:00:00 +0200
+
+mp3diags (0.99.02.018) testing; urgency=low
+
+  * made -mt suffix default for Boost Serialization
+
+ -- Marian Ciobanu <ciobi@inbox.com>  Wed, 24 Jun 2009 22:00:00 +0200
+
+mp3diags (0.99.02.017) testing; urgency=low
+
+  * always use multithreaded Boost libraries (single-threaded ones may lead to crashes)
+  * improved assert dialog; now it has more data, which can be copied and even emailed directly
+  * the tag editor shows a warning in some cases when a user action would result in discarded images
+
+ -- Marian Ciobanu <ciobi@inbox.com>  Wed, 24 Jun 2009 15:00:00 +0200
+
+mp3diags (0.99.02.016) testing; urgency=low
+
+  * fixed an assertion failure that was triggered by an unsupported text encoding in APIC
+  * added support for UTF8 text encoding in APIC
+  * made the documentation look slightly better on IE6
+
+ -- Marian Ciobanu <ciobi@inbox.com>  Sun, 21 Jun 2009 10:00:00 +0200
+
+mp3diags (0.99.02.015) testing; urgency=low
+
+  * made compilable on Fedora 11 and added Fedora 11 build
+  * copying missing ID3V1 fields to ID3V2 no longer part of the default custom transformation list 2
+
+ -- Marian Ciobanu <ciobi@inbox.com>  Sat, 20 Jun 2009 10:00:00 +0200
+
+mp3diags (0.99.02.014) testing; urgency=low
+
+  * the tag editor loads albums much faster than before; this is most visible when navigating to the next / previous album
+
+ -- Marian Ciobanu <ciobi@inbox.com>  Thu, 18 Jun 2009 10:00:00 +0200
+
+mp3diags (0.99.02.012) testing; urgency=low
+
+  * added support for UTF8 in ID3V240
+  * added maximize button to most windows in Windows (but could not get this to work with Gnome)
+  * removed "What's this" button from most windows
+  * now the main window shows the session name if more than 1 session was defined
+  * now the main window shows up maximized in Gnome and Windows if it was maximized when it was closed
+  * changed documentation links to point to new site, at SourceForge
+  * minor documentation improvements
+
+ -- Marian Ciobanu <ciobi@inbox.com>  Sun, 14 Jun 2009 10:00:00 +0200
+
+mp3diags (0.99.02.011) testing; urgency=low
+
+  * added missing dependency for SVG icons
+  * fixed a bug in "Save as ..."
+
+ -- Marian Ciobanu <ciobi@inbox.com>  Sat, 06 Jun 2009 10:00:00 +0200
+
+mp3diags (0.99.02.010) testing; urgency=low
+
+  * fixed a bug that could cause removal of audio data
+  * fixed a bug that prevented single-image-saving from working
+
+ -- Marian Ciobanu <ciobi@inbox.com>  Thu, 04 Jun 2009 10:00:00 +0200
+
+mp3diags (0.99.02.009) testing; urgency=low
+
+  * Ubuntu binaries
+  * minor UI tweaks
+
+ -- Marian Ciobanu <ciobi@inbox.com>  Wed, 03 Jun 2009 10:00:00 +0200
+
+mp3diags (0.99.02.008) testing; urgency=low
+
+  * improved font handling
+  * minor UI tweaks
+
+ -- Marian Ciobanu <ciobi@inbox.com>  Mon, 25 May 2009 10:00:00 +0200
+
+mp3diags (0.99.02.007) testing; urgency=low
+
+  * initial version
+
+ -- Marian Ciobanu <ciobi@inbox.com>  Tue, 19 May 2009 10:00:00 +0200

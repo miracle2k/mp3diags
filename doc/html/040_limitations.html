@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="keywords" content="MP3, diags, diagnosis, tag editor, tagger, normalizer" />
+<meta name="description" content="End-user documentation for MP3 Diags, an MP3 analysis tool that also includes correction and tag editing functionality" />
+<title>MP3 Diags - Limitations</title>
+<link rel="stylesheet" type="text/css" media="screen" href="style.css" />
+<!--[if lte IE 6]>  <link rel="stylesheet" type="text/css" href="style_ie6.css" />  <![endif]-->
+<!--[if IE 7]>  <link rel="stylesheet" type="text/css" href="style_ie7.css" />  <![endif]-->
+</head>
+
+<link rel="icon" href="favicon.ico" type="image/x-icon" />
+<link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+
+<body>
+
+<!-- add_this_conf -->
+
+<div class="HeaderTableText RegFnt ChpCol1">
+<table width="100%" class="HeaderTable">
+    <tr>
+        <td border="0" class="HeaderText">
+            <span class="HeaderPadLeft">
+                <a href="index.html" class="RightMargin"><img src="logo.png" border="0" alt="MP3 Diags" align="middle" /></a>
+                <!-- add_this_link -->
+            </span>
+        </td>
+
+        <!-- sf_hosting -->
+    </tr>
+</table>
+</div>
+
+
+<!-- ========================================================================================================== -->
+<!-- ========================================================================================================== -->
+<!-- ========================================================================================================== -->
+<!-- ========================================================================================================== -->
+
+
+
+
+<div class="NavPadTable RegFnt ChpCol2">
+<div style="width:100%">
+<table border="0" cellpadding="0" cellspacing="0" width="100%" class="NavTable">
+    <tr>
+        <td width="30%" align="left"> <a href="310_advanced.html"><img src="arrow_left_small.png" class="ImgNoBorder NavPadLeft" align="absmiddle" /></a> <a href="310_advanced.html"> Advanced features </a> </td>
+        <td width="40%" align="center" valign="middle" class="NavBarText"> Limitations </td>
+        <td width="30%" align="right"> <a href="050_feedback.html"> Feedback and support</a> <a href="050_feedback.html"> <img src="arrow_right_small.png" class="ImgNoBorder NavPadRight" align="absmiddle" /> </a> </td>
+    </tr>
+</table>
+</div>
+</div>
+
+
+<div class="FreeNormalText RegFnt ChpCol1">
+Only a single image per file is displayed or can be added.
+</div>
+
+<div class="NormalText RegFnt ChpCol1">
+Currently, if asked to save an image that is identical to an existing one except for the picture type, the new image is not saved. This approach looks the least likely to confuse players. If needed, a  transformation that changes picture types can be added.
+</div>
+
+<div class="NormalText RegFnt ChpCol1">
+Links are not supported for images. This is bad if you REALLY need to scan your vinyl collection at 4800dpi and save the result as an uncompressed TIFF. Instead, images are stored inside the MP3s themselves and if they are big they get resized so they take less than 100KB. For now this maximum size is hard-coded.
+</div>
+
+
+
+<div class="FreeNormalText RegFnt ChpCol2">
+Processing ID3V2 only keeps one copy of the known frames except for images; multiple images are kept, as long as they they have different image types (and the settings say to keep them.) The other frames are supposed to have only one instance, except for POPM (which is used for ratings), so this is the only case where valid data is lost; that is, assuming anybody has files containing multiple POPM frames.
+</div>
+
+<div class="NormalText RegFnt ChpCol2">
+The e-mail address in POPM frames is ignored at reading and erased at saving.
+</div>
+
+
+<div class="FreeNormalText RegFnt ChpCol1">
+The only format available for saving track information is ID3V2.3.0
+</div>
+
+
+<div class="FreeNormalText RegFnt ChpCol2">
+Some text frame formats in ID3V2.4.0 aren't supported yet (though they can be added easily, if needed.)
+</div>
+
+
+
+<div class="FreeNormalText RegFnt ChpCol1">
+MP3 Diags expects folders to be albums, having less than 30 files. If this is not the case, it's better to avoid using the tag editor, which might take a long time to load, especially if the files contain images. Even if the tag editor loads OK, it is designed for albums, so it may do things that make no sense for random collections of files (e.g. assigning the same image to all the files.)
+</div>
+
+
+<div class="FreeNormalText RegFnt ChpCol2">
+Symbolic links aren't handled nicely. I noticed that Qt replaces them with their targets, which is something I don't like. Also, I haven't tried it myself, but I expect scanning folders that have symbolic links to their ancestors to cause MP3 Diags to keep scanning the same files until it runs out of memory.
+</div>
+
+<div class="FreeNormalText RegFnt ChpCol1">
+There is no automatic detection of a file being changed by an external tool or removed. You should use the "reload" button to update the file information. However the changes are detected the next time you start the application (assuming you didn't disable the automatic scanning) or when you try to apply transformations to such a file. Note that in either of these cases, the decision that the file has changed is made based on whether its date or its size have changed; so changing the ID3V2 tag in an external tool that keeps the file's original date may go undetected.
+</div>
+
+<div class="FreeNormalText RegFnt ChpCol2">
+It is possible for audio frames to store some of their data in the neighboring frames, but I haven't looked into how to detect when this is happening. Currently MP3 Diags only reads the header of the audio frames (which doesn't have neighbor information.) As a result, it doesn't detect that some frames are missing or should be deleted.
+</div>
+
+<div class="FreeNormalText RegFnt ChpCol1">
+The function calls to the file system (open file, search for files, ...) provide and expect UTF-8-encoded file names. This is important if you have file names using non-English characters (or rather non-ASCII, to be more correct.) I have no idea how big this issue is, because the test systems use UTF-8. It may be that the file names are displayed incorrectly, but the files are still processed, or it may lead to more serious errors. So please <a href="050_feedback.html">tell me</a> if you seem to encounter errors related to this or if you can provide more insight into UTF-8 handling.
+</div>
+
+<div class="FreeNormalText RegFnt ChpCol2">
+Not really an MP3 Diags limitation, but: On Windows there may be some issues with the normalization of files whose names fall outside the system codepage. This is because although MP3 Diags passes such names correctly to MP3Gain, MP3Gain doesn't seem to use Unicode even in the beta version that allegedly added Unicode support. Anyway, testing this took me all of 2 minutes, so I might have missed something. If somebody knows how to make MP3Gain use Unicode names, please let me know. Two options that I could think of were to either use some other normalizer or a small intermediate program, which would rename the files so that MP3Gain could access them, then call MP3Gain, and then rename them back. Also, maybe changing MP3Gain to use Unicode names isn't that hard.
+</div>
+
+
+
+
+<div class="NavPadTable RegFnt ChpCol1">
+<div style="width:100%">
+<table border="0" cellpadding="0" cellspacing="0" width="100%" class="NavTable">
+    <tr>
+        <td width="30%" align="left"> <a href="310_advanced.html"><img src="arrow_left_small.png" class="ImgNoBorder NavPadLeft" align="absmiddle" /></a> <a href="310_advanced.html"> Advanced features </a> </td>
+        <td width="40%" align="center" valign="middle" class="NavBarText"> Limitations </td>
+        <td width="30%" align="right"> <a href="050_feedback.html"> Feedback and support</a> <a href="050_feedback.html"> <img src="arrow_right_small.png" class="ImgNoBorder NavPadRight" align="absmiddle" /> </a> </td>
+    </tr>
+</table>
+</div>
+</div>
+
+
+
+<!--QQQStatCounterQQQ-->
+
+</body>
+
+</html>
+

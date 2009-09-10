@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="keywords" content="MP3, diags, diagnosis, tag editor, tagger, normalizer" />
+<meta name="description" content="End-user documentation for MP3 Diags, an MP3 analysis tool that also includes correction and tag editing functionality" />
+<title>MP3 Diags - Config - Transformation parameters</title>
+<link rel="stylesheet" type="text/css" media="screen" href="style.css" />
+<!--[if lte IE 6]>  <link rel="stylesheet" type="text/css" href="style_ie6.css" />  <![endif]-->
+<!--[if IE 7]>  <link rel="stylesheet" type="text/css" href="style_ie7.css" />  <![endif]-->
+</head>
+
+<link rel="icon" href="favicon.ico" type="image/x-icon" />
+<link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+
+<body>
+
+<!-- add_this_conf -->
+
+<div class="HeaderTableText RegFnt ChpCol1">
+<table width="100%" class="HeaderTable">
+    <tr>
+        <td border="0" class="HeaderText">
+            <span class="HeaderPadLeft">
+                <a href="index.html" class="RightMargin"><img src="logo.png" border="0" alt="MP3 Diags" align="middle" /></a>
+                <!-- add_this_link -->
+            </span>
+        </td>
+
+        <!-- sf_hosting -->
+    </tr>
+</table>
+</div>
+
+
+<!-- ========================================================================================================== -->
+<!-- ========================================================================================================== -->
+<!-- ========================================================================================================== -->
+<!-- ========================================================================================================== -->
+
+
+
+
+<div class="NavPadTable RegFnt ChpCol2">
+<div style="width:100%">
+<table border="0" cellpadding="0" cellspacing="0" width="100%" class="NavTable">
+    <tr>
+        <td width="30%" align="left"> <a href="280_config_quality.html"><img src="arrow_left_small.png" class="ImgNoBorder NavPadLeft" align="absmiddle" /></a> <a href="280_config_quality.html"> Config - Audio quality </a> </td>
+        <td width="40%" align="center" valign="middle" class="NavBarText"> <a href="030_users_guide.html">User's guide</a> - Config - Transformation parameters </td>
+        <td width="30%" align="right"> <a href="300_config_others.html"> Config - Others</a> <a href="300_config_others.html"> <img src="arrow_right_small.png" class="ImgNoBorder NavPadRight" align="absmiddle" /> </a> </td>
+    </tr>
+</table>
+</div>
+</div>
+
+
+<div class="Screenshot RegFnt ChpCol1">
+<img src="290_config_transf_params.png" />
+</div>
+
+
+<div class="FreeNormalText RegFnt ChpCol2">
+Here you have the global parameters that are used by transformations.
+</div>
+
+<div class="FreeNormalText RegFnt ChpCol1">
+Names that are stored in ID3V2 are supposed to be either 8bit Latin-1 or 16bit Unicode UTF16 (well, ID3V2.4.0 has some other formats, which MP3 Diags doesn't support yet.) However, some tools use the 8bit option with other locales on frames that are declared Latin-1, when they should be using UTF16. Although those tools display the names correctly, others don't, especially if the file is moved to another computer. The reverse might happen as well: correct files using Latin-1 might appear to have incorrect frames, because they are interpreted according to some other locale. There is a transformation that does conversions from 8bit to UTF16, and it is here that you specify the locale to be used in the process.
+</div>
+
+
+<div class="FreeNormalText RegFnt ChpCol2">
+By not allowing more than 1 image per file you make sure that all the players see the same image. OTOH, if you have files containing more than 1 image, you'll probably want to keep them all, in which case the "Keep a single image" option should be unchecked.
+</div>
+
+
+<div class="FreeNormalText RegFnt ChpCol1">
+The case transformations are rather primitive. I'll probably try to make a better "title capitalization", one that takes prepositions, articles, and conjunctions into account.
+</div>
+
+
+
+<div class="NavPadTable RegFnt ChpCol2">
+<div style="width:100%">
+<table border="0" cellpadding="0" cellspacing="0" width="100%" class="NavTable">
+    <tr>
+        <td width="30%" align="left"> <a href="280_config_quality.html"><img src="arrow_left_small.png" class="ImgNoBorder NavPadLeft" align="absmiddle" /></a> <a href="280_config_quality.html"> Config - Audio quality </a> </td>
+        <td width="40%" align="center" valign="middle" class="NavBarText"> <a href="030_users_guide.html">User's guide</a> - Config - Transformation parameters </td>
+        <td width="30%" align="right"> <a href="300_config_others.html"> Config - Others</a> <a href="300_config_others.html"> <img src="arrow_right_small.png" class="ImgNoBorder NavPadRight" align="absmiddle" /> </a> </td>
+    </tr>
+</table>
+</div>
+</div>
+
+
+
+<!--QQQStatCounterQQQ-->
+
+</body>
+
+</html>
+
