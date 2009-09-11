@@ -77,7 +77,7 @@ struct Note
 
         SharedData(const std::string& strDescription) : m_eSeverity(TRACE), m_eCategory(CUSTOM), m_nLabelIndex(-1), m_nNoteId(-1), m_strDescription(strDescription) {}
     private:
-        friend class Notes;
+        friend struct Notes;
         SharedData(Severity eSeverity, Category eCategory, const std::string& strDescription) : m_eSeverity(eSeverity), m_eCategory(eCategory), m_nLabelIndex(-1), m_nNoteId(-1), m_strDescription(strDescription) {}
 
     private:

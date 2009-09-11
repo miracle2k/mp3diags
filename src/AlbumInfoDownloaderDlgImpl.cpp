@@ -27,7 +27,7 @@
 #ifndef WIN32
     #include  <sys/time.h>
 #else
-    #include  <QTime>
+    #include  <time.h>
 #endif
 
 #include  <QHttp>

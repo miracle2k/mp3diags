@@ -20,6 +20,8 @@
  ***************************************************************************/
 
 
+#include  <map>
+
 #include  <QHttp>
 
 #include  "DiscogsDownloader.h"

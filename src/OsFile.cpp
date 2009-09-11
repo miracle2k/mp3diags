@@ -32,7 +32,11 @@
 #include  <QDir>
 #include  <QTemporaryFile>
 
-#include  <utime.h>
+#ifdef _MSC_VER
+    #include  <sys/utime.h>
+#else
+    #include  <utime.h>
+#endif
 /*
 #include  <sys/stat.h>
 //#include  <sys/types.h>
