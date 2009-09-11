@@ -284,7 +284,7 @@ void FilesModel::matchSelToNotes()
 
     m_pCommonData->m_pFilesG->selectionModel()->clearSelection();
 
-    for (set<int>::const_iterator it = sSel.begin(), end = sSel.end(); it != end; ++it)
+    for (set<int, int>::const_iterator it = sSel.begin(), end = sSel.end(); it != end; ++it)
     {
         m_pCommonData->m_pFilesG->selectionModel()->select(index(m_pCommonData->getFilesGCrtRow(), *it + 1), QItemSelectionModel::Select);
 //cout << "selecting " << m_pCommonData->getFilesGCrtRow() << "x" << *it + 1 << endl;
@@ -486,6 +486,10 @@ FileHeaderView::FileHeaderView(CommonData* pCommonData, Qt::Orientation orientat
 }
 
 
+static int s_nCut (0);
+
+int getHeaderDrawOffset() { return s_nCut; }
+
 /*override*/ void FileHeaderView::paintSection(QPainter* pPainter, const QRect& r, int nLogicalIndex) const
 {
     if (0 == nLogicalIndex)
@@ -522,7 +526,6 @@ FileHeaderView::FileHeaderView(CommonData* pCommonData, Qt::Orientation orientat
 
     style()->drawControl(QStyle::CE_Header, &opt, pPainter, this);
 
-    static int s_nCut (0);
     static bool s_bCutInit (false);
     if (!s_bCutInit)
     {

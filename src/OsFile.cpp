@@ -32,10 +32,10 @@
 #include  <QDir>
 #include  <QTemporaryFile>
 
-#ifdef _MSC_VER
-    #include  <sys/utime.h>
-#else
+#ifndef _MSC_VER
     #include  <utime.h>
+#else
+    #include  <sys/utime.h>
 #endif
 /*
 #include  <sys/stat.h>
