@@ -24,9 +24,12 @@
 
 #ifndef WIN32
 #else
-    wstring wstrFromUtf8(const string& s)
+    #include  <vector>
+    #include  <windows.h>
+
+    std::wstring wstrFromUtf8(const std::string& s)
     {
-        vector<wchar_t> w (s.size() + 1);
+        std::vector<wchar_t> w (s.size() + 1);
         MultiByteToWideChar(CP_UTF8, 0, s.c_str(), -1, &w[0], w.size());
         //inspect(&w[0], w.size()*2);
         return &w[0];
