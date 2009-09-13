@@ -37,7 +37,7 @@ using namespace pearl;
 
 
 
-
+//ttt0 warn note: empty id3v2 (should have at least a frame)
 
 
 /*

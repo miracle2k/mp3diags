@@ -149,7 +149,7 @@ namespace
     }
 
 
-    class NativeFile //ttt0 test on wnd
+    class NativeFile
     {
         HANDLE m_hStepFile;
     public:
@@ -410,7 +410,6 @@ void traceLastStep(const string& s, int nLevelChange)
 
 
 //ttt0 add checkbox to uninst on wnd to remove data and settings; //ttt0 uninst should remove log file as well, including the file created when "debug/log transf" is turned on
-//ttt0 msvc 2008 fails to compile "cout << strRes << endl;" see if printing strings is GCC extension
 //static QString s_strAssertTitle ("Assertion failure");
 //static QString s_strCrashWarnTitle ("Crash detected");
 static QString s_qstrErrorMsg;
@@ -1866,7 +1865,7 @@ void MainFormDlgImpl::on_m_pTransformB_clicked() //ttt2 an alternative is to use
     for (int i = 0, n = cSize(vnVisualNdx); i < n; ++i)
     {
         Transformation* pTransf (vpTransf.at(vnVisualNdx[i]));
-        QAction* pAct (new QAction(pTransf->getActionName(), &menu));
+        QAction* pAct (new QAction(pTransf->getVisibleActionName(), &menu));
         pAct->setToolTip(makeMultiline(pTransf->getDescription()));
 
         //connect(pAct, SIGNAL(triggered()), this, SLOT(onExecTransform(i))); // !!! Qt doesn't seem to support parameter binding
@@ -2159,7 +2158,7 @@ void MainFormDlgImpl::transform(std::vector<Transformation*>& vpTransf, Subset e
     }
     else if (1 == cSize(vpTransf))
     {
-        qstrConf = (convStr(string("Apply transformation \"") + vpTransf[0]->getActionName() + "\" to ")) + qstrListInfo + "?";
+        qstrConf = (convStr(string("Apply transformation \"") + vpTransf[0]->getVisibleActionName() + "\" to ")) + qstrListInfo + "?";
     }
     else
     {
@@ -2167,7 +2166,7 @@ void MainFormDlgImpl::transform(std::vector<Transformation*>& vpTransf, Subset e
         for (int i = 0, n = cSize(vpTransf); i < n; ++i)
         {
             qstrConf += "\n      ";
-            qstrConf += vpTransf[i]->getActionName();
+            qstrConf += vpTransf[i]->getVisibleActionName();
         }
     }
 
@@ -2238,7 +2237,7 @@ void MainFormDlgImpl::setTransfTooltip(int k)
     for (int i = 0, n = cSize(m_pCommonData->getCustomTransf()[k]); i < n; ++i)
     {
         s2 += "    ";
-        s2 += m_pCommonData->getAllTransf()[m_pCommonData->getCustomTransf()[k][i]]->getActionName();
+        s2 += m_pCommonData->getAllTransf()[m_pCommonData->getCustomTransf()[k][i]]->getVisibleActionName();
         if (i < n - 1) { s2 += "\n"; }
     }
     if (s2.isEmpty()) { s2 = "   <empty list>\n\n(you can edit the list in the Settings dialog)"; }
@@ -2697,7 +2696,7 @@ namespace
 
         bool operator()(const Transformation* p) const
         {
-            return p->getActionName() == m_szName; // !!! pointer comparison
+            return 0 == strcmp(p->getActionName(), m_szName);
         }
     };
 
@@ -2723,7 +2722,8 @@ namespace
             m_strDescr = out.str();
         }
 
-        /*override*/ const char* getActionName() const { return m_strDescr.c_str(); }
+        /*override*/ const char* getActionName() const { return getClassName(); }
+        /*override*/ const char* getVisibleActionName() const { return m_strDescr.c_str(); }
         /*override*/ const char* getDescription() const { return "Removes specified stream."; }
 
         static const char* getClassName() { return "Remove specified stream"; }
@@ -2771,14 +2771,16 @@ vector<Transformation*> MainFormDlgImpl::getFixes(const Note* pNote, const DataS
         ADD_FIX(foundVbriAndXing, VbrRepairer);
 
         ADD_FIX(id3v2FrameTooShort, Id3V2Rescuer);
-        ADD_FIX(id3v2FrameTooShort, Id3V2Cleaner);
+        //ADD_FIX(id3v2FrameTooShort, Id3V2Cleaner);
         ADD_FIX(id3v2InvalidName, Id3V2Rescuer);
-        ADD_FIX(id3v2InvalidName, Id3V2Cleaner);
+        //ADD_FIX(id3v2InvalidName, Id3V2Cleaner);
         ADD_FIX(id3v2TextError, Id3V2Rescuer);
-        ADD_FIX(id3v2TextError, Id3V2Cleaner);
+        //ADD_FIX(id3v2TextError, Id3V2Cleaner);
         ADD_FIX(id3v2HasLatin1NonAscii, Id3V2UnicodeTransformer);
         ADD_FIX(id3v2EmptyTcon, Id3V2Rescuer);
-        ADD_FIX(id3v2EmptyTcon, Id3V2Cleaner);
+        //ADD_FIX(id3v2EmptyTcon, Id3V2Cleaner);
+        ADD_FIX(id3v2MultipleFramesWithSameName, Id3V2Rescuer);
+        ADD_FIX(id3v2MultipleFramesWithSameName, Id3V2Cleaner);
         ADD_FIX(id3v2PaddingTooLarge, Id3V2Compactor);
         ADD_FIX(id3v2UnsuppVer, UnsupportedId3V2Remover);
         ADD_FIX(id3v2UnsuppFlag, UnsupportedDataStreamRemover);
@@ -2786,22 +2788,22 @@ vector<Transformation*> MainFormDlgImpl::getFixes(const Note* pNote, const DataS
         ADD_FIX(id3v2UnsuppFlags2, UnsupportedDataStreamRemover);
 
         ADD_FIX(id3v2CouldntLoadPic, Id3V2Rescuer);
-        ADD_FIX(id3v2CouldntLoadPic, Id3V2Cleaner);
+        //ADD_FIX(id3v2CouldntLoadPic, Id3V2Cleaner);
         ADD_FIX(id3v2NotCoverPicture, SmallerImageRemover);
         ADD_FIX(id3v2ErrorLoadingApic, Id3V2Rescuer);
-        ADD_FIX(id3v2ErrorLoadingApic, Id3V2Cleaner);
+        //ADD_FIX(id3v2ErrorLoadingApic, Id3V2Cleaner);
         ADD_FIX(id3v2ErrorLoadingApicTooShort, Id3V2Rescuer);
-        ADD_FIX(id3v2ErrorLoadingApicTooShort, Id3V2Cleaner);
-        ADD_FIX(id3v2DuplicatePic, Id3V2Rescuer); //ttt0 check if true
-        ADD_FIX(id3v2DuplicatePic, Id3V2Cleaner); //ttt0 check if true
+        //ADD_FIX(id3v2ErrorLoadingApicTooShort, Id3V2Cleaner);
+        ADD_FIX(id3v2DuplicatePic, Id3V2Rescuer);
+        ADD_FIX(id3v2DuplicatePic, Id3V2Cleaner);
         ADD_FIX(id3v2DuplicatePic, SmallerImageRemover);
         ADD_FIX(id3v2MultipleApic, Id3V2Rescuer);
         ADD_FIX(id3v2MultipleApic, Id3V2Cleaner);
         ADD_FIX(id3v2MultipleApic, SmallerImageRemover);
         ADD_FIX(id3v2UnsupApicTextEnc, Id3V2Rescuer);
         ADD_FIX(id3v2UnsupApicTextEnc, Id3V2Cleaner);
-        ADD_FIX(id3v2LinkInApic, Id3V2Rescuer);
-        ADD_FIX(id3v2LinkInApic, Id3V2Cleaner);
+        //ADD_FIX(id3v2LinkInApic, Id3V2Rescuer); //ttt0 make this work, remove comment
+        //ADD_FIX(id3v2LinkInApic, Id3V2Cleaner); //ttt0 probably make this work, remove comment
 
         ADD_FIX(twoId3V230, MultipleId3StreamRemover);
         ADD_FIX(bothId3V230_V240, MultipleId3StreamRemover);
@@ -2863,7 +2865,12 @@ vector<Transformation*> MainFormDlgImpl::getFixes(const Note* pNote, const DataS
         } \
     }
 
-    //ttt0 None of the following is shown for header (e.g. SingleBitRepairer is shown for validFrameDiffVer only when clicking on circle, not when clicking on header), maybe we should drop the dtream test; OTOH the case of audioTooShort shows that it matters what stream the error is occuring on; so maybe drop the stream check only for some ... // workaround: see what's available for single song, then use the menu for all
+    //ttt0 None of the following is shown for header (e.g. SingleBitRepairer is shown for validFrameDiffVer only when clicking on circle, not when clicking on header), maybe we should drop the dtream test; OTOH the case of audioTooShort shows that it matters what stream the error is occuring on; so maybe drop the stream check only for some ... // workaround: see what's available for single song, then use the menu for all;
+    //ttt0 other example: mismatched xing fixable by SingleBitRepairer to other stream; probably document that all the notes should be looked at;
+    // or: add all transforms that in some context might fix a note
+    // or: extend ADD_CUSTOM_FIX to look at the other notes, similarly to how it looks at the stream it's in; add some transform if some other note is present; (note: use a set to not have duplicates entered via different rules)
+    // perhaps unknown size 16 between xing and audio -> repair vbr, but seems too specific
+    // unknown between audio and audio -> restore flipped
 
     ADD_CUSTOM_FIX(validFrameDiffVer, UnknownDataStream, SingleBitRepairer);
     ADD_CUSTOM_FIX(validFrameDiffLayer, UnknownDataStream, SingleBitRepairer);
@@ -2876,6 +2883,8 @@ vector<Transformation*> MainFormDlgImpl::getFixes(const Note* pNote, const DataS
 
     ADD_CUSTOM_FIX(audioTooShort, UnknownDataStream, UnknownDataStreamRemover);
     ADD_CUSTOM_FIX(audioTooShort, UnknownDataStream, SingleBitRepairer);
+
+    // ADD_CUSTOM_FIX(brokenInTheMiddle, ??? , Id3V2Rescuer); //ttt0 see about this
 
     static FixedAddrRemover s_fixedAddrRemover;
 
@@ -2891,7 +2900,7 @@ vector<Transformation*> MainFormDlgImpl::getFixes(const Note* pNote, const DataS
 
 int getHeaderDrawOffset();
 
-//ttt0 usually right-clicking on a non-current cell resultsin tooltips no shown; test on ubuntu //ttt0 try using a timer
+//ttt0 usually right-clicking on a non-current cell results in tooltips no shown; test on ubuntu //ttt0 try using a timer
 void MainFormDlgImpl::fixCurrentNote(int nGlobalX, int nGlobalY)
 {
     QPoint coords (m_pFilesG->mapFromGlobal(QPoint(nGlobalX, nGlobalY)));
@@ -2903,8 +2912,8 @@ void MainFormDlgImpl::fixCurrentNote(int nGlobalX, int nGlobalY)
     if (coords.y() < m_pFilesG->horizontalHeader()->height())
     {
         int x (coords.x());
-        x -= 2;
-        //ttt0 also use getHeaderDrawOffset();
+        x -= 2; // hard-coded
+        x += getHeaderDrawOffset() / 2; //ttt1 this "/2" doesn't make sense but it works best
         //qDebug("offs %d", getHeaderDrawOffset());
         nCol = m_pFilesG->columnAt(x - m_pFilesG->verticalHeader()->width());
 
@@ -2996,7 +3005,7 @@ void MainFormDlgImpl::fixCurrentNoteAllFiles(int nCol, int nGlobalX, int nGlobal
     vector<Transformation*> vpTransf (getFixes(pNote, 0));
     if (vpTransf.empty()) { return; }
 
-    showFixes(vpTransf, ALL, nGlobalX, nGlobalY); //ttt0 use right click for sel
+    showFixes(vpTransf, ALL, nGlobalX, nGlobalY);
 }
 
 
@@ -3008,7 +3017,7 @@ void MainFormDlgImpl::showFixes(vector<Transformation*>& vpTransf, Subset eSubse
     for (int i = 0, n = cSize(vpTransf); i < n; ++i)
     {
         Transformation* pTransf (vpTransf[i]);
-        QAction* pAct (new QAction(pTransf->getActionName(), &menu));
+        QAction* pAct (new QAction(pTransf->getVisibleActionName(), &menu)); //ttt0 use getVisibleActionName in other places where it makes sense;
         pAct->setToolTip(makeMultiline(pTransf->getDescription()));
 
         //connect(pAct, SIGNAL(triggered()), this, SLOT(onExecTransform(i))); // !!! Qt doesn't seem to support parameter binding
@@ -3150,3 +3159,7 @@ Development machine:
 //ttt0 https://sourceforge.net/forum/message.php?msg_id=7613657 - export as txt/m3u
 //ttt0 custom btn 4 - do all
 //ttt0 handle various artists https://sourceforge.net/apps/mantisbt/mp3diags/view.php?id=33
+
+
+//ttt0 http://connect.microsoft.com/VisualStudio/feedback/ViewFeedback.aspx?FeedbackID=489099
+
