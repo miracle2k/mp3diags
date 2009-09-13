@@ -19,10 +19,25 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifdef __GNUC__
-
 
 #include  "fstream_unicode.h"
+
+#ifndef WIN32
+#else
+    wstring wstrFromUtf8(const string& s)
+    {
+        vector<wchar_t> w (s.size() + 1);
+        MultiByteToWideChar(CP_UTF8, 0, s.c_str(), -1, &w[0], w.size());
+        //inspect(&w[0], w.size()*2);
+        return &w[0];
+    }
+#endif
+
+
+
+
+#ifdef __GNUC__
+
 
 #include  <sys/stat.h>
 
@@ -127,15 +142,6 @@ int unicodeOpenHlp(const QString& s, std::ios_base::openmode __mode)
     #include  <string>
 
     using namespace std;
-
-
-    wstring wstrFromUtf8(const string& s)
-    {
-        vector<wchar_t> w (s.size() + 1);
-        MultiByteToWideChar(CP_UTF8, 0, s.c_str(), -1, &w[0], w.size());
-        //inspect(&w[0], w.size()*2);
-        return &w[0];
-    }
 
 
     template<>
