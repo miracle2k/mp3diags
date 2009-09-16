@@ -477,7 +477,7 @@ void MusicBrainzDownloader::reloadGui()
 
 void MusicBrainzDownloader::requestAlbum(int nAlbum)
 {
-    CB_ASSERT (!m_pQHttp->hasPendingRequests() && !m_pImageQHttp->hasPendingRequests());
+    CB_ASSERT (!m_pQHttp->hasPendingRequests() && !m_pImageQHttp->hasPendingRequests());  // ttt0 triggered: https://sourceforge.net/apps/mantisbt/mp3diags/view.php?id=36
     m_nLoadingAlbum = nAlbum;
     setWaiting(ALBUM);
     //string s ("/release/" + m_vAlbums[nAlbum].m_strId + "?f=xml&api_key=f51e9c8f6c");

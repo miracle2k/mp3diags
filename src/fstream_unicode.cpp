@@ -171,5 +171,8 @@ int unicodeOpenHlp(const int& fd, std::ios_base::openmode /*__mode*/)
 //ttt1 review O_SHORT_LIVED
 
 #else // #ifdef __GNUC__
+
 // nothing to do for now; the MSVC version is fully inline and no ports to other compilers exist
+
 #endif // #ifdef __GNUC__
+

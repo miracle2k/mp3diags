@@ -62,6 +62,7 @@ std::string, without the need of calling c_str().
 #include  <ext/stdio_filebuf.h>
 #include  <istream>
 #include  <ostream>
+#include  <fstream>
 
 #include  <fcntl.h> // for open()
 
@@ -682,7 +683,16 @@ class fstream_utf8:public std::fstream
 };
 
 #else // _MSC_VER / __GNUC__
-#error classes i/ofstream_utf8 need to be ported to this compiler
-#endif // __GNUC__
+
+    //#error classes i/ofstream_utf8 need to be ported to this compiler
+    #warning classes i/ofstream_utf8 need to be ported to your compiler
+
+    #include  <fstream>
+
+    typedef std::basic_ifstream<char> ifstream_utf8;
+    typedef std::basic_ofstream<char> ofstream_utf8;
+    typedef std::basic_fstream<char> fstream_utf8;
+
+#endif // _MSC_VER / __GNUC__
 
 #endif // FStreamUtf8H

@@ -146,12 +146,13 @@ bool Id3V2Rescuer::processId3V2Stream(Id3V2StreamBase& strm, ofstream_utf8* pOut
         const Id3V2Frame* pFrm (vpFrames[i]);
         Id3V2FrameDataLoader wrp (*pFrm);
 
-        if ('T' == pFrm->m_szName[0] && KnownFrames::getKnownFrames().count(pFrm->m_szName) > 0)
+        if ('T' == pFrm->m_szName[0] /*&& KnownFrames::getKnownFrames().count(pFrm->m_szName) > 0*/)
         { // text frame
             bool bDiscard (false);
+            string s;
             try
             {
-                string s (pFrm->getUtf8String());
+                s = pFrm->getUtf8String();
                 bDiscard = s.empty();
             }
             catch (const Id3V2Frame::UnsupportedId3V2Frame&)
@@ -160,13 +161,14 @@ bool Id3V2Rescuer::processId3V2Stream(Id3V2StreamBase& strm, ofstream_utf8* pOut
 
             if (!bDiscard)
             {
-                wrt.addNonOwnedFrame(pFrm);
+                //wrt.addNonOwnedFrame(pFrm);
+                wrt.addTextFrame(pFrm->m_szName, s);
             }
         }
         else if (0 == strcmp(KnownFrames::LBL_IMAGE(), pFrm->m_szName))
         {
             CB_ASSERT (Id3V2Frame::NO_APIC != pFrm->m_eApicStatus);
-            if (Id3V2Frame::ERR != pFrm->m_eApicStatus)
+            if (Id3V2Frame::ERR != pFrm->m_eApicStatus && Id3V2Frame::USES_LINK != pFrm->m_eApicStatus) // not sure about link; OTOH going to the tab editor will get rid of links, so we do it here as well
             {
                 wrt.addNonOwnedFrame(pFrm);
             }
