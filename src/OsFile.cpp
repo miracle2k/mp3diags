@@ -37,6 +37,12 @@
 #else
     #include  <sys/utime.h>
 #endif
+
+#ifndef WIN32
+#else
+    #include  <windows.h>
+#endif
+
 /*
 #include  <sys/stat.h>
 //#include  <sys/types.h>

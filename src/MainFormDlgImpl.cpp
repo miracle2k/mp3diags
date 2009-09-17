@@ -780,6 +780,21 @@ bool SerLoadThread::scan()
     }
 }*/
 
+void listKnownFormats()
+{
+    for (unsigned i = 0x240; i < 1024; ++i) // everything below 0x240 is invalid
+    {
+        unsigned x (0xffe00000);
+        x += (i & 0x300) << (19 - 8);
+        x += (i & 0x0c0) << (17 - 6);
+
+        x += (i & 0x03c) << (12 - 2);
+        x += (i & 0x003) << (6 - 0);
+        qDebug("%x: %s", x, decodeMpegFrame(x, ", ").c_str());
+    }
+}
+
+
 } // namespace
 
 
@@ -797,6 +812,7 @@ MainFormDlgImpl::MainFormDlgImpl(const string& strSession, bool bUniqueSession) 
     s_pGlobalDlg = 0;
     setupUi(this);
 
+    //listKnownFormats(); // ttt0 sizes for many formats seem way too low (e.g. "MPEG-1 Layer I, 44100Hz 32000bps" or "MPEG-2 Layer III, 22050Hz 8000bps")
 
     {
         /*KbdNotifTableView* pStreamsG (new KbdNotifTableView(m_pStreamsG));
@@ -1295,7 +1311,6 @@ void MainFormDlgImpl::onShow()
         }
     }
 
-    //qDebug("MainFormDlgImpl::onShow() 1 %s", QDateTime::currentDateTime().toString("ss.zzz").toUtf8().data());
     m_settings.saveDbDirty(true);
 
     if (m_pCommonData->m_bScanAtStartup || bDirty)
@@ -1888,8 +1903,6 @@ void MainFormDlgImpl::on_m_pTransformB_clicked() //ttt2 an alternative is to use
 
 void MainFormDlgImpl::onMenuHovered(QAction* pAction)
 {
-//qDebug("hov %s", pAction->toolTip().toUtf8().data()); //ttt while this seems to work OK for the single transf menu, many times no tooltip is shown for the right-click to fix notes, though pAction->toolTip() returns a valid string; changes in hideText() / showText() don't seem to matter; 2009.09.15 - taken care of by using m_nGlobalX/Y
-    //QToolTip::hideText();
     QToolTip::showText(QCursor::pos(), "");
     QToolTip::showText(QCursor::pos(), pAction->toolTip());
     // see http://www.mail-archive.com/pyqt@riverbankcomputing.com/msg17214.html and http://www.mail-archive.com/pyqt@riverbankcomputing.com/msg17245.html ; apparently there's some inconsistency in when the menus are shown
