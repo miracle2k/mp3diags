@@ -2,7 +2,10 @@ cmake_minimum_required(VERSION 2.6.4)
 
 # Avoid to include the CMakeLists.txt files themselves to the project to get rid
 # of the custom build step in Visual Studio that regenerates the project.
-set(CMAKE_SUPPRESS_REGENERATION "1")
+set(CMAKE_SUPPRESS_REGENERATION TRUE)
+
+# Use relative instead of absolute paths in generated project files.
+set(CMAKE_USE_RELATIVE_PATHS TRUE)
 
 # Do not use whitespaces in the project name.
 set(name "MP3Diags")
