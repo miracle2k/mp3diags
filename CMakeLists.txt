@@ -11,6 +11,25 @@ set(CMAKE_USE_RELATIVE_PATHS TRUE)
 set(name "MP3Diags")
 project(${name})
 
+# Search for Qt in QTDIR first, then in C:\Qt\** (on Windows only).
+list(APPEND qt_glob_paths $ENV{QTDIR})
+
+if(WIN32)
+    file(GLOB dirs "C:/Qt/*")
+    foreach(dir ${dirs})
+        if(IS_DIRECTORY ${dir})
+            list(APPEND qt_glob_paths ${dir})
+        endif(IS_DIRECTORY ${dir})
+    endforeach(dir ${dirs})
+
+    # Search paths with higher version numbers first.
+    list(SORT qt_glob_paths)
+    list(REVERSE qt_glob_paths)
+endif(WIN32)
+
+set(QT_SEARCH_PATHS ${qt_glob_paths} CACHE PATH "Paths where the Qt library is searched in.")
+set(CMAKE_PREFIX_PATH ${QT_SEARCH_PATHS})
+
 # Try to find Qt, which on success provides QT_USE_FILE, which in turn provides
 # QT_LIBRARIES.
 find_package(Qt4 REQUIRED)
@@ -34,6 +53,9 @@ include(${QT_USE_FILE})
 include_directories(${CMAKE_BINARY_DIR})
 
 # Try to find Boost, probably requires BOOST_ROOT to be set.
+set(BOOST_SEARCH_PATHS "$ENV{BOOST_ROOT}" CACHE PATH "Paths where the Boost library is searched in.")
+set(ENV{BOOST_ROOT} ${BOOST_SEARCH_PATHS})
+
 find_package(Boost REQUIRED)
 
 include_directories(${Boost_INCLUDE_DIRS})
@@ -52,3 +74,8 @@ if(WIN32)
     # For "GetProcessMemoryInfo()".
     target_link_libraries(${name} psapi.lib)
 endif(WIN32)
+
+# Hide a few variables from the CMake GUI.
+set(CMAKE_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX} CACHE INTERNAL "")
+set(QT_QMAKE_EXECUTABLE ${QT_QMAKE_EXECUTABLE} CACHE INTERNAL "")
+set(Boost_LIB_DIAGNOSTIC_DEFINITIONS ${Boost_LIB_DIAGNOSTIC_DEFINITIONS} CACHE INTERNAL "")
