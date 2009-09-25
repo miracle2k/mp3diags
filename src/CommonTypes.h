@@ -95,10 +95,14 @@ struct AlbumInfo
     std::string m_strGenre;
     std::string m_strReleased;
     std::string m_strNotes;
+    enum VarArtists { VA_NOT_SUPP, VA_SINGLE, VA_VARIOUS };
+    VarArtists m_eVarArtists;
     std::vector<TrackInfo> m_vTracks;
 
     std::string m_strSourceName; // Discogs, MusicBrainz, ... ; needed by MainFormDlgImpl;
     ImageInfo m_imageInfo; // a copy of an image in m_pCommonData->m_imageColl;
+
+    AlbumInfo() : m_eVarArtists(VA_NOT_SUPP) {}
 };
 
 std::ostream& operator<<(std::ostream&, const AlbumInfo&);

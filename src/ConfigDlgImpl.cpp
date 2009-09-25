@@ -298,6 +298,8 @@ ConfigDlgImpl::ConfigDlgImpl(TransfConfig& transfCfg, CommonData* pCommonData, Q
         //m_pFontsW->hide();
         m_pNormalizeGrp->hide();
         m_pRenamerGrp->hide();
+
+        m_pVarArtistsGrp->hide(); //ttt1 we don't really want this, but changing these settings from the tag editor may intoduce bugs; in a way we should reload all; OTOH we don't want to lose changes, nor to save automatically, ...
     }
 
     m_pSourceDirF->hide();
@@ -584,6 +586,8 @@ ConfigDlgImpl::ConfigDlgImpl(TransfConfig& transfCfg, CommonData* pCommonData, Q
         m_pIconSizeSB->setValue(m_pCommonData->m_nMainWndIconSize);
         m_pAutoSizeIconsCkB->setChecked(m_pCommonData->m_bAutoSizeIcons);
         m_pKeepOneValidImgCkB->setChecked(m_pCommonData->m_bKeepOneValidImg);
+        m_pWmpCkB->setChecked(m_pCommonData->m_bWmpVarArtists);
+        m_pItunesCkB->setChecked(m_pCommonData->m_bItunesVarArtists);
         m_pMaxImgSizeSB->setValue(ImageInfo::MAX_IMAGE_SIZE/1024);
         m_pTraceToFileCkB->setChecked(m_pCommonData->isTraceToFileEnabled());
 
@@ -1021,6 +1025,8 @@ void ConfigDlgImpl::on_m_pOkB_clicked()
             m_pCommonData->m_nMainWndIconSize = m_pIconSizeSB->value();
             m_pCommonData->m_bAutoSizeIcons = m_pAutoSizeIconsCkB->isChecked();
             m_pCommonData->m_bKeepOneValidImg = m_pKeepOneValidImgCkB->isChecked();
+            m_pCommonData->m_bWmpVarArtists = m_pWmpCkB->isChecked();
+            m_pCommonData->m_bItunesVarArtists = m_pItunesCkB->isChecked();
             ImageInfo::MAX_IMAGE_SIZE = m_pMaxImgSizeSB->value()*1024; //ttt1 inconsistent to keep this in static var and the others in CommonData; perhaps switch to a global CommonData that anybody can access, without passing it in params
             m_pCommonData->setTraceToFile(m_pTraceToFileCkB->isChecked());
 

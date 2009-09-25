@@ -1032,6 +1032,7 @@ Renamer::Renamer(const std::string& strPattern, const CommonData* pCommonData) :
                 case 'y': pSeq->addPattern(new YearPattern(m_pInvalidCharsReplacer.get())); break;
                 case 'g': pSeq->addPattern(new FieldPattern(TagReader::GENRE, m_pInvalidCharsReplacer.get())); break;
                 case 'c': pSeq->addPattern(new FieldPattern(TagReader::COMPOSER, m_pInvalidCharsReplacer.get())); break;
+                //ttt2 perhaps add something for "various artists"
                 case 'r': pSeq->addPattern(new RatingPattern(m_pInvalidCharsReplacer.get())); break;
 
                 case '%':

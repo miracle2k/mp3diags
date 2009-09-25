@@ -151,6 +151,7 @@ class WebReader : public TagReader
     std::string m_strAlbumName;
     double m_dRating;
     std::string m_strComposer;
+    AlbumInfo::VarArtists m_eVarArtists;
 
     //bool m_bSuppTitle;
     //bool m_bSuppArtist;
@@ -160,8 +161,10 @@ class WebReader : public TagReader
     //bool m_bSuppAlbumName;
     //bool m_bSuppRating;
     bool m_bSuppComposer;
+    bool m_bSuppVarArtists;
 
     std::string m_strType;
+    int convVarArtists() const; // converts m_eVarArtists to an int is either 0 or contains all VA-enabled values, based on configuration
 public:
     /*override*/ std::string getTitle(bool* pbFrameExists = 0) const { if (0 != pbFrameExists) { *pbFrameExists = !m_strTitle.empty(); } return m_strTitle; }
 
@@ -180,6 +183,8 @@ public:
     /*override*/ double getRating(bool* pbFrameExists = 0) const { if (0 != pbFrameExists) { *pbFrameExists = m_dRating >= 0; } return m_dRating; }
 
     /*override*/ std::string getComposer(bool* pbFrameExists = 0) const { if (0 != pbFrameExists) { *pbFrameExists = !m_strComposer.empty(); } return m_strComposer; }
+
+    /*override*/ int getVariousArtists(bool* pbFrameExists = 0) const { if (0 != pbFrameExists) { *pbFrameExists = AlbumInfo::VA_NOT_SUPP != m_eVarArtists; } return convVarArtists(); }
 
     /*override*/ SuportLevel getSupport(Feature) const;
 
@@ -226,9 +231,11 @@ public:
     int getOrigPos() const { return m_nOrigPos; }
     const TagReader* getMatchingReader(int i) const; // returns 0 if i is out of range
 
+    void adjustVarArtists(bool b); // if VARIOUS_ARTISTS is not ASSIGNED, sets m_strValue and m_eStatus
+
     struct InvalidValue {};
 private:
-    void reload(); // to be called initially and each time the priority of tag readers changes
+    void setUp(); // to be called initially and each time the priority of tag readers changes
     TagWriter* m_pTagWriter;
     const Mp3Handler* m_pMp3Handler;
     int m_nCrtPos;
@@ -329,6 +336,10 @@ class TagWriter : public QObject
 
     int m_nFileToErase;
 
+    bool m_bVariousArtists;
+    bool m_bAutoVarArtists; // true at first, until the "toggle" button is clicked
+    void adjustVarArtists();
+
 public:
     TagWriter(CommonData* pCommonData, QWidget* pParentWnd, const bool& bIsFastSaving);
     ~TagWriter();
@@ -408,6 +419,8 @@ public:
     void clearShowedNonSeqWarn() { m_bShowedNonSeqWarn = false; }
     int getUnassignedImagesCount() const { return int(m_snUnassignedImages.size()); }
 
+    void toggleVarArtists();
+
 private slots:
     void onAssignImage(int);
     void onEraseFile(int);
@@ -419,6 +432,7 @@ signals:
     void fileChanged();
     void imagesChanged();
     void requestSave();
+    void varArtistsUpdated(bool bVarArtists);
 };
 
 

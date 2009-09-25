@@ -141,7 +141,7 @@ const char* ImageInfo::getImageType() const
 
 ostream& operator<<(ostream& out, const AlbumInfo& inf)
 {
-    out << "title: \"" << inf.m_strTitle << /*"\", artist: \"" << inf.m_strArtist << "\", composer: \"" << inf.m_strComposer <<*/ /*"\", format: \"" << inf.m_strFormat <<*/ "\", genre: \"" << inf.m_strGenre << "\", released: \"" << inf.m_strReleased << "\"\n\nnotes: " << inf.m_strNotes << endl;
+    out << "title: \"" << inf.m_strTitle << /*"\", artist: \"" << inf.m_strArtist << "\", composer: \"" << inf.m_strComposer <<*/ /*"\", format: \"" << inf.m_strFormat <<*/ "\", genre: \"" << inf.m_strGenre << "\", released: \"" << inf.m_strReleased << "\", var artists: \"" << int(inf.m_eVarArtists) << "\"\n\nnotes: " << inf.m_strNotes << endl;
 
     /*for (int i = 0, n = cSize(inf.m_vstrImageNames); i < n; ++i)
     {

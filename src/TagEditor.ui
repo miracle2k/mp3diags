@@ -359,6 +359,43 @@
        </spacer>
       </item>
       <item>
+       <widget class="QToolButton" name="m_pVarArtistsB" >
+        <property name="minimumSize" >
+         <size>
+          <width>40</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="maximumSize" >
+         <size>
+          <width>40</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="focusPolicy" >
+         <enum>Qt::NoFocus</enum>
+        </property>
+        <property name="toolTip" >
+         <string>Toggle "Various Artists"</string>
+        </property>
+        <property name="text" >
+         <string>V</string>
+        </property>
+        <property name="icon" >
+         <iconset resource="Mp3Diags.qrc" >:/images/va_va.svg</iconset>
+        </property>
+        <property name="iconSize" >
+         <size>
+          <width>36</width>
+          <height>36</height>
+         </size>
+        </property>
+        <property name="autoRaise" >
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QToolButton" name="m_pCopyFirstB" >
         <property name="minimumSize" >
          <size>

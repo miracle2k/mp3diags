@@ -292,12 +292,13 @@ LAST_STEP("CurrentFileModel::headerData");
 
 
 
-TagEditorDlgImpl::TagEditorDlgImpl(QWidget* pParent, CommonData* pCommonData, TransfConfig& transfConfig, bool& bDataSaved) : QDialog(pParent, getDialogWndFlags()), Ui::TagEditorDlg(), m_pCommonData(pCommonData), m_bSectionMovedLock(false), m_transfConfig(transfConfig), m_bIsFastSaving(false), m_bIsSaving(false), m_bIsNavigating(false), m_bDataSaved(bDataSaved)
+TagEditorDlgImpl::TagEditorDlgImpl(QWidget* pParent, CommonData* pCommonData, TransfConfig& transfConfig, bool& bDataSaved) : QDialog(pParent, getDialogWndFlags()), Ui::TagEditorDlg(), m_pCommonData(pCommonData), m_bSectionMovedLock(false), m_transfConfig(transfConfig), m_bIsFastSaving(false), m_bIsSaving(false), m_bIsNavigating(false), m_bDataSaved(bDataSaved), m_bWaitingAlbumResize(false), m_bWaitingFileResize(false)
 {
     setupUi(this);
 
     m_bDataSaved = false;
 
+    m_pVarArtistsB->setEnabled(m_pCommonData->m_bItunesVarArtists || m_pCommonData->m_bWmpVarArtists);
 
     m_pAssgnBtnWrp = new AssgnBtnWrp (m_pToggleAssignedB);
 
@@ -308,6 +309,7 @@ TagEditorDlgImpl::TagEditorDlgImpl(QWidget* pParent, CommonData* pCommonData, Tr
         connect(m_pTagWriter, SIGNAL(fileChanged()), this, SLOT(onFileChanged()));
         connect(m_pTagWriter, SIGNAL(imagesChanged()), this, SLOT(onImagesChanged()));
         connect(m_pTagWriter, SIGNAL(requestSave()), this, SLOT(on_m_pSaveB_clicked()));
+        connect(m_pTagWriter, SIGNAL(varArtistsUpdated(bool)), this, SLOT(onVarArtistsUpdated(bool)));
     }
 
     m_pCurrentAlbumModel = new CurrentAlbumModel(this);
@@ -431,6 +433,17 @@ string TagEditorDlgImpl::run()
 
 void TagEditorDlgImpl::resizeTagEditor()
 {
+    if (!m_bWaitingAlbumResize)
+    {
+        m_bWaitingAlbumResize = true;
+        QTimer::singleShot(1, this, SLOT(onResizeTagEditorDelayed()));
+    }
+}
+
+
+void TagEditorDlgImpl::onResizeTagEditorDelayed() // needed because it's pointless to call this while navigating, when the text for all cells is returned as ""
+{
+    m_bWaitingAlbumResize = false;
     QWidget* pParent (m_pCurrentAlbumG->parentWidget());
 
     //cout << "\n========================\n" << endl; listWidget(pParent);
@@ -474,6 +487,16 @@ intf1.setFixedWidth(5, 50);*/
 
 void TagEditorDlgImpl::resizeFile() // resizes the "current file" grid; called by resizeTagEditor() and by onFileChanged();
 {
+    if (!m_bWaitingFileResize)
+    {
+        m_bWaitingFileResize = true;
+        QTimer::singleShot(1, this, SLOT(onResizeFileDelayed()));
+    }
+}
+
+void TagEditorDlgImpl::onResizeFileDelayed() // resizes the "current file" grid; called by resizeTagEditor() and by onFileChanged();
+{
+    m_bWaitingFileResize = false;
     SimpleQTableViewWidthInterface intf2 (*m_pCurrentFileG);
     ColumnResizer rsz2 (intf2, 100, ColumnResizer::DONT_FILL, ColumnResizer::CONSISTENT_RESULTS);
 }
@@ -662,6 +685,16 @@ void TagEditorDlgImpl::onImagesChanged()
     }
 
     resizeTagEditor();
+}
+
+
+
+void TagEditorDlgImpl::onVarArtistsUpdated(bool bVarArtists)
+{
+    static QPixmap picSa (":/images/va_sa.svg");
+    static QPixmap picVa (":/images/va_va.svg");
+
+    m_pVarArtistsB->setIcon(bVarArtists ? picVa : picSa);
 }
 
 
@@ -890,6 +923,14 @@ void TagEditorDlgImpl::on_m_pCopyFirstB_clicked()
 }
 
 
+void TagEditorDlgImpl::on_m_pVarArtistsB_clicked()
+{
+    if (!closeEditor()) { return; }
+
+    m_pTagWriter->toggleVarArtists();
+}
+
+
 void TagEditorDlgImpl::on_m_pSaveB_clicked() //ttt1 perhaps make this save selected list, by using SHIFT
 {
     if (!closeEditor()) { return; }
@@ -1077,6 +1118,7 @@ void TagEditorDlgImpl::resizeIcons()
     v.push_back(m_pConfigB);
     v.push_back(m_pSaveB);
     v.push_back(m_pReloadB);
+    v.push_back(m_pVarArtistsB);
     v.push_back(m_pCopyFirstB);
     v.push_back(m_pSortB);
     v.push_back(m_pToggleAssignedB);
@@ -1273,6 +1315,7 @@ void Id3V230Writer::setupWriter(Id3V230StreamWriter& wrt, const Mp3HandlerTagDat
     s = pMp3HandlerTagData->getData(TagReader::GENRE); if (s.empty()) { wrt.removeFrames(KnownFrames::LBL_GENRE()); } else { wrt.addTextFrame(KnownFrames::LBL_GENRE(), s); }
     s = pMp3HandlerTagData->getData(TagReader::ALBUM); if (s.empty()) { wrt.removeFrames(KnownFrames::LBL_ALBUM()); } else { wrt.addTextFrame(KnownFrames::LBL_ALBUM(), s); }
     s = pMp3HandlerTagData->getData(TagReader::COMPOSER); if (s.empty()) { wrt.removeFrames(KnownFrames::LBL_COMPOSER()); } else { wrt.addTextFrame(KnownFrames::LBL_COMPOSER(), s); }
+    s = pMp3HandlerTagData->getData(TagReader::VARIOUS_ARTISTS); wrt.setVariousArtists(!s.empty());
     s = pMp3HandlerTagData->getData(TagReader::TIME); if (s.empty()) { wrt.removeFrames(KnownFrames::LBL_TIME_DATE_230()); wrt.removeFrames(KnownFrames::LBL_TIME_YEAR_230()); wrt.removeFrames(KnownFrames::LBL_TIME_240()); } else { wrt.setRecTime(TagTimestamp(s)); }
 
     s = pMp3HandlerTagData->getData(TagReader::IMAGE);
@@ -1532,7 +1575,7 @@ TagEditorDlgImpl::SaveOpt TagEditorDlgImpl::save(bool bImplicitCall)
     return bRes ? SAVED : PARTIALLY_SAVED;
 }
 
-
+//ttt1 hide VA column if not used
 void TagEditorDlgImpl::onHelp()
 {
     openHelp("190_tag_editor.html");
@@ -1681,7 +1724,7 @@ CurrentAlbumDelegate::CurrentAlbumDelegate(QTableView* pTableView, TagEditorDlgI
 /*override*/ QWidget* CurrentAlbumDelegate::createEditor(QWidget* pParent, const QStyleOptionViewItem& style, const QModelIndex& index) const
 {
     int nField (index.column());
-    if (0 == nField || 7 == nField) { return 0; }
+    if (0 == nField || 5 == nField || 8 == nField) { return 0; }
     QWidget* pEditor (QItemDelegate::createEditor(pParent, style, index));
     //qDebug("%s", p->metaObject()->className());
     connect(pEditor, SIGNAL(destroyed(QObject*)), this, SLOT(onEditorDestroyed(QObject*)));

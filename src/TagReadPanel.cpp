@@ -33,7 +33,7 @@
 
 using namespace std;
 
-//ttt1 switch from lineedits to grid (or make more space somehow) 25px / row with lineedit vs 20 in grid
+//ttt0 switch from lineedits to grid (or make more space somehow) 25px / row with lineedit vs 20 in grid
 TagReadPanel::TagReadPanel(QWidget* pParent, TagReader* pTagReader) : QFrame(pParent), m_pTagReader(pTagReader)
 {
     //QVBoxLayout* pMainLayout (new QVBoxLayout());

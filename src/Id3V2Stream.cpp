@@ -27,6 +27,7 @@
 
 #include  "MpegStream.h"
 #include  "Helpers.h"
+#include  "CommonData.h"
 
 
 using namespace std;
@@ -461,6 +462,8 @@ Id3V2FrameDataLoader::~Id3V2FrameDataLoader()
 /*static*/ const char* KnownFrames::LBL_RATING() { return "POPM"; }
 /*static*/ const char* KnownFrames::LBL_COMPOSER() { return "TCOM"; }
 
+/*static*/ const char* KnownFrames::LBL_WMP_VAR_ART() { return "TPE2"; }
+/*static*/ const char* KnownFrames::LBL_ITUNES_VAR_ART() { return "TCMP"; }
 
 
 //============================================================================================================
@@ -920,6 +923,58 @@ void Id3V2StreamBase::preparePicture(NoteColl& notes) // initializes fields used
     if (0 != pbFrameExists) { *pbFrameExists = 0 != p; }
     if (0 == p) { return ""; }
     return p->getUtf8String();
+}
+
+
+// *pbFrameExists gets set if at least one frame exists
+/*override*/ int Id3V2StreamBase::getVariousArtists(bool* pbFrameExists /*= 0*/) const
+{
+    const CommonData* pCommonData (getCommonData());
+    int nRes (0);
+    if (0 != pbFrameExists) { *pbFrameExists = false; }
+
+    try
+    {
+        if (pCommonData->m_bWmpVarArtists)
+        {
+            const Id3V2Frame* p (findFrame(KnownFrames::LBL_WMP_VAR_ART()));
+            if (0 != p)
+            {
+                if (0 != pbFrameExists)
+                {
+                    *pbFrameExists = true;
+                }
+                if (0 == convStr(p->getUtf8String()).compare("VaRiOuS Artists", Qt::CaseInsensitive))
+                {
+                    nRes += TagReader::VA_WMP;
+                }
+            }
+        }
+
+        if (pCommonData->m_bItunesVarArtists)
+        {
+            const Id3V2Frame* p (findFrame(KnownFrames::LBL_ITUNES_VAR_ART()));
+            if (0 != p)
+            {
+                if (0 != pbFrameExists)
+                {
+                    *pbFrameExists = true;
+                }
+                if ("1" == p->getUtf8String())
+                {
+                    nRes += TagReader::VA_ITUNES;
+                }
+            }
+        }
+    }
+    catch (const Id3V2Frame::NotId3V2Frame&)
+    {
+    }
+    catch (const Id3V2Frame::UnsupportedId3V2Frame&)
+    {
+    }
+
+    return nRes;
 }
 
 

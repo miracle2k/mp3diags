@@ -411,7 +411,7 @@ struct TagReader
 {
     virtual ~TagReader();
 
-    enum Feature { TITLE, ARTIST, TRACK_NUMBER, TIME, GENRE, IMAGE, ALBUM, RATING, COMPOSER, LIST_END };
+    enum Feature { TITLE, ARTIST, TRACK_NUMBER, TIME, GENRE, IMAGE, ALBUM, RATING, COMPOSER, VARIOUS_ARTISTS, LIST_END };
     static const char* getLabel(int); // text representation for each Feature
 
     enum SuportLevel { NOT_SUPPORTED, READ_ONLY/*, READ_WRITE*/ };
@@ -436,6 +436,10 @@ struct TagReader
 
     virtual std::string getComposer(bool* /*pbFrameExists*/ = 0) const { throw NotSupportedOp(); } // UTF8
 
+    enum VariousArtists { VA_NONE = 0, VA_ITUNES = 1, VA_WMP = 2 };
+
+    virtual int getVariousArtists(bool* /*pbFrameExists*/ = 0) const { throw NotSupportedOp(); } // combination of VariousArtists flags; since several frames might be involved, *pbFrameExists is set to "true" if at least a frame exists
+
     virtual std::string getOtherInfo() const { return ""; } // non-editable tags
 
     virtual SuportLevel getSupport(Feature) const { return NOT_SUPPORTED; }
@@ -443,6 +447,8 @@ struct TagReader
     virtual const char* getName() const = 0;
 
     std::string getValue(Feature) const; // returns the corresponding feature converted to a string; if it's not supported, it returns an empty string; for IMAGE an empty string regardless of a picture being present or not
+
+    static std::string getVarArtistsValue(); // what getValue(VARIOUS_ARTISTS) returns for VA tags, based on global configuration
 
     static int FEATURE_ON_POS[]; // the order in which Features should appear in grids
     static int POS_OF_FEATURE[]; // the "inverse" of FEATURE_ON_POS: what Feature appears in a given position
