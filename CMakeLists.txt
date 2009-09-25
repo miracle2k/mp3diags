@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.6.4)
+cmake_minimum_required(VERSION 2.6.0)
 
 # Avoid to include the CMakeLists.txt files themselves to the project to get rid
 # of the custom build step in Visual Studio that regenerates the project.
@@ -19,13 +19,13 @@ if(WIN32)
     foreach(dir ${dirs})
         if(IS_DIRECTORY ${dir})
             list(APPEND qt_glob_paths ${dir})
-        endif(IS_DIRECTORY ${dir})
-    endforeach(dir ${dirs})
+        endif()
+    endforeach()
 
     # Search paths with higher version numbers first.
     list(SORT qt_glob_paths)
     list(REVERSE qt_glob_paths)
-endif(WIN32)
+endif()
 
 set(QT_SEARCH_PATHS ${qt_glob_paths} CACHE PATH "Paths where the Qt library is searched in.")
 set(CMAKE_PREFIX_PATH ${QT_SEARCH_PATHS})
@@ -73,7 +73,7 @@ if(WIN32)
 
     # For "GetProcessMemoryInfo()".
     target_link_libraries(${name} psapi.lib)
-endif(WIN32)
+endif()
 
 # Hide a few variables from the CMake GUI.
 set(CMAKE_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX} CACHE INTERNAL "")
