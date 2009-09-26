@@ -929,13 +929,11 @@ void Id3V2StreamBase::preparePicture(NoteColl& notes) // initializes fields used
 // *pbFrameExists gets set if at least one frame exists
 /*override*/ int Id3V2StreamBase::getVariousArtists(bool* pbFrameExists /*= 0*/) const
 {
-    const CommonData* pCommonData (getCommonData());
     int nRes (0);
     if (0 != pbFrameExists) { *pbFrameExists = false; }
 
     try
     {
-        if (pCommonData->m_bWmpVarArtists)
         {
             const Id3V2Frame* p (findFrame(KnownFrames::LBL_WMP_VAR_ART()));
             if (0 != p)
@@ -951,7 +949,6 @@ void Id3V2StreamBase::preparePicture(NoteColl& notes) // initializes fields used
             }
         }
 
-        if (pCommonData->m_bItunesVarArtists)
         {
             const Id3V2Frame* p (findFrame(KnownFrames::LBL_ITUNES_VAR_ART()));
             if (0 != p)
@@ -968,10 +965,10 @@ void Id3V2StreamBase::preparePicture(NoteColl& notes) // initializes fields used
         }
     }
     catch (const Id3V2Frame::NotId3V2Frame&)
-    {
+    { // !!! nothing
     }
     catch (const Id3V2Frame::UnsupportedId3V2Frame&)
-    {
+    { // !!! nothing
     }
 
     return nRes;

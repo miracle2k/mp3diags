@@ -193,6 +193,7 @@ class TagEditorDlgImpl : public QDialog, private Ui::TagEditorDlg
     bool& m_bDataSaved;
 
     bool m_bWaitingAlbumResize, m_bWaitingFileResize; // to avoid ColumnResizer being called lots of times
+    void setupVarArtistsBtn();
 
 public:
     TagEditorDlgImpl(QWidget* pParent, CommonData* pCommonData, TransfConfig& transfConfig, bool& bDataSaved); // transfConfig is needed both to be able to instantiate the config dialog and for saving ID3V2

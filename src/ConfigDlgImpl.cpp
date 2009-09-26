@@ -298,8 +298,6 @@ ConfigDlgImpl::ConfigDlgImpl(TransfConfig& transfCfg, CommonData* pCommonData, Q
         //m_pFontsW->hide();
         m_pNormalizeGrp->hide();
         m_pRenamerGrp->hide();
-
-        m_pVarArtistsGrp->hide(); //ttt1 we don't really want this, but changing these settings from the tag editor may intoduce bugs; in a way we should reload all; OTOH we don't want to lose changes, nor to save automatically, ...
     }
 
     m_pSourceDirF->hide();

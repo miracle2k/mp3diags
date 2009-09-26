@@ -2325,34 +2325,60 @@
              </item>
              <item>
               <layout class="QVBoxLayout" >
+               <property name="spacing" >
+                <number>0</number>
+               </property>
                <item>
                 <widget class="QGroupBox" name="m_pVarArtistsGrp" >
+                 <property name="minimumSize" >
+                  <size>
+                   <width>200</width>
+                   <height>70</height>
+                  </size>
+                 </property>
                  <property name="title" >
                   <string>Handle "various artists" for</string>
                  </property>
-                 <layout class="QVBoxLayout" >
+                 <layout class="QHBoxLayout" >
                   <property name="topMargin" >
                    <number>0</number>
                   </property>
                   <property name="rightMargin" >
                    <number>0</number>
                   </property>
-                  <property name="bottomMargin" >
-                   <number>0</number>
-                  </property>
                   <item>
-                   <widget class="QCheckBox" name="m_pWmpCkB" >
-                    <property name="text" >
-                     <string>Windows Media Player</string>
-                    </property>
-                   </widget>
+                   <layout class="QVBoxLayout" >
+                    <item>
+                     <widget class="QCheckBox" name="m_pItunesCkB" >
+                      <property name="text" >
+                       <string>iTunes</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QCheckBox" name="m_pWmpCkB" >
+                      <property name="text" >
+                       <string>Windows Media Player</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
                   </item>
                   <item>
-                   <widget class="QCheckBox" name="m_pItunesCkB" >
-                    <property name="text" >
-                     <string>iTunes</string>
+                   <spacer>
+                    <property name="orientation" >
+                     <enum>Qt::Horizontal</enum>
                     </property>
-                   </widget>
+                    <property name="sizeType" >
+                     <enum>QSizePolicy::Minimum</enum>
+                    </property>
+                    <property name="sizeHint" >
+                     <size>
+                      <width>30</width>
+                      <height>20</height>
+                     </size>
+                    </property>
+                   </spacer>
                   </item>
                  </layout>
                 </widget>

@@ -290,15 +290,13 @@ LAST_STEP("CurrentFileModel::headerData");
 //======================================================================================================================
 
 
-
-
 TagEditorDlgImpl::TagEditorDlgImpl(QWidget* pParent, CommonData* pCommonData, TransfConfig& transfConfig, bool& bDataSaved) : QDialog(pParent, getDialogWndFlags()), Ui::TagEditorDlg(), m_pCommonData(pCommonData), m_bSectionMovedLock(false), m_transfConfig(transfConfig), m_bIsFastSaving(false), m_bIsSaving(false), m_bIsNavigating(false), m_bDataSaved(bDataSaved), m_bWaitingAlbumResize(false), m_bWaitingFileResize(false)
 {
     setupUi(this);
 
     m_bDataSaved = false;
 
-    m_pVarArtistsB->setEnabled(m_pCommonData->m_bItunesVarArtists || m_pCommonData->m_bWmpVarArtists);
+    setupVarArtistsBtn();
 
     m_pAssgnBtnWrp = new AssgnBtnWrp (m_pToggleAssignedB);
 
@@ -427,6 +425,18 @@ string TagEditorDlgImpl::run()
     TRACER("TagEditorDlgImpl::run()");
     exec();
     return m_pTagWriter->getCurrentName();
+}
+
+
+void TagEditorDlgImpl::setupVarArtistsBtn()
+{
+    m_pVarArtistsB->setEnabled(m_pCommonData->m_bItunesVarArtists || m_pCommonData->m_bWmpVarArtists);
+    m_pVarArtistsB->setToolTip(m_pVarArtistsB->isEnabled() ?
+            "Toggle \"Various Artists\"" :
+
+            "To enable \"Various Artists\" you need to open the\n"
+            "configuration dialog, go to the \"Others\" tab and\n"
+            "check the corresponding checkbox(es)");
 }
 
 
@@ -721,9 +731,12 @@ void TagEditorDlgImpl::onAlbumChanged(/*bool bContentOnly*/)
     m_pCrtDirTagEdtE->setText(qs);
 }
 
+
 void TagEditorDlgImpl::on_m_pConfigB_clicked()
 {
     if (!closeEditor()) { return; }
+
+    SaveOpt eSaveOpt (save(IMPLICIT)); if (SAVED != eSaveOpt && DISCARDED != eSaveOpt) { return; }
 
     ConfigDlgImpl dlg (m_transfConfig, m_pCommonData, this, ConfigDlgImpl::SOME_TABS);
 
@@ -734,6 +747,9 @@ void TagEditorDlgImpl::on_m_pConfigB_clicked()
         resizeIcons();
         resizeTagEditor();
     }
+
+    m_pTagWriter->reloadAll("", TagWriter::CLEAR_DATA, TagWriter::CLEAR_ASSGN); // !!! regardless of the conf beng cancelled, so it's consistent with 
+    setupVarArtistsBtn();
 }
 
 

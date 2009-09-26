@@ -340,6 +340,7 @@ class TagWriter : public QObject
     bool m_bAutoVarArtists; // true at first, until the "toggle" button is clicked
     void adjustVarArtists();
 
+    bool m_bDelayedAdjVarArtists;
 public:
     TagWriter(CommonData* pCommonData, QWidget* pParentWnd, const bool& bIsFastSaving);
     ~TagWriter();
@@ -420,12 +421,14 @@ public:
     int getUnassignedImagesCount() const { return int(m_snUnassignedImages.size()); }
 
     void toggleVarArtists();
+    void delayedAdjVarArtists();
 
 private slots:
     void onAssignImage(int);
     void onEraseFile(int);
     void onEraseFileDelayed();
     void onDelayedTrackSeqWarn();
+    void onDelayedAdjVarArtists();
 
 signals:
     void albumChanged(/*bool bContentOnly*/); // the selection may be kept iff bContentOnly is true
@@ -437,6 +440,4 @@ signals:
 
 
 #endif // #ifndef TagWriterH
-
-
 

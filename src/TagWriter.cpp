@@ -70,6 +70,7 @@ namespace
     }
 }
 
+
 ostream& operator<<(ostream& out, const TagWriter::OrigValue& val)
 {
     out << "song: " << val.m_nSong << ", field: " << val.m_nField << ", status: " << (int)val.m_eStatus << ", value: " << val.m_strVal;
@@ -374,12 +375,13 @@ extern const int PIC_FMT_HDR (2);
 void Mp3HandlerTagData::adjustVarArtists(bool b) // if VARIOUS_ARTISTS is not ASSIGNED, sets m_strValue and m_eStatus
 {
     ValueInfo& inf (m_vValueInfo[TagReader::VARIOUS_ARTISTS]);
+    string strAll (TagReader::getVarArtistsValue());
 
     if (ASSIGNED != inf.m_eStatus)
     {
         inf.m_strValue.clear();
 
-        string s (b ? TagReader::getVarArtistsValue() : "");
+        string s (b ? strAll : "");
         inf.m_strValue = s;
         inf.m_eStatus = s.empty() ? EMPTY : NON_ID3V2_VAL;
 
@@ -389,7 +391,17 @@ void Mp3HandlerTagData::adjustVarArtists(bool b) // if VARIOUS_ARTISTS is not AS
 
             if (isId3V2(p))
             {
-                inf.m_eStatus = p->getValue(TagReader::VARIOUS_ARTISTS) == s ? ID3V2_VAL : NON_ID3V2_VAL;
+                string strId3 (p->getValue(TagReader::VARIOUS_ARTISTS));
+                string s1; // those letters from strId3 that are also in strAll; needed because strId3 contains all known letters, regardless of their being enabled
+                for (int i = 0; i < cSize(strId3); ++i)
+                {
+                    if (string::npos != strAll.find(strId3[i]))
+                    {
+                        s1 += strId3[i];
+                    }
+                }
+
+                inf.m_eStatus = s1 == s ? ID3V2_VAL : NON_ID3V2_VAL;
 
                 break;
             }
@@ -529,7 +541,11 @@ void Mp3HandlerTagData::setData(int nField, const std::string& s)
 {
     if (s == m_vValueInfo[nField].m_strValue) { return; }
 
-    //ttt0 perhaps call TagWriter::adjustVarArtists() and "TagWriter::emit albumChanged();" if changing the artist field
+    if (TagReader::ARTIST == nField)
+    {
+        m_pTagWriter->delayedAdjVarArtists();
+    }
+
     if (TagReader::TIME == nField)
     {
         try
@@ -770,7 +786,7 @@ const TagReader* Mp3HandlerTagData::getMatchingReader(int i) const
 
 
 
-TagWriter::TagWriter(CommonData* pCommonData, QWidget* pParentWnd, const bool& bIsFastSaving) : m_pCommonData(pCommonData), m_pParentWnd(pParentWnd), m_nCurrentFile(-1), m_bShowedNonSeqWarn(true), m_bIsFastSaving(bIsFastSaving), m_nFileToErase(-1)
+TagWriter::TagWriter(CommonData* pCommonData, QWidget* pParentWnd, const bool& bIsFastSaving) : m_pCommonData(pCommonData), m_pParentWnd(pParentWnd), m_nCurrentFile(-1), m_bShowedNonSeqWarn(true), m_bIsFastSaving(bIsFastSaving), m_nFileToErase(-1), m_bVariousArtists(false), m_bAutoVarArtists(false), m_bDelayedAdjVarArtists(false)
 {
 }
 
@@ -1215,15 +1231,45 @@ void TagWriter::toggleVarArtists()
     m_bVariousArtists = !m_bVariousArtists;
     string s (m_bVariousArtists ? TagReader::getVarArtistsValue() : "");
 
-    for (int i = 0; i < cSize(m_vpMp3HandlerTagData); ++i)
+    set<int> snSelSongs;
+    for (set<OrigValue>::iterator it = m_sSelOrigVal.begin(), end = m_sSelOrigVal.end(); it != end; ++it)
     {
-        setData(i, TagReader::VARIOUS_ARTISTS, s);
+        const OrigValue& o (*it);
+        if (o.m_nField == (int)TagReader::VARIOUS_ARTISTS)
+        {
+            snSelSongs.insert(o.m_nSong);
+        }
     }
 
-    //reloadAll("", DONT_CLEAR_DATA, DONT_CLEAR_ASSGN);
+    for (int i = 0; i < cSize(m_vpMp3HandlerTagData); ++i)
+    {
+        Mp3HandlerTagData* p (m_vpMp3HandlerTagData[i]);
+        if (Mp3HandlerTagData::ASSIGNED != p->getStatus(TagReader::VARIOUS_ARTISTS) || m_nCurrentFile == i || snSelSongs.count(i) > 0)
+        {
+            p->setData(TagReader::VARIOUS_ARTISTS, s);
+        }
+    }
+
     emit albumChanged();
     emit varArtistsUpdated(m_bVariousArtists);
 }
+
+
+void TagWriter::delayedAdjVarArtists()
+{
+    if (m_bDelayedAdjVarArtists) { return; }
+
+    m_bDelayedAdjVarArtists = true;
+    QTimer::singleShot(1, this, SLOT(onDelayedAdjVarArtists()));
+}
+
+void TagWriter::onDelayedAdjVarArtists()
+{
+    m_bDelayedAdjVarArtists = false;
+    adjustVarArtists();
+    emit albumChanged();
+}
+
 
 
 void TagWriter::setCrt(const std::string& strCrt)
