@@ -38,6 +38,7 @@ class QScrollArea;
 class TagWriter;
 class TagEditorDlgImpl;
 class TransfConfig;
+class QToolButton;
 
 namespace TagEditor {
 
@@ -195,6 +196,9 @@ class TagEditorDlgImpl : public QDialog, private Ui::TagEditorDlg
     bool m_bWaitingAlbumResize, m_bWaitingFileResize; // to avoid ColumnResizer being called lots of times
     void setupVarArtistsBtn();
 
+    void createPatternButtons();
+    std::vector<QToolButton*> m_vpPattButtons;
+
 public:
     TagEditorDlgImpl(QWidget* pParent, CommonData* pCommonData, TransfConfig& transfConfig, bool& bDataSaved); // transfConfig is needed both to be able to instantiate the config dialog and for saving ID3V2
     ~TagEditorDlgImpl();
@@ -252,6 +256,8 @@ protected slots:
 
     void onHelp();
     void onVarArtistsUpdated(bool bVarArtists);
+
+    void onPatternClicked();
 };
 
 #endif

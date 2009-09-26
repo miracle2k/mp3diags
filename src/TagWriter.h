@@ -293,6 +293,7 @@ class TagWriter : public QObject
     void sortTagReaders(); // sorts m_vTagReaderInfo so that it matches m_vSortedKnownTagReaders
 
     std::vector<SongInfoParser::TrackTextParser*> m_vpTrackTextParsers; // one TrackTextParser for each pattern
+    std::set<int> m_snActivePatterns;
     std::vector<AlbumInfo> m_vAlbumInfo; // one AlbumInfo for every album data downloaded from structured web sites
 
     // "original value" of a selected field; not necessarily related to the fields in a file's tags, but merely holds whatever happened to be in a given field when it gets selected; the "original value" from Mp3HandlerTagData's point of view is not stored anywhere, but it is recovered as needed, because toggleAssigned() calls "reloadAll("", DONT_CLEAR)"
@@ -382,6 +383,8 @@ public:
     // doesn't throw, but invalid patterns are discarded; it returns false if at least one pattern was discarded;
     bool updatePatterns(const std::vector<std::pair<std::string, int> >&);
     std::vector<std::string> getPatterns() const;
+    void setActivePatterns(const std::set<int>&);
+    std::set<int> getActivePatterns() const { return m_snActivePatterns; }
 
     // model-based nField; UI components should pass the UI index through TagReader::FEATURE_ON_POS[] before calling this
     Mp3HandlerTagData::Status getStatus(int nSong, int nField) const { return m_vpMp3HandlerTagData[nSong]->getStatus(nField); }

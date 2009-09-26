@@ -1064,8 +1064,12 @@ void TagWriter::reloadAll(string strCrt, bool bClearData, bool bClearAssgn)
 
     for (int i = 0, n = cSize(m_vpTrackTextParsers); i < n; ++i)
     {
-        sReaders.insert(make_pair(string(TrackTextReader::getClassDisplayName()), i));
+        if (m_snActivePatterns.count(i) > 0)
+        {
+            sReaders.insert(make_pair(string(TrackTextReader::getClassDisplayName()), i));
+        }
     }
+
     mReaderCount[TrackTextReader::getClassDisplayName()] = cSize(m_vpTrackTextParsers);
 
     for (int i = 0, n = cSize(m_vAlbumInfo); i < n; ++i)
@@ -1313,6 +1317,16 @@ void TagWriter::setCrt(int nCrt)
 // doesn't throw, but invalid patterns are discarded; it returns false if at least one pattern was discarded;
 bool TagWriter::updatePatterns(const std::vector<std::pair<std::string, int> >& v)
 {
+    set<string> sstrActive;
+    {
+        vector<string> v (getPatterns());
+        set<int> s (getActivePatterns());
+        for (set<int>::const_iterator it = s.begin(); it != s.end(); ++it)
+        {
+            sstrActive.insert(v[*it]);
+        }
+    }
+
     clearPtrContainer(m_vpTrackTextParsers);
     bool bRes (true);
 
@@ -1365,6 +1379,18 @@ bool TagWriter::updatePatterns(const std::vector<std::pair<std::string, int> >& 
         vNew.swap(m_vSortedKnownTagReaders);
     }
 
+    {
+        vector<string> v (getPatterns());
+        m_snActivePatterns.clear();
+        for (int i = 0; i < cSize(v); ++i)
+        {
+            if (sstrActive.count(v[i]) > 0)
+            {
+                m_snActivePatterns.insert(i); //ttt2 not quite right: for 2 identical patterns of which one was selected before, both will be selected now;
+            }
+        }
+    }
+
     reloadAll("", DONT_CLEAR_DATA, DONT_CLEAR_ASSGN);
 
     return bRes;
@@ -1381,6 +1407,12 @@ vector<string> TagWriter::getPatterns() const
     return v;
 }
 
+
+void TagWriter::setActivePatterns(const std::set<int>& s)
+{
+    m_snActivePatterns = s;
+    reloadAll("", DONT_CLEAR_DATA, DONT_CLEAR_ASSGN);
+}
 
 
 int TagWriter::getIndex(const ImageInfo& img) const

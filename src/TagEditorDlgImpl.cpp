@@ -367,7 +367,7 @@ TagEditorDlgImpl::TagEditorDlgImpl(QWidget* pParent, CommonData* pCommonData, Tr
 
 
     {
-        delete m_pRemovableL; // m_pRemovableL's only job is to make m_pImagesW visible in QtDesigner
+        delete m_pRemovable1L; // m_pRemovableL's only job is to make m_pImagesW visible in QtDesigner
 
         QWidget* pWidget (new QWidget (this));
         pWidget->setSizePolicy(QSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding));
@@ -375,7 +375,7 @@ TagEditorDlgImpl::TagEditorDlgImpl(QWidget* pParent, CommonData* pCommonData, Tr
         QHBoxLayout* pScrlLayout (new QHBoxLayout (pWidget));
         pWidget->setLayout(pScrlLayout);
 
-        pWidget->layout()->setContentsMargins(0, 0, 0, 4 + 1); // "+1" added to look better, but don't know how to calculated
+        pWidget->layout()->setContentsMargins(0, 0, 0, 4 + 1); // "+1" added to look better, but don't know how to calculate
 
         m_pImgScrollArea = new QScrollArea (m_pImagesW);
 
@@ -383,6 +383,11 @@ TagEditorDlgImpl::TagEditorDlgImpl(QWidget* pParent, CommonData* pCommonData, Tr
 
         m_pImgScrollArea->setWidget(pWidget);
         m_pImgScrollArea->setFrameShape(QFrame::NoFrame);
+    }
+
+    {
+        delete m_pRemovable2L; // m_pRemovable2L's only job is to make m_pPatternsW visible in QtDesigner
+        createPatternButtons();
     }
 
     //layout()->update();
@@ -406,6 +411,59 @@ TagEditorDlgImpl::TagEditorDlgImpl(QWidget* pParent, CommonData* pCommonData, Tr
     QTimer::singleShot(1, this, SLOT(onShow())); // just calls resizeTagEditor(); !!! needed to properly resize the table columns; album and file tables have very small widths until they are actually shown, so calling resizeTagEditor() earlier is pointless; calling update() on various layouts seems pointless as well; (see also DoubleList::resizeEvent() )
 }
 
+
+void TagEditorDlgImpl::createPatternButtons()
+{
+    QBoxLayout* pLayout (dynamic_cast<QBoxLayout*>(m_pPatternsW->layout()));
+    CB_ASSERT (0 != pLayout);
+
+    QObjectList l (m_pPatternsW->children());
+
+    for (int i = 0, n = l.size(); i < n; ++i)
+    {
+        if (l[i] != pLayout)
+        {
+            delete l[i];
+        }
+    }
+
+    const set<int>& snActivePatterns (m_pTagWriter->getActivePatterns());
+
+    m_vpPattButtons.clear();
+
+    const vector<string>& vstrPatterns (m_pTagWriter->getPatterns());
+    int n (cSize(vstrPatterns));
+    for (int i = 0; i < n; ++i)
+    {
+        QToolButton* p (new QToolButton(m_pPatternsW));
+        p->setText(toNativeSeparators(convStr(vstrPatterns[i])));
+        p->setCheckable(true);
+        m_vpPattButtons.push_back(p);
+        if (snActivePatterns.count(i) > 0)
+        {
+            p->setChecked(true);
+        }
+        connect(p, SIGNAL(clicked()), this, SLOT(onPatternClicked()));
+        pLayout->insertWidget(i, p);
+    }
+
+    pLayout->insertStretch(n);
+}
+
+
+void TagEditorDlgImpl::onPatternClicked()
+{
+    set<int> s;
+    for (int i = 0; i < cSize(m_vpPattButtons); ++i)
+    {
+        if (m_vpPattButtons[i]->isChecked())
+        {
+            s.insert(i);
+        }
+    }
+
+    m_pTagWriter->setActivePatterns(s);
+}
 
 
 TagEditorDlgImpl::~TagEditorDlgImpl()
@@ -659,6 +717,7 @@ void TagEditorDlgImpl::on_m_pEditPatternsB_clicked()
     if (dlg.run(v))
     {
         m_pTagWriter->updatePatterns(v);
+        createPatternButtons();
     }
 }
 
@@ -856,8 +915,18 @@ void TagEditorDlgImpl::loadTagWriterInf()
         }*/
 
         bErr = !m_pTagWriter->updatePatterns(v) || bErr;
+
+        bool bErr2;
+        vector<string> vstrActivePatterns (m_pCommonData->m_settings.loadVector("tagWriter/activePatterns", bErr2));
+        set<int> snActivePatterns;
+        for (int i = 0; i < cSize(vstrActivePatterns); ++i)
+        {
+            snActivePatterns.insert(atoi(vstrActivePatterns[i].c_str()));
+        }
+        m_pTagWriter->setActivePatterns(snActivePatterns);
+
 //if (bErr) { qDebug("error when reading patterns"); } //ttt remove
-        if (bErr)
+        if (bErr || bErr2)
         {
             QMessageBox::warning(this, "Error setting up patterns", "An invalid value was found in the configuration file. You'll have to set up the patterns manually.");
         }
@@ -892,6 +961,16 @@ void TagEditorDlgImpl::saveTagWriterInf()
             v.push_back("*");
         }*/
         m_pCommonData->m_settings.saveVector("tagWriter/patterns", v);
+
+        vector<string> u;
+        char a [15];
+        const set<int>& snActivePatterns (m_pTagWriter->getActivePatterns());
+        for (set<int>::const_iterator it = snActivePatterns.begin(); it != snActivePatterns.end(); ++it)
+        {
+            sprintf(a, "%d", *it);
+            u.push_back(a);
+        }
+        m_pCommonData->m_settings.saveVector("tagWriter/activePatterns", u);
     }
 }
 
