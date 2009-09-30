@@ -59,7 +59,7 @@ ExportDlgImpl::ExportDlgImpl(QWidget* pParent) : QDialog(pParent, getDialogWndFl
     }
     else
     {
-        defaultResize(*this);
+        //defaultResize(*this);
     }
 
     m_pSortByShortNamesCkB->setChecked(bSortByShortNames);

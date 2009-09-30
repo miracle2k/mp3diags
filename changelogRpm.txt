@@ -3,6 +3,7 @@
 - all pictures are shown and can be viewed in full size in "Tag details"
 - all pictures from a file are shown in the tag editor
 - patterns in the tag editor may now be disabled
+- export as M3U or XML
 - better handling of text frames containing null characters
 - auto-size for the tag editor's "current file" area
 - better column widths in the tag editor

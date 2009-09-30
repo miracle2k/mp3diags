@@ -1718,7 +1718,7 @@ void CommonData::updateWidgets(const std::string& strCrtName /*= ""*/, const std
         CommonData::ViewMode eViewMode (getViewMode());
         setViewMode(CommonData::ALL);
         int nPos (getPosInView(strCrtName)); // doesn't matter if it's empty
-        const Mp3Handler* pMp3Handler (m_vpViewHandlers[nPos]);
+        const Mp3Handler* pMp3Handler (nPos >= 0 ? m_vpViewHandlers.at(nPos) : 0);
         setViewMode(eViewMode, pMp3Handler);
     }
 

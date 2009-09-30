@@ -55,7 +55,7 @@ DebugDlgImpl::DebugDlgImpl(QWidget* pParent, CommonData* pCommonData) : QDialog(
 
     int nWidth, nHeight;
     m_pCommonData->m_settings.loadDebugSettings(nWidth, nHeight);
-    if (nWidth > 400 && nHeight > 400)
+    if (nWidth > 400 && nHeight > 200)
     {
         resize(nWidth, nHeight);
     }
