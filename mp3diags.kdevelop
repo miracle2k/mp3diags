@@ -168,6 +168,8 @@
       <subclass uifile="src/NewSession.ui" sourcefile="NewSessionDlgImpl.h" />
       <subclass uifile="src/Scan.ui" sourcefile="ScanDlgImpl.cpp" />
       <subclass uifile="src/Scan.ui" sourcefile="ScanDlgImpl.h" />
+      <subclass uifile="src/Export.ui" sourcefile="ExportDlgImpl.cpp" />
+      <subclass uifile="src/Export.ui" sourcefile="ExportDlgImpl.h" />
     </subclassing>
   </kdevtrollproject>
   <workspace>
