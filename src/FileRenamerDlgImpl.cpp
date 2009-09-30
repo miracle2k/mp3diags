@@ -321,30 +321,28 @@ void FileRenamerDlgImpl::on_m_pEditPatternsB_clicked()
 void FileRenamerDlgImpl::updateButtons()
 {
     m_nBtnId = 0;
-    //createButtons(m_pSaButtonsW);
-    //createButtons(m_pVaButtonsW);
-    createButtons(m_pButtonsW);
+    createButtons();
 }
 
 
-void FileRenamerDlgImpl::createButtons(QWidget* pWidget)
+void FileRenamerDlgImpl::createButtons()
 {
-    QBoxLayout* pLayout (dynamic_cast<QBoxLayout*>(pWidget->layout()));
+    QBoxLayout* pLayout (dynamic_cast<QBoxLayout*>(m_pButtonsW->layout()));
     CB_ASSERT (0 != pLayout);
     /*int nPos (pLayout->indexOf(pOldBtn));
     pLayout->insertWidget(nPos, this);*/
 
-    QObjectList l (pWidget->children());
+    QObjectList l (m_pButtonsW->children());
     //qDebug("cnt: %d", l.size());
 
-    for (int i = 1, n = l.size(); i < n; ++i)
+    for (int i = 1, n = l.size(); i < n; ++i) // l[0] is m_pButtonsW's layout (note that m_pAlbumTypeL is in m_pBtnPanelW)
     {
         delete l[i];
     }
 
     for (int i = 0, n = cSize(m_vstrPatterns); i < n; ++i)
     {
-        QToolButton* p (new QToolButton(pWidget));
+        QToolButton* p (new QToolButton(m_pButtonsW));
         p->setText(toNativeSeparators(convStr(m_vstrPatterns[i])));
         p->setCheckable(true);
         m_pButtonGroup->addButton(p, m_nBtnId++);

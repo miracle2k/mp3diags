@@ -23,6 +23,8 @@
 #ifndef DataStreamH
 #define DataStreamH
 
+#include  <vector>
+
 #include  "SerSupport.h"
 
 #include  "Notes.h"
@@ -441,6 +443,10 @@ struct TagReader
     virtual int getVariousArtists(bool* /*pbFrameExists*/ = 0) const { throw NotSupportedOp(); } // combination of VariousArtists flags; since several frames might be involved, *pbFrameExists is set to "true" if at least a frame exists
 
     virtual std::string getOtherInfo() const { return ""; } // non-editable tags
+
+    virtual std::vector<ImageInfo> getImages() const { return std::vector<ImageInfo>(); } // all images, even those with errors
+
+    virtual std::string getImageData(bool* pbFrameExists = 0) const { if (0 != pbFrameExists) { *pbFrameExists = false; } return ""; }
 
     virtual SuportLevel getSupport(Feature) const { return NOT_SUPPORTED; }
 

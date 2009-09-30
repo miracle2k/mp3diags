@@ -28,7 +28,6 @@ SOURCES +=  \
  PaletteDlgImpl.cpp \
  RenamerPatternsDlgImpl.cpp \
  ScanDlgImpl.cpp \
- SerSupport.cpp \
  SessionEditorDlgImpl.cpp \
  SessionsDlgImpl.cpp \
  SongInfoParser.cpp \
@@ -55,7 +54,9 @@ SOURCES +=  \
  DebugDlgImpl.cpp \
  DirFilterDlgImpl.cpp \
  Version.cpp \
-  fstream_unicode.cpp
+ SerSupport.cpp \
+ fstream_unicode.cpp \
+  ExportDlgImpl.cpp
 TEMPLATE = app
 CONFIG += warn_on \
 	  thread \
@@ -66,7 +67,6 @@ DESTDIR = ../bin
 
 QT += xml \
 network
-LIBS += -lboost_serialization
 
 RESOURCES += Mp3Diags.qrc
 
@@ -125,7 +125,8 @@ ThreadRunnerDlgImpl.h \
 Transformation.h \
 UniqueNotesModel.h \
 Widgets.h \
- fstream_unicode.h
+ fstream_unicode.h \
+ ExportDlgImpl.h
 FORMS += About.ui \
 AlbumInfoDownloader.ui \
 Config.ui \
@@ -143,13 +144,13 @@ Scan.ui \
 SessionEditor.ui \
 Sessions.ui \
 TagEditor.ui \
-ThreadRunner.ui
+ThreadRunner.ui \
+ Export.ui
 
 
+LIBS += -lboost_serialization
 
-
-
-
+#CONFIG += console
 
 
 

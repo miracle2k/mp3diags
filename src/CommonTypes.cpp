@@ -23,6 +23,10 @@
 #include  <cmath>
 
 #include  <QBuffer>
+#include  <QDialog>
+#include  <QLabel>
+#include  <QVBoxLayout>
+#include  <QPainter>
 
 #include  "CommonTypes.h"
 
@@ -41,13 +45,28 @@ ImageInfo::ImageInfo(int nImageType, Status eStatus, Compr eCompr, QByteArray co
 // if nMaxWidth>0 and nMaxHeight<=0, nMaxHeight has the same value as nMaxWidth;
 QPixmap ImageInfo::getPixmap(int nMaxWidth /*= -1*/, int nMaxHeight /*= -1*/) const
 {
+    CB_ASSERT (NO_PICTURE_FOUND != m_eStatus);
+
     if (nMaxHeight <= 0) { nMaxHeight = nMaxWidth; }
     if (nMaxWidth <= 0) { nMaxWidth = nMaxHeight; }
 
     QPixmap pic;
-    if (!pic.loadFromData(m_compressedImg)) //ttt2 not sure what happens for huge images;
+
+    if (USES_LINK == m_eStatus || ERROR_LOADING == m_eStatus || !pic.loadFromData(m_compressedImg)) //ttt2 not sure how loadFromData() handles huge images;
     {
-        return QPixmap();
+        if (nMaxWidth < 0) { nMaxWidth = m_nWidth; }
+        if (nMaxHeight < 0) { nMaxHeight = m_nHeight; }
+
+        if (nMaxWidth <= 0) { nMaxWidth = 200; }
+        if (nMaxHeight <= 0) { nMaxHeight = 200; }
+
+        QPixmap errImg (nMaxWidth, nMaxHeight);
+        QPainter pntr (&errImg);
+        pntr.fillRect(0, 0, nMaxWidth, nMaxHeight, QColor(255, 128, 128));
+        pntr.drawRect(0, 0, nMaxWidth - 1, nMaxHeight - 1);
+        //pntr.drawText(5, nMaxHeight/2 + 10, USES_LINK == m_eStatus ? "Link" : (ERROR_LOADING == m_eStatus ?  "Error" : "Uncompr error"));
+        pntr.drawText(QRectF(0, 0, nMaxWidth, nMaxHeight), Qt::AlignCenter | Qt::TextWordWrap, USES_LINK == m_eStatus ? "Link" : (ERROR_LOADING == m_eStatus ?  "Error" : "Uncompr error"));
+        return errImg;
     }
 
     if (nMaxWidth <= 0 || (pic.width() <= nMaxWidth && pic.height() <= nMaxHeight))
@@ -77,9 +96,10 @@ ImageInfo::ImageInfo(int nImageType, Status eStatus, const QPixmap& pic) : m_eCo
 }
 
 
-const char* ImageInfo::getImageType() const
+
+/*static*/ const char* ImageInfo::getImageType(int nImageType)
 {
-    switch (m_nImageType)
+    switch (nImageType)
     {
     case 0x00: return "other";
     case 0x01: return "32x32 icon";
@@ -105,6 +125,24 @@ const char* ImageInfo::getImageType() const
     default:
         return "unknown";
     }
+}
+
+
+const char* ImageInfo::getImageType() const
+{
+    return getImageType(m_nImageType);
+}
+
+
+/*static*/ const char* ImageInfo::getComprStr(Compr eCompr)
+{
+    switch (eCompr)
+    {
+    case INVALID: return "invalid";
+    case JPG: return "JPEG";
+    case PNG: return "PNG";
+    }
+    CB_ASSERT (false);
 }
 
 
@@ -136,6 +174,35 @@ const char* ImageInfo::getImageType() const
 
         if (i <= 150) { break; }
     }
+}
+
+
+
+
+QString ImageInfo::getTextDescr(const QString& qstrSep /*= "\n"*/) const
+{
+    QString s;
+    s.sprintf("%dx%d", getWidth(), getHeight());
+    s += qstrSep + getImageType();
+    return s;
+}
+
+
+void ImageInfo::showFull(QWidget* pParent) const
+{
+    QDialog dlg (pParent, getNoResizeWndFlags());
+
+    QVBoxLayout* pLayout (new QVBoxLayout(&dlg));
+    //dlg.setLayout(pGridLayout);
+    QLabel* p (new QLabel(&dlg));
+    p->setPixmap(getPixmap()); //ttt1 see if it should limit size (IIRC QLabel scaled down once a big image)
+    pLayout->addWidget(p, 0, Qt::AlignHCenter);
+
+    p = new QLabel(getTextDescr(), &dlg);
+    p->setAlignment(Qt::AlignHCenter);
+    pLayout->addWidget(p, 0, Qt::AlignHCenter);
+
+    dlg.exec();
 }
 
 

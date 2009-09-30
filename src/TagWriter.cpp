@@ -19,6 +19,12 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+
+#ifdef MSVC_QMAKE
+    #pragma warning (disable : 4100)
+#endif
+
+
 #include  <algorithm>
 
 #include  <QFile>
@@ -658,7 +664,7 @@ std::string Mp3HandlerTagData::getData(int nField, int k) const
             char a [15];
             double d (p->getRating(&bFrameExists));
             if (!bFrameExists) { return "\3"; }
-            //ttt0 perhaps use this: return p->getValue(TagReader::RATING); see why there's no test for "<0" in TagReader::getValue()
+            //ttt2 perhaps use this: return p->getValue(TagReader::RATING); see why there's no test for "<0" in TagReader::getValue()
             sprintf(a, "%0.1f", d);
             if ('-' == a[0]) { a[0] = 0; }
             return a;
@@ -1049,8 +1055,11 @@ void TagWriter::reloadAll(string strCrt, bool bClearData, bool bClearAssgn)
                 { // add images
                     try
                     {
-                        ImageInfo img (pRd->getImage());
-                        m_imageColl.addImage(img); // doesn't matter if it's null or already exists; m_imageColl handles it correctly
+                        const vector<ImageInfo> vImg (pRd->getImages());
+                        for (int i = 0; i < cSize(vImg); ++i)
+                        {
+                            m_imageColl.addImage(vImg[i]); // doesn't matter if it's null or already exists; m_imageColl handles it correctly
+                        }
                     }
                     catch (const NotSupportedOp&)
                     {

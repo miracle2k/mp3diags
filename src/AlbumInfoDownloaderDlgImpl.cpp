@@ -513,6 +513,8 @@ void AlbumInfoDownloaderDlgImpl::onRequestFinished(int /*nId*/, bool bError)
         QString qstrInfo;
         QPixmap img;
         QByteArray comprImg (b);
+        ImageInfo::Compr eOrigCompr (m_eLoadingImageCompr);
+
         if (img.loadFromData(b)) //ttt2 not sure what happens for huge images;
         {
             qstrInfo = QString("Original: %1kB, %2x%3").arg(nAv/1024).arg(img.width()).arg(img.height());
@@ -544,7 +546,7 @@ void AlbumInfoDownloaderDlgImpl::onRequestFinished(int /*nId*/, bool bError)
             QPainter pntr (&errImg);
             pntr.fillRect(0, 0, SIZE, SIZE, QColor(255, 128, 128));
             pntr.drawRect(0, 0, SIZE - 1, SIZE - 1);
-            pntr.drawText(5, SIZE/2 + 10, "Error");
+            pntr.drawText(QRectF(0, 0, SIZE, SIZE), Qt::AlignCenter, "Error");
             qstrInfo = "Error loading image\n";
             comprImg.clear();
             QBuffer bfr (&comprImg);
@@ -553,7 +555,7 @@ void AlbumInfoDownloaderDlgImpl::onRequestFinished(int /*nId*/, bool bError)
             onImageLoaded(comprImg, SIZE, SIZE, qstrInfo);
         }
 
-        if (m_bSaveResults) { saveDownloadedData(b.data(), b.size(), ImageInfo::JPG == m_eLoadingImageCompr ? "jpg" : "png"); }
+        if (m_bSaveResults) { saveDownloadedData(b.data(), b.size(), (ImageInfo::JPG == eOrigCompr ? "jpg" : (ImageInfo::PNG == eOrigCompr ? "png" : "unkn"))); }
 
         return;
     }
