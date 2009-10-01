@@ -890,7 +890,7 @@ MainFormDlgImpl::MainFormDlgImpl(const string& strSession, bool bUniqueSession) 
         FilesGDelegate* pDel (new FilesGDelegate(m_pCommonData, m_pFilesG));
         m_pFilesG->setItemDelegate(pDel);
 
-        m_pFilesG->setHorizontalHeader(new FileHeaderView(m_pCommonData, Qt::Horizontal, m_pFilesG));
+        m_pFilesG->setHorizontalHeader(new FileHeaderView(m_pCommonData, m_pFilesG));
 
         m_pFilesG->horizontalHeader()->setMinimumSectionSize(CELL_WIDTH);
         m_pFilesG->verticalHeader()->setMinimumSectionSize(CELL_HEIGHT);
@@ -3209,8 +3209,8 @@ Development machine:
 //ttt1 a "reload" that only looks for new / removed files
 
 //ttt1 handle symbolic links to ancestors
-//ttt0 https://sourceforge.net/forum/message.php?msg_id=7613657 - export as txt/m3u: probably a new window, where several formats and their options can be chosen from
-//ttt0 https://sourceforge.net/forum/forum.php?thread_id=3391593&forum_id=947206 - txt/m3u export
+
+
 
 
 

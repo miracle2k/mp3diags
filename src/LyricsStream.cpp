@@ -314,5 +314,5 @@ LyricsStream::LyricsStream(int nIndex, NoteColl& notes, std::istream& in, const 
 
 #endif
 
-//ttt0 perhaps force release for all ser classes (so ver 0 doesn't attempt to load from ver 1)
+
 //ttt2 perhaps remove \r

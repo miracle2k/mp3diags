@@ -95,7 +95,7 @@ void NormalizeDlgImpl::normalize(const QString& qstrProg1, const QStringList& lF
 
     //
     int k (1);
-    for (; k < qstrProg1.size() && (qstrProg1[k - 1] != ' '  || (qstrProg1[k] != '-' && qstrProg1[k] != '/')); ++k) {}
+    for (; k < qstrProg1.size() && (qstrProg1[k - 1] != ' '  || (qstrProg1[k] != '-' && qstrProg1[k] != '/')); ++k) {} //ttt2 perhaps better: look for spaces from the end and stop when a dir exists from the beginning of the name till the current space
     QString qstrProg (qstrProg1.left(k).trimmed());
     QString qstrArg (qstrProg1.right(qstrProg1.size() - k).trimmed());
     //qDebug("prg <%s>  arg <%s>", qstrProg.toUtf8().data(), qstrArg.toUtf8().data());

@@ -745,6 +745,7 @@ void initDefaultCustomTransf(int k, vector<vector<int> >& vv, CommonData* pCommo
         v.push_back(pCommonData->getTransfPos(InnerNonAudioRemover::getClassName()));
         v.push_back(pCommonData->getTransfPos(TruncatedMpegDataStreamRemover::getClassName()));
         v.push_back(pCommonData->getTransfPos(VbrRepairer::getClassName()));
+        v.push_back(pCommonData->getTransfPos(MismatchedXingRemover::getClassName())); // !!! takes care of broken Xing headers for CBR files (VbrRepairer only deals with VBR files)
         break;
 
     case 1:
@@ -770,6 +771,7 @@ void initDefaultCustomTransf(int k, vector<vector<int> >& vv, CommonData* pCommo
         v.push_back(pCommonData->getTransfPos(InnerNonAudioRemover::getClassName()));
         v.push_back(pCommonData->getTransfPos(TruncatedMpegDataStreamRemover::getClassName()));
         v.push_back(pCommonData->getTransfPos(VbrRepairer::getClassName()));
+        v.push_back(pCommonData->getTransfPos(MismatchedXingRemover::getClassName())); // !!! takes care of broken Xing headers for CBR files (VbrRepairer only deals with VBR files)
 
         v.push_back(pCommonData->getTransfPos(Id3V2Rescuer::getClassName()));
         v.push_back(pCommonData->getTransfPos(UnsupportedId3V2Remover::getClassName()));
@@ -992,7 +994,7 @@ void ConfigDlgImpl::on_m_pOkB_clicked()
 
         {
             m_pCommonData->m_locale = m_pLocaleCbB->currentText().toLatin1();
-            m_pCommonData->m_pCodec = (QTextCodec::codecForName(m_pCommonData->m_locale));
+            m_pCommonData->m_pCodec = QTextCodec::codecForName(m_pCommonData->m_locale);
             CB_ASSERT (0 != m_pCommonData->m_pCodec);
         }
 

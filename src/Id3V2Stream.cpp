@@ -1036,7 +1036,7 @@ void Id3V2StreamBase::preparePicture(NoteColl& notes) // initializes fields used
     {
     case Id3V2Frame::USES_LINK: m_eImageStatus = ImageInfo::USES_LINK; return;
     case Id3V2Frame::ERR: m_eImageStatus = ImageInfo::ERROR_LOADING; return;
-    case Id3V2Frame::NON_COVER: m_eImageStatus = ImageInfo::ERROR_LOADING; return; //ttt0 2009.09.29 review
+    case Id3V2Frame::NON_COVER: m_eImageStatus = ImageInfo::ERROR_LOADING; return;
     default: CB_ASSERT1 (false, m_pFileName->s); // all cases should have been covered
     }
 

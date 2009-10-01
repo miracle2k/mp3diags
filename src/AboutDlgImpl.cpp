@@ -176,4 +176,5 @@ dpkg-genchanges: warning: the current version (0.99.01.009) is smaller than the 
 //ttt0 doc: intended target: not those who want to push a button and have everything fixed
 //ttt0 doc: just because you tell it to do a transform doesn't mean it will change the file; only if it makes sense
 
-
+//ttt0 try WND/W7 with other styles
+//ttt0 README.TXT in root with build instructions

@@ -24,6 +24,7 @@
 #define LyricsStreamH
 
 #include  <iosfwd>
+#include  <stdexcept>
 
 #include  "DataStream.h"
 
@@ -89,6 +90,8 @@ private:
     template<class Archive>
     void serialize(Archive& ar, const unsigned int nVersion)
     {
+        if (nVersion > 1) { throw std::runtime_error("invalid version of serialized file"); }
+
         ar & boost::serialization::base_object<DataStream>(*this);
 
         ar & m_pos;

@@ -165,17 +165,12 @@ void visStudioMessageOutput(QtMsgType, const char* szMsg)
 #endif
 
 
+//ttt0 w7 - retest export
 
-//ttt0 dwnld from MB, erase local file; dwnld is lost
 
-//ttt0 2009.09.30 - crash after adding new session on 11.1b4; unable to reproduce
 
 int main(int argc, char *argv[])
 {
-/*      QCoreApplication app(argc, argv);
-      qDebug("Hello from Qt 4!");
-      return 0;*/
-
     //DEFINE_PROF_ROOT("mp3diags");
     //PROF("root");
 
@@ -186,9 +181,10 @@ int main(int argc, char *argv[])
     Q_INIT_RESOURCE(Mp3Diags); // base name of the ".qrc" file
     QMp3DiagsApplication app(argc, argv);
 
-
+//qInstallMsgHandler(messageOutput);
 #ifdef MSVC_QMAKE
     qInstallMsgHandler(visStudioMessageOutput);
+    // see http://lists.trolltech.com/qt-interest/2006-10/msg00829.html
     //OutputDebugStringA("\n\ntest output\n\n\n"); // !!! this only works if debugging (started with F5)
 #endif
 
