@@ -3,6 +3,9 @@
 qqq 30.09.2009 - 0.99.06.040
 
 - locale, checks in export dialog
+- XML export now works when names contain double quotes
+- made transformation options work correctly in MSVC
+- locale lists are now sorted
 
 ---------------------------------------------------------------------------
 

@@ -294,10 +294,15 @@ void SessionSettings::loadMiscConfigSettings(CommonData* p) const
         p->m_pCodec = (QTextCodec::codecForName(p->m_locale));
         if (0 == p->m_pCodec)
         {
-            QList<QByteArray> l (QTextCodec::availableCodecs());
+            /*QList<QByteArray> l (QTextCodec::availableCodecs());
             CB_ASSERT (l.size() > 0);
-            p->m_locale = l.front();
+            p->m_locale = l.front();*/
+            p->m_locale = "System";
             p->m_pCodec = (QTextCodec::codecForName(p->m_locale));
+        }
+        else
+        {
+            p->m_locale = p->m_pCodec->name(); // !!! needed because the names may be different ("ISO 8859-1" vs. "ISO-8859-1")
         }
         CB_ASSERT (0 != p->m_pCodec);
 

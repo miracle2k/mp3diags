@@ -1301,7 +1301,7 @@ void MainFormDlgImpl::onShow()
         /*s_strErrorMsg = "Rescanning files after crash.";
         showErrorDlg(this, false);*/
 
-        if (m_transfConfig.m_optionsWrp.m_opt.m_bKeepOrigTime)
+        if (m_transfConfig.m_options.m_bKeepOrigTime)
         {
             QMessageBox::warning(this, "Warning", "It seems that MP3 Diags is restarting after a crash. Your files will be rescanned.\n\n(Since this may take a long time for large collections, you may want to abort the full rescanning and apply a filter to include only the files that you changed since the last time the program closed correctly, then manually rescan only those files.)");
         }
@@ -2170,7 +2170,7 @@ void MainFormDlgImpl::transform(std::vector<Transformation*>& vpTransf, Subset e
     QString qstrConf;
     if (vpTransf.empty())
     {
-        if (0 == m_transfConfig.m_optionsWrp.m_opt.m_nUnprocOrigChange)
+        if (0 == m_transfConfig.m_options.m_nUnprocOrigChange)
         {
             QMessageBox::warning(this, "Warning", "The transformation list is empty.\n\nBased on the configuration, it is possible for changes to the files in the list to be performed, even in this case (the files may still be moved, renamed or erased). However, the current settings are to leave the original files unchanged, so currently there's no point in applying an empty transformation list.\n\nExiting ...");
             return;
@@ -2193,18 +2193,18 @@ void MainFormDlgImpl::transform(std::vector<Transformation*>& vpTransf, Subset e
 
     {
         const char* aOrig[] = { "don't change", "erase", "move", "move", "rename", "move if destination doesn't exist" };
-        if (m_transfConfig.m_optionsWrp.m_opt.m_nProcOrigChange != 1 || m_transfConfig.m_optionsWrp.m_opt.m_nUnprocOrigChange != 0)
+        if (m_transfConfig.m_options.m_nProcOrigChange != 1 || m_transfConfig.m_options.m_nUnprocOrigChange != 0)
         {
             qstrConf += "\n\nActions to be taken:";
 
             if (!vpTransf.empty())
             {
                 qstrConf += "\n- original file that has been transformed: ";
-                qstrConf += aOrig[m_transfConfig.m_optionsWrp.m_opt.m_nProcOrigChange];
+                qstrConf += aOrig[m_transfConfig.m_options.m_nProcOrigChange];
             }
 
             qstrConf += "\n- original file that has not been transformed: ";
-            qstrConf += aOrig[m_transfConfig.m_optionsWrp.m_opt.m_nUnprocOrigChange];
+            qstrConf += aOrig[m_transfConfig.m_options.m_nUnprocOrigChange];
         }
     }
 

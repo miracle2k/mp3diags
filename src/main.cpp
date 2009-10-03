@@ -156,6 +156,7 @@ public:
 #ifdef MSVC_QMAKE
 void visStudioMessageOutput(QtMsgType, const char* szMsg)
 {
+    OutputDebugStringA("    "); // to stand out from the other messages that get printed
     OutputDebugStringA(szMsg);
     OutputDebugStringA("\r\n");
     //cerr << szMsg << endl;
@@ -165,7 +166,6 @@ void visStudioMessageOutput(QtMsgType, const char* szMsg)
 #endif
 
 
-//ttt0 w7 - retest export
 
 
 
@@ -181,11 +181,10 @@ int main(int argc, char *argv[])
     Q_INIT_RESOURCE(Mp3Diags); // base name of the ".qrc" file
     QMp3DiagsApplication app(argc, argv);
 
-//qInstallMsgHandler(messageOutput);
 #ifdef MSVC_QMAKE
     qInstallMsgHandler(visStudioMessageOutput);
     // see http://lists.trolltech.com/qt-interest/2006-10/msg00829.html
-    //OutputDebugStringA("\n\ntest output\n\n\n"); // !!! this only works if debugging (started with F5)
+    //OutputDebugStringA("\n\ntest output\n\n\n"); // !!! this only works if actually debugging (started with F5);
 #endif
 
 

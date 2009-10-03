@@ -90,29 +90,34 @@ static string getDefaultComp() { return convStr(getTempDir() + "/mp3diags/comp")
 
 
 
-static TransfConfig::OptionsWrp getDefaultOptions()
+TransfConfig::Options::Options() // !!! sets everything to 0; for the "default" options there is a getDefaultOptions()
 {
-    TransfConfig::OptionsWrp x;
-    x.m_nVal = 0;
+    memset(this, 0, sizeof(*this));
+}
 
-    x.m_opt.m_bTempCreate = false;
 
-    x.m_opt.m_bCompCreate = false;
+static TransfConfig::Options getDefaultOptions()
+{
+    TransfConfig::Options x;
 
-    x.m_opt.m_nProcOrigChange = 5; // move w/o renaming, if doesn't exist; discard if it exists;
-    x.m_opt.m_bProcOrigUseLabel = false;
-    x.m_opt.m_bProcOrigAlwayUseCounter = false;
+    x.m_bTempCreate = false;
 
-    x.m_opt.m_nUnprocOrigChange = 0; // don't change
-    x.m_opt.m_bUnprocOrigUseLabel = false;
-    x.m_opt.m_bUnprocOrigAlwayUseCounter = false;
+    x.m_bCompCreate = false;
 
-    x.m_opt.m_nProcessedCreate = 2; // create and always rename, since it is created in the same dir as the source
-    x.m_opt.m_bProcessedUseLabel = true;
-    x.m_opt.m_bProcessedAlwayUseCounter = true;
-    x.m_opt.m_bProcessedUseSeparateDir = false;
+    x.m_nProcOrigChange = 5; // move w/o renaming, if doesn't exist; discard if it exists;
+    x.m_bProcOrigUseLabel = false;
+    x.m_bProcOrigAlwayUseCounter = false;
 
-    x.m_opt.m_bKeepOrigTime = false;
+    x.m_nUnprocOrigChange = 0; // don't change
+    x.m_bUnprocOrigUseLabel = false;
+    x.m_bUnprocOrigAlwayUseCounter = false;
+
+    x.m_nProcessedCreate = 2; // create and always rename, since it is created in the same dir as the source
+    x.m_bProcessedUseLabel = true;
+    x.m_bProcessedAlwayUseCounter = true;
+    x.m_bProcessedUseSeparateDir = false;
+
+    x.m_bKeepOrigTime = false;
 
     return x;
 }
@@ -136,7 +141,7 @@ TransfConfig::TransfConfig(
     m_strTempDir = "*" == strTempDir ? getDefaultTemp() : strTempDir;
     m_strCompDir = "*" == strCompDir ? getDefaultComp() : strCompDir;
 
-    m_optionsWrp.m_nVal = -1 == nOptions ? getDefaultOptions().m_nVal : nOptions;
+    m_options.setVal(-1 == nOptions ? getDefaultOptions().getVal() : nOptions);
 
     checkDirName(m_strSrcDir);
     checkDirName(m_strProcOrigDir);  // some of these dirs are allowed to be empty, just like src when comes from the config dialog, empty meaning "/", so that should work for all, probably
@@ -156,7 +161,7 @@ TransfConfig::TransfConfig()
     m_strTempDir = getDefaultTemp();
     m_strCompDir = getDefaultComp();
 
-    m_optionsWrp.m_nVal = getDefaultOptions().m_nVal;
+    m_options = getDefaultOptions();
 }
 
 
@@ -323,14 +328,14 @@ TransfConfig::OrigFile TransfConfig::getChangedOrigNameHlp(const string& strOrig
 TransfConfig::OrigFile TransfConfig::getProcOrigName(string strOrigSrcName, string& strNewName) const
 {
     removeSuffix(strOrigSrcName);
-    return getChangedOrigNameHlp(strOrigSrcName, m_strProcOrigDir, m_optionsWrp.m_opt.m_nProcOrigChange, m_optionsWrp.m_opt.m_bProcOrigUseLabel, m_optionsWrp.m_opt.m_bProcOrigAlwayUseCounter, strNewName);
+    return getChangedOrigNameHlp(strOrigSrcName, m_strProcOrigDir, m_options.m_nProcOrigChange, m_options.m_bProcOrigUseLabel, m_options.m_bProcOrigAlwayUseCounter, strNewName);
 }
 
 
 TransfConfig::OrigFile TransfConfig::getUnprocOrigName(string strOrigSrcName, string& strNewName) const
 {
     removeSuffix(strOrigSrcName);
-    return getChangedOrigNameHlp(strOrigSrcName, m_strUnprocOrigDir, m_optionsWrp.m_opt.m_nUnprocOrigChange, m_optionsWrp.m_opt.m_bUnprocOrigUseLabel, m_optionsWrp.m_opt.m_bUnprocOrigAlwayUseCounter, strNewName);
+    return getChangedOrigNameHlp(strOrigSrcName, m_strUnprocOrigDir, m_options.m_nUnprocOrigChange, m_options.m_bUnprocOrigUseLabel, m_options.m_bUnprocOrigAlwayUseCounter, strNewName);
 }
 
 
@@ -433,17 +438,17 @@ void TransfConfig::testRemoveSuffix() const
 TransfConfig::TransfFile TransfConfig::getProcessedName(string strOrigSrcName, std::string& strName) const
 {
     removeSuffix(strOrigSrcName);
-    switch (m_optionsWrp.m_opt.m_nProcessedCreate)
+    switch (m_options.m_nProcessedCreate)
     {
     case 0: // don't create proc files
         strName.clear(); return TRANSF_DONT_CREATE;
 
     case 1: // create proc files and always rename
-        strName = getRenamedName(strOrigSrcName, m_optionsWrp.m_opt.m_bProcessedUseSeparateDir ? m_strProcessedDir : m_strSrcDir, m_optionsWrp.m_opt.m_bProcessedUseLabel ? "proc" : "", m_optionsWrp.m_opt.m_bProcessedAlwayUseCounter, ALWAYS_RENAME);
+        strName = getRenamedName(strOrigSrcName, m_options.m_bProcessedUseSeparateDir ? m_strProcessedDir : m_strSrcDir, m_options.m_bProcessedUseLabel ? "proc" : "", m_options.m_bProcessedAlwayUseCounter, ALWAYS_RENAME);
         return TRANSF_CREATE;
 
     case 2: // create proc files and rename if the name is in use
-        strName = getRenamedName(strOrigSrcName, m_optionsWrp.m_opt.m_bProcessedUseSeparateDir ? m_strProcessedDir : m_strSrcDir, m_optionsWrp.m_opt.m_bProcessedUseLabel ? "proc" : "", m_optionsWrp.m_opt.m_bProcessedAlwayUseCounter, RENAME_IF_NEEDED);
+        strName = getRenamedName(strOrigSrcName, m_options.m_bProcessedUseSeparateDir ? m_strProcessedDir : m_strSrcDir, m_options.m_bProcessedUseLabel ? "proc" : "", m_options.m_bProcessedAlwayUseCounter, RENAME_IF_NEEDED);
         return TRANSF_CREATE;
 
     default:
@@ -455,7 +460,7 @@ TransfConfig::TransfFile TransfConfig::getProcessedName(string strOrigSrcName, s
 TransfConfig::TransfFile TransfConfig::getTempName(string strOrigSrcName, const std::string& strOpName, std::string& strName) const
 {
     removeSuffix(strOrigSrcName);
-    if (!m_optionsWrp.m_opt.m_bTempCreate)
+    if (!m_options.m_bTempCreate)
     {
         strName = getTempFile(strOrigSrcName);
         return TRANSF_DONT_CREATE;
@@ -481,7 +486,7 @@ TransfConfig::TransfFile TransfConfig::getCompNames(string strOrigSrcName, const
 {
     removeSuffix(strOrigSrcName);
 
-    if (!m_optionsWrp.m_opt.m_bCompCreate)
+    if (!m_options.m_bCompCreate)
     {
         strBefore = getTempFile(strOrigSrcName);
         strAfter = getTempFile(strOrigSrcName);
@@ -575,7 +580,7 @@ TransfConfig::TransfFile TransfConfig::getCompNames(string strOrigSrcName, const
 
 TransfConfig::OrigFile TransfConfig::getProcOrigAction() const
 {
-    switch (m_optionsWrp.m_opt.m_nProcOrigChange)
+    switch (m_options.m_nProcOrigChange)
     {
     case 0: // don't change unprocessed orig file
         return ORIG_DONT_CHANGE;
@@ -598,7 +603,7 @@ TransfConfig::OrigFile TransfConfig::getProcOrigAction() const
 
 TransfConfig::OrigFile TransfConfig::getUnprocOrigAction() const
 {
-    switch (m_optionsWrp.m_opt.m_nUnprocOrigChange)
+    switch (m_options.m_nUnprocOrigChange)
     {
     case 0: // don't change unprocessed orig file
         return ORIG_DONT_CHANGE;
@@ -619,7 +624,7 @@ TransfConfig::OrigFile TransfConfig::getUnprocOrigAction() const
 
 TransfConfig::TransfFile TransfConfig::getProcessedAction() const
 {
-    switch (m_optionsWrp.m_opt.m_nProcessedCreate)
+    switch (m_options.m_nProcessedCreate)
     {
     case 0: // don't create proc files
         return TRANSF_DONT_CREATE;
@@ -635,12 +640,12 @@ TransfConfig::TransfFile TransfConfig::getProcessedAction() const
 
 TransfConfig::TransfFile TransfConfig::getTempAction() const
 {
-    return m_optionsWrp.m_opt.m_bTempCreate ? TRANSF_CREATE : TRANSF_DONT_CREATE;
+    return m_options.m_bTempCreate ? TRANSF_CREATE : TRANSF_DONT_CREATE;
 }
 
 TransfConfig::TransfFile TransfConfig::getCompAction() const
 {
-    return m_optionsWrp.m_opt.m_bCompCreate ? TRANSF_CREATE : TRANSF_DONT_CREATE;
+    return m_options.m_bCompCreate ? TRANSF_CREATE : TRANSF_DONT_CREATE;
 }
 
 

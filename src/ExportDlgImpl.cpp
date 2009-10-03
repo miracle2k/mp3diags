@@ -77,6 +77,7 @@ ExportDlgImpl::ExportDlgImpl(QWidget* pParent) : QDialog(pParent, getDialogWndFl
         {
             lNames << QString::fromUtf8(l[i]);
         }
+        lNames.sort();
 
         m_pLocaleCbB->addItems(lNames);
         int n (m_pLocaleCbB->findText(strLocale.c_str()));
@@ -157,7 +158,7 @@ void ExportDlgImpl::on_m_pExportB_clicked()
 
     if (QFileInfo(qs).isFile())
     {
-        if (0 != HtmlMsg::msg(this, 1, 1, 0, 0, "Warning", "A file called \"" + qs + "\" already exists. Do you want to overwrite it?", 600, 200, "Overwrite", "Cancel"))
+        if (0 != HtmlMsg::msg(this, 1, 1, 0, 0, "Warning", "A file called \"" + toNativeSeparators(qs) + "\" already exists. Do you want to overwrite it?", 600, 200, "Overwrite", "Cancel"))
         {
             return;
         }
@@ -188,11 +189,11 @@ void ExportDlgImpl::on_m_pExportB_clicked()
 
     if (b)
     {
-        HtmlMsg::msg(this, 0, 0, 0, 0, "Info", "Successfully created file \"" + qs + "\"", 600, 200, "OK");
+        HtmlMsg::msg(this, 0, 0, 0, 0, "Info", "Successfully created file \"" + toNativeSeparators(qs) + "\"", 600, 200, "OK");
     }
     else
     {
-        HtmlMsg::msg(this, 0, 0, 0, 0, "Error", "There was an error writing to the file \"" + qs + "\"", 600, 200, "OK");
+        HtmlMsg::msg(this, 0, 0, 0, 0, "Error", "There was an error writing to the file \"" + toNativeSeparators(qs) + "\"", 600, 200, "OK");
     }
 }
 
@@ -427,7 +428,10 @@ namespace {
 
 string escapeXml(const string& s)
 {
-    return convStr(Qt::escape(convStr(s)));
+    QString qs (Qt::escape(convStr(s)));
+    qs.replace(QString("\""), "&quot;");
+    qs.replace(QString("#"), "&#35;");
+    return convStr(qs);
 }
 
 void printDataStream(ostream& out, DataStream* p)
@@ -562,6 +566,13 @@ bool ExportDlgImpl::exportAsXml(const std::string& strFileName)
     ofstream_utf8 out (strFileName.c_str());
 
     out << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<files>\n";
+
+    /*{
+        string x;
+        for (int i = 32; i < 128; ++i)
+        x += char(i);
+        out << "<abc x=\"" << escapeXml(x) << "\">\n" << escapeXml(x) << "\n</abc>\n";
+    }*/
 
     const char* aszSeverity[] = { "error", "warning", "support", "trace" };
     for (int i = 0, n = cSize(v); i < n; ++i)

@@ -231,7 +231,7 @@ void SessionSettings::loadExportSettings(int& nWidth, int& nHeight, bool& bSortB
     s = m_pSettings->value("export/fileName", "").toString(); strFile = convStr(s);
     bUseVisible = m_pSettings->value("export/useVisible", true).toBool();
     s = m_pSettings->value("export/m3uRoot", "").toString(); strM3uRoot = convStr(s);
-    s = m_pSettings->value("export/m3uLocale", "").toString(); strM3uLocale = convStr(s);
+    s = m_pSettings->value("export/m3uLocale", "System").toString(); strM3uLocale = convStr(s);
 }
 
 
