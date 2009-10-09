@@ -670,6 +670,11 @@ MainFormDlgImpl* getGlobalDlg()
     return s_pGlobalDlg;
 }
 
+QWidget* getMainForm()
+{
+    return getGlobalDlg();
+}
+
 static PausableThread* s_pSerThread;
 PausableThread* getSerThread() //ttt1 global function
 {
@@ -1016,7 +1021,10 @@ MainFormDlgImpl::MainFormDlgImpl(const string& strSession, bool bUniqueSession) 
     loadIgnored();
 
     {
-        m_settings.loadTransfConfig(m_transfConfig);
+        if (!m_settings.loadTransfConfig(m_transfConfig))
+        {
+            m_settings.saveTransfConfig(m_transfConfig);
+        }
 
         for (int i = 0; i < CUSTOM_TRANSF_CNT; ++i)
         {
@@ -1117,7 +1125,22 @@ MainFormDlgImpl::MainFormDlgImpl(const string& strSession, bool bUniqueSession) 
 
 void MainFormDlgImpl::onHelp()
 {
-    openHelp("130_main_window.html");
+    if (m_pViewFileInfoB->isChecked())
+    {
+        openHelp("130_main_window.html");
+    }
+    else if (m_pViewAllNotesB->isChecked())
+    {
+        openHelp("150_main_window_all_notes.html");
+    }
+    else if (m_pViewTagDetailsB->isChecked())
+    {
+        openHelp("160_main_window_tag_details.html");
+    }
+    else
+    {
+        CB_ASSERT(false);
+    }
 }
 
 /*override*/ void MainFormDlgImpl::keyReleaseEvent(QKeyEvent* pEvent)
@@ -1250,6 +1273,10 @@ void MainFormDlgImpl::initializeUi()
     if (!m_pCommonData->m_bShowSessions)
     {
         m_pSessionsB->hide();
+        if (!m_pCommonData->m_bShowExport)
+        {
+            m_pOptBtn1W->hide();
+        }
     }
 
     resizeIcons();
@@ -2292,6 +2319,7 @@ void MainFormDlgImpl::on_m_pPrevB_clicked()
 //CB_ASSERT("345" == "ab");
 //traceLastStep("tsterr", 0); char* p (0); *p = 11;
 //throw 1;
+//int x (2), y (3); CB_ASSERT(x >= y);
 
     m_pCommonData->previous();
     //updateWidgets();
@@ -2376,6 +2404,16 @@ void MainFormDlgImpl::updateUi(const string& strCrt) // strCrt may be empty
         saveVisibleTransf();
     }
 
+    if (m_pCommonData->m_bShowExport || m_pCommonData->m_bShowSessions)
+    {
+        m_pOptBtn1W->show();
+    }
+    else
+    {
+        m_pOptBtn1W->hide();
+    }
+
+
     if (m_pCommonData->m_bShowExport)
     {
         m_pExportB->show();
@@ -2386,6 +2424,7 @@ void MainFormDlgImpl::updateUi(const string& strCrt) // strCrt may be empty
         m_pExportB->hide();
     }
 
+
     if (m_pCommonData->m_bShowDebug)
     {
         m_pDebugB->show();
@@ -2395,6 +2434,7 @@ void MainFormDlgImpl::updateUi(const string& strCrt) // strCrt may be empty
     {
         m_pDebugB->hide();
     }
+
 
     if (m_pCommonData->m_bShowSessions)
     {

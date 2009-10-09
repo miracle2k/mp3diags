@@ -121,13 +121,6 @@ private:
 };
 
 BOOST_CLASS_VERSION(LyricsStream, 1);
-/* ttt1 see why the version had to be increased to 2 instead of 1 when introducing track fields
-symptoms of using "1":
-1. the new ver would open the old one's db but if closing the program, it wouldn't be able to reopen the db (at least without rescanning the db)
-2. reopening was ok if only several of the new bool fields were used, and no string fields got serialized
-3. the old program would segfault with the new one's db instead of symply throwing a "mismatch" exception
-4. after rescanning the db, the new prog seemed ok
-*/
 
 
 #endif // ifndef LyricsStreamH

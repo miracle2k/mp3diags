@@ -411,8 +411,6 @@ ConfigDlgImpl::ConfigDlgImpl(TransfConfig& transfCfg, CommonData* pCommonData, Q
         default:
             CB_ASSERT(false); // the constructor of TransfConfig should have detected it
         }
-//ttt0 proxy: QNetworkProxyFactory::systemProxyForQuery; QNetworkProxy; http://www.dbits.be/index.php/pc-problems/65-vistaproxycfg
-
 
         if (transfCfg.m_options.m_bProcessedUseLabel) { m_pProcUseLabelRB->setChecked(true); } else { m_pProcDontUseLabelRB->setChecked(true); }
         if (transfCfg.m_options.m_bProcessedAlwayUseCounter) { m_pProcAlwaysUseCounterRB->setChecked(true); } else { m_pProcUseCounterIfNeededRB->setChecked(true); }
@@ -692,7 +690,8 @@ void SessionSettings::saveTransfConfig(const TransfConfig& transfConfig)
     }*/
 }
 
-void SessionSettings::loadTransfConfig(TransfConfig& transfConfig) const
+// returns false if there was some error while loading (so the user can be told about defaults being used and those defaults could get saved)
+bool SessionSettings::loadTransfConfig(TransfConfig& transfConfig) const
 {
     try
     {
@@ -707,11 +706,13 @@ void SessionSettings::loadTransfConfig(TransfConfig& transfConfig) const
                 m_pSettings->value("transformation/options", -1).toInt()
             );
         transfConfig = tc;
+        return !tc.hadInitError();
     }
     catch (const IncorrectDirName&)
     {
         TransfConfig tc ("*", "*", "*", "*", "*", "*", -1);
         transfConfig = tc;
+        return false;
     }
 }
 
@@ -1177,11 +1178,11 @@ void ConfigDlgImpl::onHelp()
     case 1: openHelp("260_config_ignored_notes.html"); break;
     case 2: openHelp("270_config_custom_transf.html"); break;
     case 3: openHelp("290_config_transf_params.html"); break;
-
-    case 5: openHelp("280_config_quality.html"); break;
-
+    case 4: openHelp("292_config_visible_transf.html"); break;
+    case 5: openHelp("295_config_quality.html"); break;
+    case 6: openHelp("297_config_colors.html"); break;
     case 7: openHelp("300_config_others.html"); break;
-    //ttt0 revise as needed
+    //tttr revise as needed
 
     default: /*openHelp("index.html");*/ break;
     }
@@ -1235,4 +1236,6 @@ void ConfigDlgImpl::on_m_pFastSaveCkB_stateChanged()
 
 //ttt2 dir config: perhaps something simpler, with a "more options" button
 
-//ttt1 Font style is ignored (see DejaVu Sans / Light on machines with antialiased fonts)
+//ttt2 Font style is ignored (see DejaVu Sans / Light on machines with antialiased fonts)
+
+//ttt2 proxy: QNetworkProxyFactory::systemProxyForQuery; QNetworkProxy; http://www.dbits.be/index.php/pc-problems/65-vistaproxycfg  https://sourceforge.net/projects/mp3diags/forums/forum/947207/topic/3415940

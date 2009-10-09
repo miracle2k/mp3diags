@@ -211,6 +211,8 @@ public:
 
     const Id3V2Frame* getFrame(const char* szName) const; // returns a frame with the given name; normally it returns the first such frame, but it may return another if there's a good reason (currently this is done for APIC only); returns 0 if no frame was found;
 
+    bool hasReplayGain() const;
+
     enum { ID3_HDR_SIZE = 10 };
 
     std::vector<const Id3V2Frame*> getKnownFrames() const; // to be used by Id3V2Cleaner;

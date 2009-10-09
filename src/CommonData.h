@@ -567,6 +567,7 @@ private:
 
 CommonData* getCommonData(); // the only CommonData that exists at a given moment
 
+QWidget* getMainForm();
 
 
 //=====================================================================================================================

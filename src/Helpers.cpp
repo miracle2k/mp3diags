@@ -458,7 +458,7 @@ namespace
                     { 448,     384,     320,     256,     160 }
                 };
             int nRateIndex ((*pHeader & 0xf0) >> 4);
-            DECODE_CHECK (nRateIndex >= 1 && nRateIndex <= 14, "Not an MPEG frame. Invalid bitrate.");
+            DECODE_CHECK (nRateIndex >= 1 && nRateIndex <= 14, "Not an MPEG frame. Invalid bitrate."); //ttt0 valgrid - uninit value
             int nTypeIndex (m_eVersion*3 + m_eLayer);
             if (nTypeIndex == 5) { nTypeIndex = 4; }
             m_nBitrate = s_bitrates[nRateIndex - 1][nTypeIndex]*1000;

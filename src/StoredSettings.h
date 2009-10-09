@@ -42,7 +42,7 @@ public:
     ~SessionSettings();
 
     void saveTransfConfig(const TransfConfig& transfConfig);
-    void loadTransfConfig(TransfConfig& transfConfig) const;
+    bool loadTransfConfig(TransfConfig& transfConfig) const; // returns false if there was some error while loading (so the user can be told about defaults being used and those defaults could get saved)
 
     void saveDirs(const std::vector<std::string>& vstrIncludedDirs, const std::vector<std::string>& vstrExcludedDirs);
     bool loadDirs(std::vector<std::string>& vstrIncludedDirs, std::vector<std::string>& vstrExcludedDirs) const; // returns false if there were inconsistencies in the settings

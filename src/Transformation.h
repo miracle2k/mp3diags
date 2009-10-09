@@ -298,6 +298,8 @@ public:
 
     int getOptions() const { return m_options.getVal(); }
 
+    bool hadInitError() const { return m_bInitError; }
+
     //struct DirOverlap {};
     //struct InvalidName {}; // something is wrong with the file name
     struct IncorrectPath {}; // thrown if a "source file" is outside of the "source folder" (takes care of this case too, where it's not enough to check for a substring: src="/tst/dir1", origName="/tst/dir10/file1.mp3")
@@ -306,6 +308,7 @@ public:
 private:
     OrigFile getChangedOrigNameHlp(const std::string& strOrigSrcName, const std::string& strDestDir, int nChange, bool bUseLabel, bool bAlwayUseCounter, std::string& strNewName) const;
     void removeSuffix(std::string& s) const;
+    bool m_bInitError;
 };
 
 

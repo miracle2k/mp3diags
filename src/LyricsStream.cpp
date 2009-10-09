@@ -270,7 +270,7 @@ LyricsStream::LyricsStream(int nIndex, NoteColl& notes, std::istream& in, const 
     //return m_str;
     if (m_bHasImage)
     {
-        //m_strImageFile //ttt2 extract file names, see which one to choose, try to load ... (use m_strCrtDir)
+        //m_strImageFile //ttt0 extract file names, see which one to choose, try to load ... (use m_strCrtDir)
         // http://www.id3.org/Lyrics3v2
         // http://www.mpx.cz/mp3manager/tags.htm
     }

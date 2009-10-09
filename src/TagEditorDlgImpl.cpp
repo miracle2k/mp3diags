@@ -1481,6 +1481,7 @@ void Id3V230Writer::setupWriter(Id3V230StreamWriter& wrt, const Mp3HandlerTagDat
         }
     }
 }
+//ttt0 when multiple id3v2 are found, the bkg color doesn't change if the 2 id3v2 are switched; probably ok, though, in the sense that if at least one field is assigned, all the others will be used when saving
 
 /*override*/ Transformation::Result Id3V230Writer::apply(const Mp3Handler& h, const TransfConfig& transfConfig, const std::string& strOrigSrcName, std::string& strTempName)
 {

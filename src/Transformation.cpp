@@ -24,12 +24,14 @@
 #include  <iomanip>
 
 #include  <QDir>
+#include  <QMessageBox>
 
 #include  "Transformation.h"
 
 #include  "Helpers.h"
 #include  "OsFile.h"
 #include  "Mp3Manip.h"
+#include  "CommonData.h"
 
 
 using namespace std;
@@ -104,7 +106,8 @@ static TransfConfig::Options getDefaultOptions()
 
     x.m_bCompCreate = false;
 
-    x.m_nProcOrigChange = 5; // move w/o renaming, if doesn't exist; discard if it exists;
+    //x.m_nProcOrigChange = 5; // move w/o renaming, if doesn't exist; discard if it exists;
+    x.m_nProcOrigChange = 1; // erase
     x.m_bProcOrigUseLabel = false;
     x.m_bProcOrigAlwayUseCounter = false;
 
@@ -134,12 +137,20 @@ TransfConfig::TransfConfig(
         int nOptions // may be -1 to indicate "default" values
         )
 {
+    m_bInitError = false;
     m_strSrcDir = "*" == strSrcDir ? getDefaultSrc() : strSrcDir;
     m_strProcOrigDir = "*" == strProcOrigDir ? getDefaultProcOrig() : strProcOrigDir;
     m_strUnprocOrigDir = "*" == strUnprocOrigDir ? getDefaultUnprocOrig() : strUnprocOrigDir;
     m_strProcessedDir = "*" == strProcessedDir ? getDefaultProcessed() : strProcessedDir;
     m_strTempDir = "*" == strTempDir ? getDefaultTemp() : strTempDir;
     m_strCompDir = "*" == strCompDir ? getDefaultComp() : strCompDir;
+
+    if (nOptions >= 0x00020000)
+    { // only the first 17 bits are supposed to be used; if more seem to be used, it is because of a manually entered wrong value or because a change in the bitfield representation;
+        QMessageBox::critical(getMainForm(), "Error", "Invalid value found for file settings. Reverting to default settings.");
+        nOptions = -1;
+        m_bInitError = true;
+    }
 
     m_options.setVal(-1 == nOptions ? getDefaultOptions().getVal() : nOptions);
 

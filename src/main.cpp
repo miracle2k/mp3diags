@@ -161,7 +161,6 @@ void visStudioMessageOutput(QtMsgType, const char* szMsg)
     OutputDebugStringA("\r\n");
     //cerr << szMsg << endl;
     //QMessageBox::information(0, "Debug message", szMsg, QMessageBox::Ok);
-    //throw 8; //ttt0 see why this doesn't get called for Qt-generated notes like "Corrupt JPEG data: 319 extraneous bytes before marker 0xc4"
 }
 #endif
 
