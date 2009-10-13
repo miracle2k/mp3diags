@@ -27,7 +27,7 @@
 #include  <vector>
 
 //#include  <QByteArray>
-#include  <QStringList>  // ttt1 what we really want is QByteArray; however, by including QByteArray directly, lots of warnings get displayed; perhaps some defines are needed but don't know which; so we just include QStringList to avoid the warnings (see also Helpers.h)
+#include  <QStringList>  // ttt2 what we really want is QByteArray; however, by including QByteArray directly, lots of warnings get displayed; perhaps some defines are needed but don't know which; so we just include QStringList to avoid the warnings (see also Helpers.h)
 
 
 class QSettings;
@@ -104,7 +104,7 @@ public:
     void saveVersion(const std::string& strVersion);
     void loadVersion(std::string& strVersion);
 
-    //ttt1 ??? see about ThreadRunner size; perhaps set width to its parent
+    //ttt2 ??? see about ThreadRunner size; perhaps set width to its parent
 
     bool sync();
 };

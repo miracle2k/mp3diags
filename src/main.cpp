@@ -68,7 +68,7 @@ void GlobalSettings::saveSessions(const vector<string>& vstrSess1, const string&
         {
             if (vstrSess.end() == find(vstrSess.begin(), vstrSess.end(), vstrSess2[i]))
             {
-                vstrSess.push_back(vstrSess2[i]); // ttt1 perhaps add a return value to the function, so the caller would know to update the UI; however, what is done here is more important, because it prevents data loss
+                vstrSess.push_back(vstrSess2[i]); // ttt2 perhaps add a return value to the function, so the caller would know to update the UI; however, what is done here is more important, because it prevents data loss
             }
         }
     }
@@ -298,7 +298,7 @@ int main(int argc, char *argv[])
             if (MainFormDlgImpl::OPEN_SESS_DLG != mainDlg.run()) { return 0; }
         }
     }
-    catch (...) // ttt1 for now it doesn't catch many exceptions; it seems that nothing can be done if an exception leaves a slot / event handler, but maybe there are ways around
+    catch (...) // ttt2 for now it doesn't catch many exceptions; it seems that nothing can be done if an exception leaves a slot / event handler, but maybe there are ways around
     {
         /*QMessageBox dlg (QMessageBox::Critical, "Error", "Caught generic exception. Exiting ...", QMessageBox::Close, 0, Qt::Dialog | Qt::MSWindowsFixedSizeDialogHint | Qt::WindowStaysOnTopHint);
 
@@ -321,7 +321,7 @@ int main(int argc, char *argv[])
 
 
 
-//ttt1 perhaps sign package
+//ttt2 perhaps sign package
 
 /*
 rpmlint:

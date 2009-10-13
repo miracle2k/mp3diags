@@ -74,12 +74,14 @@ struct Mp3TransformThread : public PausableThread
         m_vpDel(vpDel),
         m_vpAdd(vpAdd),
         m_vpTransf(vpTransf),
-        m_bWriteError(true)
+        m_bWriteError(true),
+        m_bFileChanged(false)
     {
     }
 
     string m_strErrorFile; // normally this is empty; if it's not, writing to the specified file failed
     bool m_bWriteError;
+    bool m_bFileChanged;
 
     /*override*/ void run()
     {
@@ -189,6 +191,16 @@ bool Mp3TransformThread::transform()
 {
     bool bAborted (false);
 
+    bool bUseFastSave (m_pCommonData->useFastSave());
+    for (int j = 0, m = cSize(m_vpTransf); j < m; ++j)
+    {
+        if (!m_vpTransf[j]->acceptsFastSave())
+        {
+            bUseFastSave = false;
+            break;
+        }
+    }
+
     try
     {
         for (int i = 0, n = cSize(m_vpHndlr); i < n; ++i)
@@ -202,10 +214,11 @@ bool Mp3TransformThread::transform()
             const Mp3Handler* pOrigHndl (m_vpHndlr[i]);
             string strOrigName (pOrigHndl->getName());
 
-            if (pOrigHndl->id3V2NeedsReload(!m_pCommonData->useFastSave()))
+            if (pOrigHndl->needsReload(bUseFastSave))
             {
                 m_strErrorFile = strOrigName;
                 m_bWriteError = false;
+                m_bFileChanged = true;
                 return false;
             }
 
@@ -281,7 +294,7 @@ bool Mp3TransformThread::transform()
                         }
 
                         strPrevTempName = strTempName;
-                        pNewHndl.reset(new Mp3Handler(strTempName, m_pCommonData->m_bUseAllNotes, m_pCommonData->getQualThresholds())); //ttt1 try..catch
+                        pNewHndl.reset(new Mp3Handler(strTempName, m_pCommonData->m_bUseAllNotes, m_pCommonData->getQualThresholds())); //ttt2 try..catch
                         checkPause();
                         if (isAborted())
                         {
@@ -374,11 +387,11 @@ bool Mp3TransformThread::transform()
                 {
                     bErrorInTransform = true;
                 }
-                catch (const CannotRenameFile&) //ttt1 perhaps also NameNotFound, AlreadyExists, ...
+                catch (const CannotRenameFile&) //ttt2 perhaps also NameNotFound, AlreadyExists, ...
                 {
                     bErrorInTransform = true;
                 }
-                catch (const CannotCopyFile&) //ttt1 perhaps also NameNotFound, AlreadyExists, ...
+                catch (const CannotCopyFile&)
                 {
                     CB_ASSERT(false);
                     //bErrorInTransform = true;
@@ -400,8 +413,8 @@ bool Mp3TransformThread::transform()
                     m_bWriteError = false;
                     return false;
                 }
-                //ttt1 perhaps do something similar to strNewOrigName
-                //ttt1 review the whole thing
+                //ttt2 perhaps do something similar to strNewOrigName
+                //ttt2 review the whole thing
 
                 if (!strNewOrigName.empty())
                 {
@@ -460,6 +473,7 @@ bool transform(const deque<const Mp3Handler*>& vpHndlr, vector<Transformation*>&
 
     string strErrorFile;
     bool bWriteError;
+    bool bFileChanged;
     {
         Mp3TransformThread* pThread (new Mp3TransformThread(pCommonData, transfConfig, vpHndlr, vpDel, vpAdd, vpTransf));
         ThreadRunnerDlgImpl dlg (pParent, getNoResizeWndFlags(), pThread, ThreadRunnerDlgImpl::SHOW_COUNTER, ThreadRunnerDlgImpl::TRUNCATE_BEGIN);
@@ -467,6 +481,7 @@ bool transform(const deque<const Mp3Handler*>& vpHndlr, vector<Transformation*>&
         dlg.exec();
         strErrorFile = pThread->m_strErrorFile;
         bWriteError = pThread->m_bWriteError;
+        bFileChanged = pThread->m_bFileChanged;
     }
 
 
@@ -483,7 +498,14 @@ bool transform(const deque<const Mp3Handler*>& vpHndlr, vector<Transformation*>&
         }
         else
         {
-            QMessageBox::critical(pParent, "Error", "There was an error processing the following file:\n\n" + toNativeSeparators(convStr(strErrorFile)) + "\n\nProbably the file was deleted or modified since the last scan, in which case you should reload / rescan your collection. Or it may be used by another program; if that's the case, you should stop the other program first.\n\nProcessing aborted.");
+            if (bFileChanged)
+            {
+                QMessageBox::critical(pParent, "Error", "The file \"" + toNativeSeparators(convStr(strErrorFile)) + "\" seems to have been modified since the last scan. You need to rescan it before continuing.\n\nProcessing aborted.");
+            }
+            else
+            {
+                QMessageBox::critical(pParent, "Error", "There was an error processing the following file:\n\n" + toNativeSeparators(convStr(strErrorFile)) + "\n\nProbably the file was deleted or modified since the last scan, in which case you should reload / rescan your collection. Or it may be used by another program; if that's the case, you should stop the other program first.\n\nProcessing aborted.");
+            }
         }
     }
 

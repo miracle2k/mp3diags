@@ -45,7 +45,7 @@
 using namespace std;
 using namespace pearl;
 
-//ttt1 simple / detailed files tab, with "simple" only allowing to "create backups in ..."
+//ttt2 simple / detailed files tab, with "simple" only allowing to "create backups in ..."
 //=====================================================================================================================
 //=====================================================================================================================
 //=====================================================================================================================
@@ -1032,7 +1032,7 @@ void ConfigDlgImpl::on_m_pOkB_clicked()
             m_pCommonData->m_bKeepOneValidImg = m_pKeepOneValidImgCkB->isChecked();
             m_pCommonData->m_bWmpVarArtists = m_pWmpCkB->isChecked();
             m_pCommonData->m_bItunesVarArtists = m_pItunesCkB->isChecked();
-            ImageInfo::MAX_IMAGE_SIZE = m_pMaxImgSizeSB->value()*1024; //ttt1 inconsistent to keep this in static var and the others in CommonData; perhaps switch to a global CommonData that anybody can access, without passing it in params
+            ImageInfo::MAX_IMAGE_SIZE = m_pMaxImgSizeSB->value()*1024; //ttt2 inconsistent to keep this in static var and the others in CommonData; perhaps switch to a global CommonData that anybody can access, without passing it in params
             m_pCommonData->setTraceToFile(m_pTraceToFileCkB->isChecked());
 
             m_pCommonData->setFontInfo(convStr(m_generalFont.family()), m_generalFont.pointSize(), m_pDecrLabelFontSB->value(), convStr(m_fixedFont.family()), m_fixedFont.pointSize());
@@ -1047,7 +1047,7 @@ void ConfigDlgImpl::on_m_pOkB_clicked()
     }
     catch (const IncorrectDirName&)
     {
-        QMessageBox::critical(this, "Invalid folder name", "A folder name is incorrect."); //ttt1 say which name
+        QMessageBox::critical(this, "Invalid folder name", "A folder name is incorrect."); //ttt2 say which name
     }
 }
 
@@ -1061,7 +1061,7 @@ void ConfigDlgImpl::on_m_pCancelB_clicked()
 void ConfigDlgImpl::on_m_pChangeGenFontB_clicked()
 {
     bool bOk;
-    QFont font = QFontDialog::getFont(&bOk, m_generalFont, this); //ttt1 see if possible to remove "What's this" button
+    QFont font = QFontDialog::getFont(&bOk, m_generalFont, this); //ttt2 see if possible to remove "What's this" button
     if (!bOk) { return; }
 
     m_generalFont = font;

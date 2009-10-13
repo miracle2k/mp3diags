@@ -50,7 +50,7 @@ struct NotesModel;
 struct StreamsModel;
 struct UniqueNotesModel;
 
-extern int CELL_WIDTH; // ttt1 perhaps replace with functions
+extern int CELL_WIDTH; // ttt2 perhaps replace with functions
 extern int CELL_HEIGHT;
 
 extern const int CUSTOM_TRANSF_CNT; // search for this to find all places that need changes to add another custom transform list
@@ -213,7 +213,7 @@ private:
 
         ar << m_vDirs;
         //qDebug("saved dirs sz %d", cSize(m_vDirs));
-        //ar << m_vpNotes; //ttt1 weird behaviour: this compiles and doesn't trigger runtime errros, and neither does the loading, but when loading a vector<Note*> it always ends up empty; it's probably some incorrect use of the ser library (share / global / const pointers), but the library is broken too, because it should have failed to compile or at least crashed when running instead of just failing to load anything (the files are different, so something is saved)
+        //ar << m_vpNotes; //ttt2 weird behaviour: this compiles and doesn't trigger runtime errros, and neither does the loading, but when loading a vector<Note*> it always ends up empty; it's probably some incorrect use of the ser library (share / global / const pointers), but the library is broken too, because it should have failed to compile or at least crashed when running instead of just failing to load anything (the files are different, so something is saved)
         //ar << (const std::vector<const Note*>&)m_vpNotes; qDebug("saved notes sz %d", cSize(m_vpNotes));
 
         std::vector<std::string> v;

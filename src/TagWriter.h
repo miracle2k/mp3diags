@@ -342,6 +342,7 @@ class TagWriter : public QObject
     void adjustVarArtists();
 
     bool m_bDelayedAdjVarArtists;
+    bool m_bWaitingChangeNotif;
 public:
     TagWriter(CommonData* pCommonData, QWidget* pParentWnd, const bool& bIsFastSaving);
     ~TagWriter();
@@ -432,6 +433,7 @@ private slots:
     void onEraseFileDelayed();
     void onDelayedTrackSeqWarn();
     void onDelayedAdjVarArtists();
+    void onDelayedChangeNotif();
 
 signals:
     void albumChanged(/*bool bContentOnly*/); // the selection may be kept iff bContentOnly is true

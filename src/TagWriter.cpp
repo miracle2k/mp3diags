@@ -693,7 +693,7 @@ int Mp3HandlerTagData::getImage() const // 0-based; -1 if there-s no image;
 double Mp3HandlerTagData::getRating() const
 {
     string s (getData(TagReader::RATING));
-    double d (s.empty() ? -1 : atof(s.c_str())); //ttt1 review atof/sprintf usage, for foreign locales;
+    double d (s.empty() ? -1 : atof(s.c_str())); //ttt0 review atof/sprintf usage, for foreign locales;
     return d;
 }
 
@@ -792,7 +792,7 @@ const TagReader* Mp3HandlerTagData::getMatchingReader(int i) const
 
 
 
-TagWriter::TagWriter(CommonData* pCommonData, QWidget* pParentWnd, const bool& bIsFastSaving) : m_pCommonData(pCommonData), m_pParentWnd(pParentWnd), m_nCurrentFile(-1), m_bShowedNonSeqWarn(true), m_bIsFastSaving(bIsFastSaving), m_nFileToErase(-1), m_bVariousArtists(false), m_bAutoVarArtists(false), m_bDelayedAdjVarArtists(false)
+TagWriter::TagWriter(CommonData* pCommonData, QWidget* pParentWnd, const bool& bIsFastSaving) : m_pCommonData(pCommonData), m_pParentWnd(pParentWnd), m_nCurrentFile(-1), m_bShowedNonSeqWarn(true), m_bIsFastSaving(bIsFastSaving), m_nFileToErase(-1), m_bVariousArtists(false), m_bAutoVarArtists(false), m_bDelayedAdjVarArtists(false), m_bWaitingChangeNotif(false)
 {
 }
 
@@ -975,6 +975,14 @@ const Mp3HandlerTagData* TagWriter::getCrtMp3HandlerTagData() const
 bool s_bToldAboutPatternsInCrtRun (false); // to limit to 1 per run the number of times the user is told about support
 
 
+void TagWriter::onDelayedChangeNotif()
+{
+    m_bWaitingChangeNotif = false;
+    QMessageBox::critical(m_pParentWnd, "Error", "Some files have been modified by an external tool after the last scan. You won't be able to save any changes to those files until you rescan them.");
+}
+
+
+
 //void TagWriter::reloadAll(string strCrt, ReloadOption eReloadOption/*, bool bKeepUnassgnImg*/)
 void TagWriter::reloadAll(string strCrt, bool bClearData, bool bClearAssgn)
 {
@@ -1104,6 +1112,7 @@ void TagWriter::reloadAll(string strCrt, bool bClearData, bool bClearAssgn)
         }
     }
 
+    bool bRescanNeeded (false);
     { // process handlers in the order in which they appear in vpHndl;
         m_vpMp3HandlerTagData.resize(n);
         int nPastedSize (cSize(m_vstrPastedValues));
@@ -1111,6 +1120,7 @@ void TagWriter::reloadAll(string strCrt, bool bClearData, bool bClearAssgn)
         {
             int k (m_vnMovedTo[i]);
             const Mp3Handler* p (vpHndl[i]);
+            bRescanNeeded = bRescanNeeded || p->needsReload(m_pCommonData->useFastSave());
             m_vpMp3HandlerTagData[k] = new Mp3HandlerTagData(this, p, k, i, k < nPastedSize ? m_vstrPastedValues[k] : "");
             //cout << "k=" << k << ", i=" << i << ", val=" << (k < nPastedSize ? m_vstrPastedValues[k] : "") << endl;
             if (!v.empty() && !bClearAssgn)
@@ -1131,6 +1141,12 @@ void TagWriter::reloadAll(string strCrt, bool bClearData, bool bClearAssgn)
         }
 
         adjustVarArtists();
+    }
+
+    if (bRescanNeeded && !m_bWaitingChangeNotif)
+    {
+        m_bWaitingChangeNotif = true;
+        QTimer::singleShot(1, this, SLOT(onDelayedChangeNotif()));
     }
 
 
@@ -1746,7 +1762,7 @@ bool TagWriter::addImgFromFile(const QString& qs, bool bConsiderAssigned)
             if (nSize <= ImageInfo::MAX_IMAGE_SIZE)
             {
                 nWidth = pic.width(); nHeight = pic.height();
-                eCompr = qs.endsWith(".png", Qt::CaseInsensitive) ? ImageInfo::PNG : ImageInfo::JPG; //ttt2 add more cases if supporting more image tipes
+                eCompr = qs.endsWith(".png", Qt::CaseInsensitive) ? ImageInfo::PNG : ImageInfo::JPG; //ttt2 add more cases if supporting more image types
             }
             else
             {
@@ -1787,17 +1803,17 @@ void TagWriter::paste()
     CursorOverrider crs;
 
     QClipboard* pClp (QApplication::clipboard());
-    QPixmap pic (pClp->pixmap()); //ttt1 this leads in many cases to recompression; see how to avoid it; (probably ask the clipboard for other formats)
+    QPixmap pic (pClp->pixmap()); //ttt2 this leads in many cases to recompression; see how to avoid it; (probably ask the clipboard for other formats)
     if (!pic.isNull())
     {
         ImageInfo img (-1, ImageInfo::OK, pic);
-        //ttt1 only reason to change image widget is because images were loaded, so perhaps adjust signals; (keep in mind first time, though)
+        //ttt2 only reason to change image widget is because images were loaded, so perhaps adjust signals; (keep in mind first time, though)
         //emit imagesChanged();
         addImage(img, CONSIDER_UNASSIGNED);
         return;
     }
 
-    //ttt1 text file name, including "http://", "ftp://", "file://" (see KIO::NetAccess::download() at http://developer.kde.org/documentation/books/kde-2.0-development/ch07lev1sec5.html )
+    //ttt2 text file name, including "http://", "ftp://", "file://" (see KIO::NetAccess::download() at http://developer.kde.org/documentation/books/kde-2.0-development/ch07lev1sec5.html )
     QString qs (pClp->text());
 
     if (qs.isEmpty())
@@ -1855,7 +1871,7 @@ void TagWriter::paste()
 #endif
 
 #ifndef WIN32
-            if (qs.startsWith(getPathSep())) // ttt1 see if it makes sense to open files without full name
+            if (qs.startsWith(getPathSep())) // ttt2 see if it makes sense to open files without full name
 #else
             qs = fromNativeSeparators(qs);
             //qDebug("qs=%s", qs.toUtf8().data());

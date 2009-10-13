@@ -197,7 +197,7 @@ CurrentAlbumDelegate::CurrentAlbumDelegate(QWidget* pParent, HndlrListModel* pHn
 
     if (0 == pId3V2)
     {
-        //pPainter->fillRect(option.rect, QColor(255, 226, 236)); //ttt1 perhaps put back, but should work for "missing fields" as well
+        //pPainter->fillRect(option.rect, QColor(255, 226, 236)); //ttt2 perhaps put back, but should work for "missing fields" as well
     }
 
     QItemDelegate::paint(pPainter, option, index);
@@ -715,7 +715,7 @@ void FileRenamerDlgImpl::selectPattern()
 
     resizeUi();
 
-    m_pAlbumTypeL->setText(isSingleArtist() ? "Single artist" : "Various artists"); //ttt1 see if "single" is the best word
+    m_pAlbumTypeL->setText(isSingleArtist() ? "Single artist" : "Various artists"); //ttt2 see if "single" is the best word
 }
 
 
@@ -742,9 +742,9 @@ void FileRenamerDlgImpl::loadPatterns()
         }
     }
 
-    /*if (m_vstrPatterns.empty()) // ttt1 because there is no default, the user is forced to add a pattern first; see if a meaningful default can be used
+    /*if (m_vstrPatterns.empty()) // ttt2 because there is no default, the user is forced to add a pattern first; see if a meaningful default can be used
     { // use default (only if the user didn't remove all patterns on purpose)
-        string s ("/tmp/%a/%b[ %y]/%r%n %t"); //ttt1 change from tmp to root/out; //ttt1 perhaps ask the user //ttt1 OS specific
+        string s ("/tmp/%a/%b[ %y]/%r%n %t"); //ttt2 change from tmp to root/out; //ttt2 perhaps ask the user //ttt2 OS specific
         Renamer r (s); // may throw after porting, but that's OK, because it signals a fix is needed
         m_vstrPatterns.push_back(s);
     }*/
@@ -763,7 +763,7 @@ void FileRenamerDlgImpl::savePatterns()
 }
 
 
-//ttt1 perhaps have a "reload" button
+//ttt2 perhaps have a "reload" button
 
 void FileRenamerDlgImpl::resizeIcons()
 {
@@ -1043,7 +1043,7 @@ Renamer::Renamer(const std::string& strPattern, const CommonData* pCommonData) :
                     {
                         ostringstream s;
                         s << "Error in column " << p - strPattern.c_str() <<  ".";
-                        throw InvalidPattern(strPattern, s.str()); // ttt1 more details, perhaps make tag edt errors more similar to this
+                        throw InvalidPattern(strPattern, s.str()); // ttt2 more details, perhaps make tag edt errors more similar to this
                     }
                 }
             }
@@ -1103,7 +1103,5 @@ string Renamer::getNewName(const Mp3Handler* pHndl) const
     return s;
 }
 
-//ttt1 timer in normalizer
-//ttt1 look at normalized loudness in tracks, maybe warn
 
 

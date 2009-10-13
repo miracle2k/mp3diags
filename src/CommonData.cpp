@@ -473,7 +473,7 @@ void CommonData::setFontInfo(const std::string& strGenName, int nGenSize, int nL
 
     if (!bFirstTime)
     {
-        QMessageBox::warning(m_pFilesG, "Info", "The font changes will only be used after restarting the application."); //ttt1 try to get this work, probably needs to call QHeaderView::resizeSection(), as well as review all setMinimumSectionSize() and setDefaultSectionSize() calls;
+        QMessageBox::warning(m_pFilesG, "Info", "The font changes will only be used after restarting the application."); //ttt2 try to get this work, probably needs to call QHeaderView::resizeSection(), as well as review all setMinimumSectionSize() and setDefaultSectionSize() calls;
         return;
     }
 
@@ -492,22 +492,11 @@ void CommonData::setFontInfo(const std::string& strGenName, int nGenSize, int nL
     //m_fixedFont.setFixedPitch(true);  // !!! needed to select some fixed font in case there's no "B&H LucidaTypewriter" installed
     m_fixedFont.setFixedPitch(true);
     m_fixedFont.setStyleHint(QFont::Courier);
-    //f.setPixelSize(12); //ttt2 hard-coded "12"; //ttt1 some back-up font instead of just letting the system decide
+    //f.setPixelSize(12); //ttt2 hard-coded "12"; //ttt2 some back-up font instead of just letting the system decide
     m_fixedFont.setPointSize(nFixedSize);
 
 
     CELL_HEIGHT = QApplication::fontMetrics().height() + 3;
-
-    //qDebug("wdth %d", QApplication::fontMetrics().width("W"));
-    //qDebug("wdth %d", QApplication::fontMetrics().maxWidth()); // too big, probably from non-ASCII-letter chars
-    /*int n (QApplication::fontMetrics().width("W")); // ttt1 switch to W', M' and m' when needed
-    n = max(n, QApplication::fontMetrics().width("M"));
-    n = max(n, QApplication::fontMetrics().width("m"));
-#ifndef WIN32
-    CELL_WIDTH = n + 5;
-#else
-    CELL_WIDTH = n + 6; //ttt2 hard-coded "6"; see how to get the correct value
-#endif*/
 
     {
         QPixmap img (100, 100); //ttt2 revisit the size; might need increase in the future
@@ -1554,8 +1543,8 @@ const QFont& getFixedFont()
         s_font.setFamily("B&H LucidaTypewriter");
         //s_font.setFamily("B&H LucidaTypewriter12c");
         s_font.setFixedPitch(true);  // !!! needed to select some fixed font in case there's no "B&H LucidaTypewriter" installed
-        s_font.setPixelSize(12); //ttt2 hard-coded "12"; //ttt1 some back-up font instead of just letting the system decide
-        //s_font.setPointSize(9); //ttt2 hard-coded "9"; //ttt2 some back-up font instead of just letting the system decide
+        s_font.setPixelSize(12); //ttt2 hard-coded "12";
+        //s_font.setPointSize(9); //ttt2 hard-coded "9";
 
 //QFont f; qDebug("default font: pix %d, point: %d, fam: %s", f.pixelSize(), f.pointSize(), f.family().toLatin1().data());
 
@@ -1941,7 +1930,7 @@ qDebug("1c %d %d %d", cSize(vpAll), cSize(vpFlt), cSize(vpView));*/
 
     m_vpAllHandlers.clear(); m_vpFltHandlers.clear(); m_vpViewHandlers.clear();
     set_union(vpAll.begin(), vpAll.end(), vpAdd.begin(), vpAdd.end(), back_inserter(m_vpAllHandlers), CmpMp3HandlerPtrByName());
-    set_union(vpFlt.begin(), vpFlt.end(), vpAdd.begin(), vpAdd.end(), back_inserter(m_vpFltHandlers), CmpMp3HandlerPtrByName()); // !!! perhaps for view and flt we should check the directory/filter, but it seems more important that the new handlers are seen, so they can be compared to the old ones //ttt1 review
+    set_union(vpFlt.begin(), vpFlt.end(), vpAdd.begin(), vpAdd.end(), back_inserter(m_vpFltHandlers), CmpMp3HandlerPtrByName()); // !!! perhaps for view and flt we should check the directory/filter, but it seems more important that the new handlers are seen, so they can be compared to the old ones //ttt2 review
     set_union(vpView.begin(), vpView.end(), vpAdd.begin(), vpAdd.end(), back_inserter(m_vpViewHandlers), CmpMp3HandlerPtrByName());
 
     updateWidgets(strCrtName, vstrSel);

@@ -135,30 +135,15 @@ Finds problems in MP3 files and helps the user to fix many of them using include
 
 
 
-/*
-ttt1
-dpkg-deb: building package `mp3diags' in `../mp3diags_0.99.01.009_i386.deb'.
-dpkg-genchanges >../mp3diags_0.99.01.009_i386.changes
-parsechangelog/debian: warning: debian/changelog(l9): found change data where expected next heading or eof
-LINE: * improved font handling
-parsechangelog/debian: warning: debian/changelog(l15): found change data where expected next heading or eof
-LINE: * initial version
-parsechangelog/debian: warning: debian/changelog(l9): found change data where expected next heading or eof
-LINE: * improved font handling
-parsechangelog/debian: warning: debian/changelog(l15): found change data where expected next heading or eof
-LINE: * initial version
-dpkg-genchanges: warning: the current version (0.99.01.009) is smaller than the previous one (unknown1)
-
-*/
-
 
 //ttt0 doc: use case: compare images, id3v2 tags; first use right-click to see what happens, then transf lists
+//ttt0 how to process: run an automated check, then filter the files to only show those with issues; the user chooses how to deal with those issues; then the changes are applied
+
 
 //ttt2 perhaps "Scan images in the current folder", checked by default
 //ttt2 perhaps something to remove image files after assigning them, or at least show them in a different color; it was suggested to add a "-" button to remove images, below the "v" for "assigning them", but not sure it's such great idea; perhaps some option to delete local images that were assigned (but perhaps the unassigned CD scan should go as well); // perhaps "-" works, though; should be enabled/visible only for local files
 
 
-//ttt1 handle Lyrics tag, display, transform, download ...
 
 
 
@@ -166,8 +151,7 @@ dpkg-genchanges: warning: the current version (0.99.01.009) is smaller than the 
 
 
 
-
-//ttt1 some standard means to log only uncaught exceptions
+//ttt2 some standard means to log only uncaught exceptions
 
 
 
@@ -189,11 +173,10 @@ Based on the above two settings, 8dot3 name creation is enabled on c:.
 */
 
 
-//ttt0 Perhaps linking Boost statically and Qt dynamically would solve most dependency issues - http://pages.cs.wisc.edu/~thomas/X/static-linking.html : "surround the libraries you wish to link statically with -static and -dynamic (in that order)"; OTOH "-dynamic" is not in man
+//ttt2 Perhaps linking Boost statically and Qt dynamically would solve most dependency issues - http://pages.cs.wisc.edu/~thomas/X/static-linking.html : "surround the libraries you wish to link statically with -static and -dynamic (in that order)"; OTOH "-dynamic" is not in man
 
 
-//ttt0 html: try and not show "back" if there's no back
 
-//ttt0 "when close tag edt with fast save - rescan"
-//ttt0 at startup scan the whole thing not crt dir only
+
+
 

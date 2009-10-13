@@ -93,7 +93,7 @@ private:
         int nStart (attrs.value("start").toInt());
         int nEnd (attrs.value("end").toInt());
         int nCount (attrs.value("numResults").toInt());
-        CB_ASSERT (0 == nEnd % 20 || nEnd == nCount); //ttt1 see if this needs to be more flexible
+        CB_ASSERT (0 == nEnd % 20 || nEnd == nCount); //ttt2 see if this needs to be more flexible
         int nPageCnt ((nCount + 19) / 20);
         int nCrtPage ((nStart - 1)/20);
         if (0 == nPageCnt) { nCrtPage = -1; } // !!! needed for consistency
@@ -183,7 +183,7 @@ struct AlbumXmlHandler : public SimpleSaxHandler<AlbumXmlHandler>
                     Node& format (makeNode(formats, "format")); format.onStart = &AlbumXmlHandler::onFormatStart;
                 Node& genres (makeNode(rel, "genres"));
                     Node& genre (makeNode(genres, "genre")); genre.onChar = &AlbumXmlHandler::onGenreChar;
-                //Node& QQQQQQQ (makeNode(QQQQQQQ, "styles //ttt1 see if there's a use for styles
+                //Node& QQQQQQQ (makeNode(QQQQQQQ, "styles //ttt2 see if there's a use for styles
                     //Node& QQQQQQQ (makeNode(QQQQQQQ, "style
                 Node& released (makeNode(rel, "released")); released.onChar = &AlbumXmlHandler::onReleasedChar;
                 Node& notes (makeNode(rel, "notes")); notes.onChar = &AlbumXmlHandler::onNotesChar;
@@ -240,7 +240,7 @@ private:
         //qDebug(" orig role %s", s.c_str());
         s = transfRole(s);
         //qDebug(" transf role %s", s.c_str());
-        return "composedby" == s || "writtenby" == s || "musicby" == s || "lyricsby" == s; // ttt1 review whether all these should be added to "composer"; see if some others should be put here
+        return "composedby" == s || "writtenby" == s || "musicby" == s || "lyricsby" == s; // ttt2 review whether all these should be added to "composer"; see if some others should be put here
     }
 
 
@@ -346,7 +346,7 @@ private:
 
     void onTrkExtraArtistEnd()
     {
-        if (isComposerRole(m_strExtraArtistRole)) // ttt1 see if "Music By" should be compared too
+        if (isComposerRole(m_strExtraArtistRole)) // ttt2 see if "Music By" should be compared too
         {
             addIfMissing(m_albumInfo.m_vTracks.back().m_strComposer, m_strExtraArtistName);
 //inspect(m_strExtraArtistName);
@@ -361,7 +361,7 @@ private:
     void onExtraArtistNameChar(const string& s)
     {
         m_strExtraArtistName = s;
-        //addIfMissing(m_strExtraArtistName, s); // ttt1 review if this makes sense, given that for artists there is the option to join, but not sure about extraartists:
+        //addIfMissing(m_strExtraArtistName, s); // ttt2 review if this makes sense, given that for artists there is the option to join, but not sure about extraartists:
         /*
         <track>
             <position>5</position>
@@ -454,6 +454,7 @@ private:
     dest.m_strReleased = m_strReleased;
     dest.m_strNotes = m_strNotes;
     dest.m_vTracks = m_vTracks;
+    //dest.m_eVarArtists  // !!! missing
 
     dest.m_strSourceName = DiscogsDownloader::SOURCE_NAME; // Discogs, MusicBrainz, ... ; needed by MainFormDlgImpl;
     //dest.m_imageInfo; // !!! not set
@@ -669,4 +670,4 @@ void DiscogsDownloader::requestImage(int nAlbum, int nImage)
 
 
 
-//ttt1 perhaps make m_pResArtistE editable
+

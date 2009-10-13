@@ -42,7 +42,7 @@ using namespace std;
 //ttt2 remove id3v1; copy id3v2 to id3v1; copy id3v1 to id3v2;
 
 
-// ttt1 another option: before a group of transforms is executed on a group of files, a function is called on transforms to allow them to ask config info. most won't use this ...
+// ttt2 another option: before a group of transforms is executed on a group of files, a function is called on transforms to allow them to ask config info. most won't use this ...
 
 
 
@@ -129,7 +129,7 @@ bool Id3V2Cleaner::processId3V2Stream(Id3V2StreamBase& strm, ofstream_utf8& out)
 
 
 
-//ttt1 perhaps if there's only one APIC with some unsupported type convert it to "front cover"
+
 
 
 // APIC: if it can be loaded or is unsupported - keep; on error - dump
@@ -168,7 +168,7 @@ bool Id3V2Rescuer::processId3V2Stream(Id3V2StreamBase& strm, ofstream_utf8* pOut
         else if (0 == strcmp(KnownFrames::LBL_IMAGE(), pFrm->m_szName))
         {
             CB_ASSERT (Id3V2Frame::NO_APIC != pFrm->m_eApicStatus);
-            if (Id3V2Frame::ERR != pFrm->m_eApicStatus && Id3V2Frame::USES_LINK != pFrm->m_eApicStatus) // not sure about link; OTOH going to the tab editor will get rid of links, so we do it here as well
+            if (Id3V2Frame::COVER == pFrm->m_eApicStatus || Id3V2Frame::NON_COVER == pFrm->m_eApicStatus) // not sure about link; OTOH going to the tab editor will get rid of links, so we do it here as well
             {
                 wrt.addNonOwnedFrame(pFrm);
             }
@@ -187,7 +187,7 @@ bool Id3V2Rescuer::processId3V2Stream(Id3V2StreamBase& strm, ofstream_utf8* pOut
     return !wrt.contentEqualTo(&strm);
 }
 
-
+//ttt2 consider empty frames; or identifying valid id3v2 frames instead of stopping at first error, also looking in next unknown streams;
 
 /*override*/ Transformation::Result Id3V2Rescuer::apply(const Mp3Handler& h, const TransfConfig& transfConfig, const std::string& strOrigSrcName, std::string& strTempName)
 {
@@ -270,7 +270,7 @@ e1:
                 NoteColl notes (20);
                 StringWrp fileName (h.getName());
                 Id3V240Stream strm (0, notes, in, &fileName, Id3V240Stream::ACCEPT_BROKEN);
-                Id3V230StreamWriter wrt (m_pCommonData->m_bKeepOneValidImg, m_pCommonData->useFastSave(), &strm, h.getName()); //ttt1 if useFastSave is true there should probably be an automatic reload; OTOH we may want to delay until more transforms are applied, so probably it's OK as is
+                Id3V230StreamWriter wrt (m_pCommonData->m_bKeepOneValidImg, m_pCommonData->useFastSave(), &strm, h.getName()); //ttt2 if useFastSave is true there should probably be an automatic reload; OTOH we may want to delay until more transforms are applied, so probably it's OK as is
                 wrt.write(out);
                 bChanged = true;
                 bRecall = true;
@@ -304,7 +304,7 @@ e1:
     string strActionName (string("Convert non-ASCII ID3V2 text frames to Unicode assuming codepage ") + m_pCommonData->m_pCodec->name().data());
     if (strActionName != m_strActionName)
     {
-        m_strActionName = strActionName; // to make sure that pointer comparisons still work (though they should probably be replaced by string comparisons) //ttt1 replace ptr comparisons
+        m_strActionName = strActionName; // to make sure that pointer comparisons still work (though they should probably be replaced by string comparisons) //ttt2 replace ptr comparisons
     }
     return m_strActionName.c_str();
 }
@@ -739,7 +739,7 @@ bool Id3V1ToId3V2Copier::processId3V2Stream(Id3V2StreamBase& strm, ofstream_utf8
     { // temp
         transfConfig.getTempName(strOrigSrcName, getActionName(), strTempName);
         ofstream_utf8 out (strTempName.c_str(), ios::binary);
-        in.seekg(0); // ttt1 see if still needed
+        in.seekg(0); // ttt2 doesn't seem needed; search for similar cases and perhaps remove them all
 
         for (int i = 0, n = cSize(vpStreams); i < n; ++i)
         {
@@ -1112,7 +1112,7 @@ bool Id3V1ToId3V2Copier::processId3V2Stream(Id3V2StreamBase& strm, ofstream_utf8
 //========================================================================================================================
 
 //ttt2 perhaps be able to extract composer even when the field is empty, if artist is "composer [artist]", but doesn't look too useful
-//ttt1 perhaps something to discard invalid ID3V2 frames, especially invalid pictures
+
 
 
 //ttt2 warn in config if user enables fast save and then hides Id3V2Compactor

@@ -80,7 +80,7 @@ QPixmap ImageInfo::getPixmap(int nMaxWidth /*= -1*/, int nMaxHeight /*= -1*/) co
 
 bool ImageInfo::operator==(const ImageInfo& other) const
 {
-    return m_eCompr == other.m_eCompr /*&& m_eStatus == other.m_eStatus*/ && m_nWidth == other.m_nWidth && m_compressedImg == other.m_compressedImg; // !!! related to Id3V230StreamWriter::addImage() status is ignored in both places //ttt1 review decision to ignore status
+    return m_eCompr == other.m_eCompr /*&& m_eStatus == other.m_eStatus*/ && m_nWidth == other.m_nWidth && m_compressedImg == other.m_compressedImg; // !!! related to Id3V230StreamWriter::addImage() status is ignored in both places //ttt2 review decision to ignore status
 }
 
 
@@ -149,7 +149,7 @@ const char* ImageInfo::getImageType() const
 // scales down origPic and stores the pixmap in scaledPic, as well as a compressed version in comprImg; the algorithm coninues until comprImg becomes smaller than MAX_IMAGE_SIZE or until the width and the height of scaledPic get smaller than 150; no scaling is done if comprImg turns out to be small enough for the original image;
 /*static*/ void ImageInfo::compress(const QPixmap& origPic, QPixmap& scaledPic, QByteArray& comprImg)
 {
-    const int QUAL (-1); //ttt1 hard-coded
+    const int QUAL (-1); //ttt2 hard-coded
 
     //QPixmap scaledImg;
     int n (max(origPic.width(), origPic.height()));
@@ -195,7 +195,7 @@ void ImageInfo::showFull(QWidget* pParent) const
     QVBoxLayout* pLayout (new QVBoxLayout(&dlg));
     //dlg.setLayout(pGridLayout);
     QLabel* p (new QLabel(&dlg));
-    p->setPixmap(getPixmap()); //ttt1 see if it should limit size (IIRC QLabel scaled down once a big image)
+    p->setPixmap(getPixmap()); //ttt2 see if it should limit size (IIRC QLabel scaled down once a big image)
     pLayout->addWidget(p, 0, Qt::AlignHCenter);
 
     p = new QLabel(getTextDescr(), &dlg);
