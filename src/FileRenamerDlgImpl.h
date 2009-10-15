@@ -73,6 +73,7 @@ public:
 
     const Renamer* getRenamer() const { return m_pRenamer; }
     void setRenamer(const Renamer*);
+    void setUnratedAsDuplicates(bool bUnratedAsDuplicate);
 
     const std::deque<const Mp3Handler*> getHandlerList() const; // returns either m_pCommonData->getCrtAlbum() or m_pCommonData->getViewHandlers(), based on m_bUseCurrentView
 
@@ -167,8 +168,7 @@ protected slots:
 
     void onPatternClicked();
 
-    //void onPatternChanged();
-    //void onAlbumChanged();
+    void on_m_pMarkUnratedAsDuplicatesCkB_clicked();
 
     void onHelp();
 };
@@ -184,7 +184,7 @@ class Renamer
     const CommonData* m_pCommonData;
     std::auto_ptr<FileRenamer::InvalidCharsReplacer> m_pInvalidCharsReplacer;
 public:
-    Renamer(const std::string& strPattern, const CommonData* pCommonData);
+    Renamer(const std::string& strPattern, const CommonData* pCommonData, bool bUnratedAsDuplicate);
     ~Renamer();
     const std::string& getPattern() const { return m_strPattern; }
 
@@ -196,6 +196,8 @@ public:
         const std::string m_strErr;
         InvalidPattern(const std::string& strPattern, const std::string& strErr) : m_strErr("Pattern \"" + strPattern + "\" is invalid. " + strErr) {}
     };
+
+    mutable bool m_bUnratedAsDuplicate;
 };
 
 #endif

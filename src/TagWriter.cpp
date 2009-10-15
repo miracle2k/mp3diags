@@ -441,26 +441,51 @@ void Mp3HandlerTagData::setUp()
                     string s (p->getValue((TagReader::Feature)f));
                     if (!s.empty())
                     {
+                        bool bId3V2Val (true);
+
+                        if ((TagReader::ARTIST == f || TagReader::COMPOSER == f) && TC_NONE != m_pTagWriter->m_eArtistCase)
+                        {
+                            string s1 (convStr(getCaseConv(convStr(s), m_pTagWriter->m_eArtistCase)));
+                            if (s1 != s)
+                            {
+                                s = s1;
+                                bId3V2Val = false;
+                            }
+                        }
+
+                        if ((TagReader::TITLE == f || TagReader::ALBUM == f) && TC_NONE != m_pTagWriter->m_eTitleCase) //ttt2 perhaps include genre as well
+                        {
+                            string s1 (convStr(getCaseConv(convStr(s), m_pTagWriter->m_eTitleCase)));
+                            if (s1 != s)
+                            {
+                                s = s1;
+                                bId3V2Val = false;
+                            }
+                        }
+
                         inf.m_strValue = s;
 
-                        bool bId3V2Val (false);
-                        if (isId3V2(p))
+                        if (bId3V2Val)
                         {
-                            bId3V2Val = true;
-                        }
-                        else if (bId3V2Found)
-                        { // !!! nothing: an ID3V2 was already found and, since it got here, the value was empty
-                        }
-                        else
-                        { // find the first ID3V2 and see if it has the same value
-                            for (; i < n; ++i)
+                            bId3V2Val = false; // !!!
+                            if (isId3V2(p))
                             {
-                                TagReader* p1 (m_vpTagReaders[i]);
-                                if (isId3V2(p1))
+                                bId3V2Val = true;
+                            }
+                            else if (bId3V2Found)
+                            { // !!! nothing: an ID3V2 was already found and, since it got here, the value was empty
+                            }
+                            else
+                            { // find the first ID3V2 and see if it has the same value
+                                for (; i < n; ++i)
                                 {
-                                    string s1 (p1->getValue((TagReader::Feature)f));
-                                    bId3V2Val = (s1 == s);
-                                    break;
+                                    TagReader* p1 (m_vpTagReaders[i]);
+                                    if (isId3V2(p1))
+                                    {
+                                        string s1 (p1->getValue((TagReader::Feature)f));
+                                        bId3V2Val = (s1 == s);
+                                        break;
+                                    }
                                 }
                             }
                         }
@@ -693,7 +718,7 @@ int Mp3HandlerTagData::getImage() const // 0-based; -1 if there-s no image;
 double Mp3HandlerTagData::getRating() const
 {
     string s (getData(TagReader::RATING));
-    double d (s.empty() ? -1 : atof(s.c_str())); //ttt0 review atof/sprintf usage, for foreign locales;
+    double d (s.empty() ? -1 : atof(s.c_str())); // !!! it's OK to use atof, regardless of the system's locale, because a program's locale is "C" unless changed explicitley ("locale::global(locale(""));" would switch to the system's locale)
     return d;
 }
 
@@ -792,7 +817,7 @@ const TagReader* Mp3HandlerTagData::getMatchingReader(int i) const
 
 
 
-TagWriter::TagWriter(CommonData* pCommonData, QWidget* pParentWnd, const bool& bIsFastSaving) : m_pCommonData(pCommonData), m_pParentWnd(pParentWnd), m_nCurrentFile(-1), m_bShowedNonSeqWarn(true), m_bIsFastSaving(bIsFastSaving), m_nFileToErase(-1), m_bVariousArtists(false), m_bAutoVarArtists(false), m_bDelayedAdjVarArtists(false), m_bWaitingChangeNotif(false)
+TagWriter::TagWriter(CommonData* pCommonData, QWidget* pParentWnd, const bool& bIsFastSaving, const TextCaseOptions& eArtistCase, const TextCaseOptions& eTitleCase) : m_pCommonData(pCommonData), m_pParentWnd(pParentWnd), m_nCurrentFile(-1), m_bShowedNonSeqWarn(true), m_bIsFastSaving(bIsFastSaving), m_nFileToErase(-1), m_bVariousArtists(false), m_bAutoVarArtists(false), m_bDelayedAdjVarArtists(false), m_bWaitingChangeNotif(false), m_eArtistCase(eArtistCase),  m_eTitleCase(eTitleCase)
 {
 }
 

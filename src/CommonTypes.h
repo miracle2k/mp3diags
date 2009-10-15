@@ -115,5 +115,13 @@ struct AlbumInfo
 
 std::ostream& operator<<(std::ostream&, const AlbumInfo&);
 
+enum TextCaseOptions { TC_NONE = -1, TC_LOWER = 0, TC_UPPER, TC_TITLE, TC_SENTENCE };
+
+QString getCaseConv(const QString& s, TextCaseOptions eCase);
+
+const char* getCaseAsStr(TextCaseOptions e);
+
+
+
 #endif // #ifndef CommonTypesH
 

@@ -1345,7 +1345,7 @@
            <widget class="QComboBox" name="m_pArtistsCaseCbB" >
             <property name="minimumSize" >
              <size>
-              <width>250</width>
+              <width>150</width>
               <height>0</height>
              </size>
             </property>
@@ -1378,7 +1378,7 @@
            <widget class="QComboBox" name="m_pOthersCaseCbB" >
             <property name="minimumSize" >
              <size>
-              <width>250</width>
+              <width>150</width>
               <height>0</height>
              </size>
             </property>

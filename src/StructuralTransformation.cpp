@@ -277,7 +277,22 @@ void InnerNonAudioRemover::setupDiscarded(const Mp3Handler& h)
         }
     }
 }
-//ttt2 see about unsynch audio (when some frames use data from other frames - bit reservoirs) ; http://www.hydrogenaudio.org/forums/index.php?showtopic=35654&st=25&p=354991&#entry354991 http://www.hydrogenaudio.org/forums/lofiversion/index.php/t42194.html ; http://www.hydrogenaudio.org/forums/index.php?showtopic=38510&pid=347136&mode=threaded&start=0#entry347136
+/*
+ttt2 see about unsynch audio (when some frames use data from other frames - bit reservoirs)
+
+diagram at http://www.hydrogenaudio.org/forums/index.php?showtopic=36445&pid=321867&mode=threaded&start=#entry321867
+
+http://www.hydrogenaudio.org/forums/index.php?showtopic=35654&st=25&p=354991&#entry354991
+http://www.hydrogenaudio.org/forums/lofiversion/index.php/t42194.html http://www.hydrogenaudio.org/forums/index.php?showtopic=38510&pid=347136&mode=threaded&start=0#entry347136
+
+the issue is that this is stored in the "side info" area, which is poorly documented, the main way to figure out what's going on being to look at working code;
+
+so it's probably not worth the bother; something that could probably be done is to remove some/most of the "truncated audio" notes, where the last frame only uses the beginning of the area; still, padding with 0 is probably better, as most stand-alone taggers shoudln't care about side info, and probably just expect a full frame;
+
+note that inserting a blank frame before a cut duesn't really solve the warning in mplayer about being unable to rewind, because the side info needs to be modified in the affected frames
+*/
+
+
 
 /*override*/ bool InnerNonAudioRemover::matches(DataStream* p) const
 {
@@ -567,6 +582,9 @@ void MismatchedXingRemover::setupDiscarded(const Mp3Handler& h)
 //================================================================================================================================
 //================================================================================================================================
 //================================================================================================================================
+
+//ttt2 see how adding a Xing header affects gapless playing. split a VBR file
+
 
 //ttt2 in a way this could take care of Xing headers for CBR streams as well, but it doesn't seem the best place to do it, especially as we ignore most of the data in the Lame header and "restoring a header" means just putting back byte count and frame count
 /*override*/ Transformation::Result VbrRepairerBase::repair(const Mp3Handler& h, const TransfConfig& transfConfig, const std::string& strOrigSrcName, std::string& strTempName, bool bForceRebuild)

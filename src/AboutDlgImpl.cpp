@@ -136,8 +136,7 @@ Finds problems in MP3 files and helps the user to fix many of them using include
 
 
 
-//ttt0 doc: use case: compare images, id3v2 tags; first use right-click to see what happens, then transf lists
-//ttt0 how to process: run an automated check, then filter the files to only show those with issues; the user chooses how to deal with those issues; then the changes are applied
+
 
 
 //ttt2 perhaps "Scan images in the current folder", checked by default

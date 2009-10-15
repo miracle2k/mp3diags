@@ -64,6 +64,15 @@ void HndlrListModel::setRenamer(const Renamer* p)
 }
 
 
+void HndlrListModel::setUnratedAsDuplicates(bool bUnratedAsDuplicate)
+{
+    if (0 == m_pRenamer) { return; }
+
+    m_pRenamer->m_bUnratedAsDuplicate = bUnratedAsDuplicate;
+    emitLayoutChanged();
+}
+
+
 // returns either m_pCommonData->getCrtAlbum() or m_pCommonData->getViewHandlers(), based on m_bUseCurrentView
 const deque<const Mp3Handler*> HndlrListModel::getHandlerList() const
 {
@@ -200,6 +209,11 @@ CurrentAlbumDelegate::CurrentAlbumDelegate(QWidget* pParent, HndlrListModel* pHn
         //pPainter->fillRect(option.rect, QColor(255, 226, 236)); //ttt2 perhaps put back, but should work for "missing fields" as well
     }
 
+    if (0 != m_pHndlrListModel->getRenamer() && index.column() == 1 && fileExists(m_pHndlrListModel->getRenamer()->getNewName(p)))
+    {
+        pPainter->fillRect(option.rect, QColor(255, 226, 236));
+    }
+
     QItemDelegate::paint(pPainter, option, index);
 
     pPainter->restore();
@@ -239,8 +253,8 @@ FileRenamerDlgImpl::FileRenamerDlgImpl(QWidget* pParent, CommonData* pCommonData
 
     {
         int nWidth, nHeight;
-        bool bKeepOriginal;
-        m_pCommonData->m_settings.loadRenamerSettings(nWidth, nHeight, m_nSaButton, m_nVaButton, bKeepOriginal);
+        bool bKeepOriginal, bUnratedAsDuplicate;
+        m_pCommonData->m_settings.loadRenamerSettings(nWidth, nHeight, m_nSaButton, m_nVaButton, bKeepOriginal, bUnratedAsDuplicate);
         if (nWidth > 400 && nHeight > 400)
         {
             resize(nWidth, nHeight);
@@ -253,6 +267,7 @@ FileRenamerDlgImpl::FileRenamerDlgImpl(QWidget* pParent, CommonData* pCommonData
         if (m_nVaButton >= cSize(m_vstrPatterns) || m_nVaButton <= 0) { m_nVaButton = 0; }
         if (m_nSaButton >= cSize(m_vstrPatterns) || m_nSaButton <= 0) { m_nSaButton = 0; }
         m_pKeepOriginalCkB->setChecked(bKeepOriginal);
+        m_pMarkUnratedAsDuplicatesCkB->setChecked(bUnratedAsDuplicate);
     }
 
 
@@ -273,7 +288,7 @@ FileRenamerDlgImpl::FileRenamerDlgImpl(QWidget* pParent, CommonData* pCommonData
 
 FileRenamerDlgImpl::~FileRenamerDlgImpl()
 {
-    m_pCommonData->m_settings.saveRenamerSettings(width(), height(), m_nSaButton, m_nVaButton, m_pKeepOriginalCkB->isChecked());
+    m_pCommonData->m_settings.saveRenamerSettings(width(), height(), m_nSaButton, m_nVaButton, m_pKeepOriginalCkB->isChecked(), m_pMarkUnratedAsDuplicatesCkB->isChecked());
 }
 
 
@@ -370,7 +385,7 @@ void FileRenamerDlgImpl::onPatternClicked()
     {
         m_nVaButton = nId;
     }
-    m_pHndlrListModel->setRenamer(new Renamer(m_vstrPatterns[nId], m_pCommonData));
+    m_pHndlrListModel->setRenamer(new Renamer(m_vstrPatterns[nId], m_pCommonData, m_pMarkUnratedAsDuplicatesCkB->isChecked()));
 }
 
 
@@ -700,12 +715,12 @@ void FileRenamerDlgImpl::selectPattern()
         if (isSingleArtist())
         {
             m_pButtonGroup->button(m_nSaButton)->setChecked(true);
-            m_pHndlrListModel->setRenamer(new Renamer(m_vstrPatterns[m_nSaButton], m_pCommonData));
+            m_pHndlrListModel->setRenamer(new Renamer(m_vstrPatterns[m_nSaButton], m_pCommonData, m_pMarkUnratedAsDuplicatesCkB->isChecked()));
         }
         else
         {
             m_pButtonGroup->button(m_nVaButton /*+ cSize(m_vstrPatterns)*/)->setChecked(true);
-            m_pHndlrListModel->setRenamer(new Renamer(m_vstrPatterns[m_nVaButton], m_pCommonData));
+            m_pHndlrListModel->setRenamer(new Renamer(m_vstrPatterns[m_nVaButton], m_pCommonData, m_pMarkUnratedAsDuplicatesCkB->isChecked()));
         }
     }
     else
@@ -733,7 +748,7 @@ void FileRenamerDlgImpl::loadPatterns()
         string strPatt (v[i]);
         try
         {
-            Renamer r (strPatt, m_pCommonData);
+            Renamer r (strPatt, m_pCommonData, m_pMarkUnratedAsDuplicatesCkB->isChecked());
             m_vstrPatterns.push_back(strPatt);
         }
         catch (const Renamer::InvalidPattern&)
@@ -790,6 +805,12 @@ void FileRenamerDlgImpl::onHelp()
     openHelp("240_file_renamer.html");
 }
 
+
+//void FileRenamerDlgImpl::on_m_pMarkUnratedAsDuplicatesCkB_stateChanged()
+void FileRenamerDlgImpl::on_m_pMarkUnratedAsDuplicatesCkB_clicked()
+{
+    m_pHndlrListModel->setUnratedAsDuplicates(m_pMarkUnratedAsDuplicatesCkB->isChecked());
+}
 
 
 //======================================================================================================================
@@ -873,10 +894,10 @@ struct TrackNoPattern : public PatternBase
     /*override*/ string getVal(const Mp3Handler* pHndl) const
     {
         const Id3V2StreamBase* p (pHndl->getId3V2Stream());
-        if (0 == p) { return ""; }
+        if (0 == p) { return "00"; }
         string s (p->getTrackNumber());
         int n (atoi(s.c_str()));
-        if (n <= 0) { return ""; }
+        if (n <= 0) { return "00"; }
         char a [20];
         sprintf(a, "%02d", n);
         return a;
@@ -887,13 +908,14 @@ struct TrackNoPattern : public PatternBase
 
 struct RatingPattern : public PatternBase
 {
-    RatingPattern(const InvalidCharsReplacer* pInvalidCharsReplacer) : PatternBase(pInvalidCharsReplacer) {}
+    RatingPattern(const InvalidCharsReplacer* pInvalidCharsReplacer, const bool& bUnratedAsDuplicate) : PatternBase(pInvalidCharsReplacer), m_bUnratedAsDuplicate(bUnratedAsDuplicate) {}
+    const bool& m_bUnratedAsDuplicate;
     /*override*/ string getVal(const Mp3Handler* pHndl) const
     {
         const Id3V2StreamBase* p (pHndl->getId3V2Stream());
         if (0 == p) { return ""; }
         double r (p->getRating());
-        if (r < 0) { return ""; }
+        if (r < 0) { return m_bUnratedAsDuplicate ? "q" : ""; }
 // from TrackTextReader::TrackTextReader
 //                                   a    b    c    d    e    f    g    h    i    j    k    l    m    n    o    p   q   r    s    t    u    v    w    x    y    z
 //static double s_ratingMap [] = { 5.0, 4.5, 4.0, 3.5, 3.0, 2.5, 2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 1.5, 1.0, 1.0, 1.0, -1, -1, 1.0, 1.0, 1.0, 1.0, 1.0, 0.5, 0.5, 0.0 };
@@ -949,7 +971,7 @@ private:
 //using namespace RenamerPatterns;
 
 
-Renamer::Renamer(const std::string& strPattern, const CommonData* pCommonData) : m_strPattern(strPattern), m_bSameDir(string::npos == strPattern.find(getPathSep())), m_pCommonData(pCommonData)
+Renamer::Renamer(const std::string& strPattern, const CommonData* pCommonData, bool bUnratedAsDuplicate1) : m_strPattern(strPattern), m_bSameDir(string::npos == strPattern.find(getPathSep())), m_pCommonData(pCommonData), m_bUnratedAsDuplicate(bUnratedAsDuplicate1)
 {
     if (0 != pCommonData)
     {
@@ -1031,7 +1053,7 @@ Renamer::Renamer(const std::string& strPattern, const CommonData* pCommonData) :
                 case 'g': pSeq->addPattern(new FieldPattern(TagReader::GENRE, m_pInvalidCharsReplacer.get())); break;
                 case 'c': pSeq->addPattern(new FieldPattern(TagReader::COMPOSER, m_pInvalidCharsReplacer.get())); break;
                 //ttt2 perhaps add something for "various artists"
-                case 'r': pSeq->addPattern(new RatingPattern(m_pInvalidCharsReplacer.get())); break;
+                case 'r': pSeq->addPattern(new RatingPattern(m_pInvalidCharsReplacer.get(), m_bUnratedAsDuplicate)); break;
 
                 case '%':
                 case '[':
@@ -1104,4 +1126,6 @@ string Renamer::getNewName(const Mp3Handler* pHndl) const
 }
 
 
+//ttt0 should be possible to filter by var/single artists and do the renaming for all; or have a checkbox in the renamer, but that requires the renamer to have the concept of an album
 
+//ttt0 ?? have names editable

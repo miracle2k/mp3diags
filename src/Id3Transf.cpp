@@ -422,72 +422,21 @@ struct PLPAS
 PLPAS llpwwe;
 */
 
-static QString getCaseConv(const QString& s, CommonData::Case eCase)
+
+
+/*override*/ const char* Id3V2CaseTransformer::getVisibleActionName() const
 {
-/*
-    lNames << "Lower case: first part. second part.";
-    lNames << "Upper case: FIRST PART. SECOND PART.";
-    lNames << "Title case: First Part. Second Part.";
-    lNames << "Phrase case: First part. Second part.";
-*/
-    switch(eCase)
+    string strActionName (string("Change case for ID3V2 text frames: Artists - ") + getCaseAsStr(m_pCommonData->m_eCaseForArtists) + "; Others - " + getCaseAsStr(m_pCommonData->m_eCaseForOthers));
+
+    if (strActionName != m_strActionName)
     {
-    case CommonData::LOWER: return s.toLower();
-
-    case CommonData::UPPER: return s.toUpper();
-
-    case CommonData::TITLE:
-        {
-            int n (s.size());
-            QString res;
-            bool bWhitesp (true);
-            for (int i = 0; i < n; ++i)
-            {
-                const QChar& qc (s[i]);
-                if (bWhitesp)
-                {
-                    res += qc.toUpper();
-                }
-                else
-                {
-                    res += qc.toLower();
-                }
-
-                bWhitesp = qc.isSpace() || qc == '.';
-            }
-            return res;
-        }
-
-    case CommonData::PHRASE:
-        {
-            int n (s.size());
-            QString res;
-            bool bPer (true);
-            for (int i = 0; i < n; ++i)
-            {
-                const QChar& qc (s[i]);
-                if (bPer)
-                {
-                    res += qc.toUpper();
-                }
-                else
-                {
-                    res += qc.toLower();
-                }
-
-                if (!qc.isSpace()) { bPer = (qc == '.'); }
-            }
-            return res;
-        }
+        m_strActionName = strActionName; // to make sure that pointer comparisons still work (though they should probably be replaced by string comparisons) //ttt2 replace ptr comparisons
     }
-
-    CB_ASSERT (false);
+    return m_strActionName.c_str();
 }
 
 
-
-
-bool Id3V2CaseTransformer::processId3V2Stream(Id3V2StreamBase& strm, ofstream_utf8& out)
+bool Id3V2CaseTransformer::processId3V2Stream(Id3V2StreamBase& strm, ofstream_utf8& out) //ttt0 improve
 {
     Id3V230StreamWriter wrt (m_pCommonData->m_bKeepOneValidImg, m_pCommonData->useFastSave(), &strm, strm.getFileName());
 

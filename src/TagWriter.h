@@ -343,8 +343,9 @@ class TagWriter : public QObject
 
     bool m_bDelayedAdjVarArtists;
     bool m_bWaitingChangeNotif;
+
 public:
-    TagWriter(CommonData* pCommonData, QWidget* pParentWnd, const bool& bIsFastSaving);
+    TagWriter(CommonData* pCommonData, QWidget* pParentWnd, const bool& bIsFastSaving, const TextCaseOptions& eArtistCase, const TextCaseOptions& eTitleCase);
     ~TagWriter();
 
     enum ClearData { DONT_CLEAR_DATA, CLEAR_DATA };
@@ -426,6 +427,9 @@ public:
 
     void toggleVarArtists();
     void delayedAdjVarArtists();
+
+    const TextCaseOptions& m_eArtistCase;
+    const TextCaseOptions& m_eTitleCase;
 
 private slots:
     void onAssignImage(int);

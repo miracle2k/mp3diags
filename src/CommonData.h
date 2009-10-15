@@ -36,6 +36,7 @@
 #include  "Mp3Manip.h"
 #include  "Helpers.h"
 #include  "FileEnum.h"
+#include  "CommonTypes.h"
 
 //class QFont;
 
@@ -408,9 +409,8 @@ public:
     bool useFastSave() const { return m_bFastSave; }
 
 public:
-    enum Case { LOWER, UPPER, TITLE, PHRASE };
-    Case m_eCaseForArtists;
-    Case m_eCaseForOthers;
+    TextCaseOptions m_eCaseForArtists;
+    TextCaseOptions m_eCaseForOthers;
 
     bool m_bWarnOnNonSeqTracks, m_bWarnPastingToNonSeqTracks;
     bool m_bShowExport, m_bShowDebug, m_bShowSessions;
@@ -615,7 +615,6 @@ QColor getDefaultBkgCol();
 //=====================================================================================================================
 //=====================================================================================================================
 //=====================================================================================================================
-
 
 void printFontInfo(const char* szLabel, const QFont& font);
 

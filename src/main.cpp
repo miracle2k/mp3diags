@@ -21,6 +21,9 @@
 
 
 #include  <algorithm>
+#include  <cstdio>
+#include  <iostream>
+#include  <locale>
 
 #include  <QApplication>
 #include  <QSettings>
@@ -35,8 +38,6 @@
 #include  "OsFile.h"
 
 //#include  "Profiler.h"
-#include  <cstdio>
-#include  <iostream>
 
 using namespace std;
 
@@ -165,13 +166,19 @@ void visStudioMessageOutput(QtMsgType, const char* szMsg)
 #endif
 
 
-
+#include <sstream>
 
 
 int main(int argc, char *argv[])
 {
     //DEFINE_PROF_ROOT("mp3diags");
     //PROF("root");
+
+    //locale::global(locale("")); ttt0 W7
+    ostringstream o;
+    o << 12345.78;
+    cout << o.str() << endl;
+    printf("%f\n", 12345.78);//*/
 
     void (*nh)() = set_new_handler(newHandler);
     if (0 != nh) { cerr << "previous new handler: " << (void*)nh << endl; }

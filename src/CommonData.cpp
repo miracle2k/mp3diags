@@ -306,8 +306,8 @@ void SessionSettings::loadMiscConfigSettings(CommonData* p) const
         }
         CB_ASSERT (0 != p->m_pCodec);
 
-        p->m_eCaseForArtists = (CommonData::Case)m_pSettings->value("id3V2Transf/caseForArtists", 2).toInt();
-        p->m_eCaseForOthers = (CommonData::Case)m_pSettings->value("id3V2Transf/caseForOthers", 3).toInt();
+        p->m_eCaseForArtists = (TextCaseOptions)m_pSettings->value("id3V2Transf/caseForArtists", 2).toInt();
+        p->m_eCaseForOthers = (TextCaseOptions)m_pSettings->value("id3V2Transf/caseForOthers", 3).toInt();
     }
 
     { // tag editor
@@ -2087,6 +2087,10 @@ void CommonData::setFastSave(bool bFastSave, bool bUpdateTransforms)
     m_bFastSave = bFastSave;
     if (!bUpdateTransforms) { return; }
 }
+
+
+
+
 
 
 /*

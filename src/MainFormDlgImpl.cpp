@@ -2810,7 +2810,7 @@ vector<Transformation*> MainFormDlgImpl::getFixes(const Note* pNote, const Mp3Ha
         ADD_FIX(id3v240IncorrectSynch, Id3V2Rescuer);
         ADD_FIX(id3v240IncorrectSynch, Id3V2Cleaner);
 
-        ADD_FIX(id3v240DeprTyerAndTdrc, Id3V2Rescuer);  //ttt0 no id3v240DeprXX tested, but it looks like they should work
+        ADD_FIX(id3v240DeprTyerAndTdrc, Id3V2Rescuer);
         ADD_FIX(id3v240DeprTyerAndTdrc, Id3V2Cleaner);
         ADD_FIX(id3v240DeprTyer, Id3V2Rescuer);
         ADD_FIX(id3v240DeprTyer, Id3V2Cleaner);

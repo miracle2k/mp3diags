@@ -20,6 +20,8 @@
  ***************************************************************************/
 
 
+#include  <algorithm>
+
 #include  <QScrollArea>
 #include  <QScrollBar>
 #include  <QPainter>
@@ -290,7 +292,7 @@ LAST_STEP("CurrentFileModel::headerData");
 //======================================================================================================================
 
 
-TagEditorDlgImpl::TagEditorDlgImpl(QWidget* pParent, CommonData* pCommonData, TransfConfig& transfConfig, bool& bDataSaved) : QDialog(pParent, getDialogWndFlags()), Ui::TagEditorDlg(), m_pCommonData(pCommonData), m_bSectionMovedLock(false), m_transfConfig(transfConfig), m_bIsFastSaving(false), m_bIsSaving(false), m_bIsNavigating(false), m_bDataSaved(bDataSaved), m_bWaitingAlbumResize(false), m_bWaitingFileResize(false)
+TagEditorDlgImpl::TagEditorDlgImpl(QWidget* pParent, CommonData* pCommonData, TransfConfig& transfConfig, bool& bDataSaved) : QDialog(pParent, getDialogWndFlags()), Ui::TagEditorDlg(), m_pCommonData(pCommonData), m_bSectionMovedLock(false), m_transfConfig(transfConfig), m_bIsFastSaving(false), m_bIsSaving(false), m_bIsNavigating(false), m_bDataSaved(bDataSaved), m_bWaitingAlbumResize(false), m_bWaitingFileResize(false), m_eArtistsCase(TC_NONE), m_eOthersCase(TC_NONE)
 {
     setupUi(this);
 
@@ -301,7 +303,7 @@ TagEditorDlgImpl::TagEditorDlgImpl(QWidget* pParent, CommonData* pCommonData, Tr
     m_pAssgnBtnWrp = new AssgnBtnWrp (m_pToggleAssignedB);
 
     {
-        m_pTagWriter = new TagWriter(m_pCommonData, this, m_bIsFastSaving);
+        m_pTagWriter = new TagWriter(m_pCommonData, this, m_bIsFastSaving, m_eArtistsCase, m_eOthersCase);
         loadTagWriterInf();
         connect(m_pTagWriter, SIGNAL(albumChanged()), this, SLOT(onAlbumChanged()));
         connect(m_pTagWriter, SIGNAL(fileChanged()), this, SLOT(onFileChanged()));
@@ -349,7 +351,10 @@ TagEditorDlgImpl::TagEditorDlgImpl(QWidget* pParent, CommonData* pCommonData, Tr
 
     {
         int nWidth, nHeight;
-        m_pCommonData->m_settings.loadTagEdtSettings(nWidth, nHeight);
+        int nArtistsCase, nOthersCase;
+        m_pCommonData->m_settings.loadTagEdtSettings(nWidth, nHeight, nArtistsCase, nOthersCase);
+        m_eArtistsCase = TextCaseOptions(nArtistsCase);
+        m_eOthersCase = TextCaseOptions(nOthersCase);
         if (nWidth > 400 && nHeight > 400)
         {
             resize(nWidth, nHeight);
@@ -473,7 +478,7 @@ TagEditorDlgImpl::~TagEditorDlgImpl()
 {
     saveTagWriterInf();
 
-    m_pCommonData->m_settings.saveTagEdtSettings(width(), height());
+    m_pCommonData->m_settings.saveTagEdtSettings(width(), height(), int(m_eArtistsCase), int(m_eOthersCase));
     delete m_pCurrentAlbumModel;
     delete m_pCurrentFileModel;
     delete m_pTagWriter;
@@ -1029,6 +1034,50 @@ void TagEditorDlgImpl::on_m_pVarArtistsB_clicked()
 }
 
 
+void TagEditorDlgImpl::on_m_pCaseB_clicked()
+{
+    QMenu menu;
+    vector<QAction*> vpAct;
+
+    QAction* pAct;
+    for (int i = TC_NONE; i <= TC_SENTENCE; ++i)
+    {
+        pAct = new QAction(QString("Artists - ") + getCaseAsStr(TextCaseOptions(i)), &menu); menu.addAction(pAct); vpAct.push_back(pAct);
+    }
+    menu.addSeparator();
+    for (int i = TC_NONE; i <= TC_SENTENCE; ++i)
+    {
+        pAct = new QAction(QString("Others - ") + getCaseAsStr(TextCaseOptions(i)), &menu); menu.addAction(pAct); vpAct.push_back(pAct);
+    }
+
+    for (int i = 0; i < cSize(vpAct); ++i) { vpAct[i]->setCheckable(true); }
+
+    CB_ASSERT(m_eArtistsCase >= TC_NONE && m_eArtistsCase <= TC_SENTENCE);
+    CB_ASSERT(m_eOthersCase >= TC_NONE && m_eOthersCase <= TC_SENTENCE);
+
+    vpAct[m_eArtistsCase - TC_NONE]->setChecked(true);
+    vpAct[m_eOthersCase - TC_NONE + 5]->setChecked(true);
+
+
+    QAction* p (menu.exec(m_pCaseB->mapToGlobal(QPoint(0, m_pCaseB->height()))));
+    if (0 != p)
+    {
+        int nIndex (std::find(vpAct.begin(), vpAct.end(), p) - vpAct.begin());
+        if (nIndex < 5)
+        {
+            m_eArtistsCase = TextCaseOptions(nIndex - 1);
+        }
+        else
+        {
+            m_eOthersCase = TextCaseOptions(nIndex - 1 - 5);
+        }
+
+        m_pTagWriter->reloadAll(m_pTagWriter->getCurrentName(), TagWriter::DONT_CLEAR_DATA, TagWriter::DONT_CLEAR_ASSGN);
+    }
+}
+
+
+
 void TagEditorDlgImpl::on_m_pSaveB_clicked() //ttt2 perhaps make this save selected list, by using SHIFT
 {
     if (!closeEditor()) { return; }
@@ -1217,6 +1266,7 @@ void TagEditorDlgImpl::resizeIcons()
     v.push_back(m_pSaveB);
     v.push_back(m_pReloadB);
     v.push_back(m_pVarArtistsB);
+    v.push_back(m_pCaseB);
     v.push_back(m_pCopyFirstB);
     v.push_back(m_pSortB);
     v.push_back(m_pToggleAssignedB);

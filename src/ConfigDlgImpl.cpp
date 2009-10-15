@@ -518,10 +518,14 @@ ConfigDlgImpl::ConfigDlgImpl(TransfConfig& transfCfg, CommonData* pCommonData, Q
 
     { // case
         QStringList lNames;
-        lNames << "Lower case: first part. second part.";
+        /*lNames << "Lower case: first part. second part.";
         lNames << "Upper case: FIRST PART. SECOND PART.";
         lNames << "Title case: First Part. Second Part.";
-        lNames << "Phrase case: First part. Second part.";
+        lNames << "Sentence case: First part. Second part.";*/ // ttt2 perhaps put this back; as of 2009.10.15, "." is no longer supported as a sentence ending
+        lNames << "lower case";
+        lNames << "UPPER CASE";
+        lNames << "Title Case";
+        lNames << "Sentence case";
 
         m_pArtistsCaseCbB->addItems(lNames);
         m_pOthersCaseCbB->addItems(lNames);
@@ -1002,8 +1006,8 @@ void ConfigDlgImpl::on_m_pOkB_clicked()
         }
 
         { // case
-            m_pCommonData->m_eCaseForArtists = (CommonData::Case)m_pArtistsCaseCbB->currentIndex();
-            m_pCommonData->m_eCaseForOthers = (CommonData::Case)m_pOthersCaseCbB->currentIndex();
+            m_pCommonData->m_eCaseForArtists = (TextCaseOptions)m_pArtistsCaseCbB->currentIndex(); //ttt2 perhaps allow NONE
+            m_pCommonData->m_eCaseForOthers = (TextCaseOptions)m_pOthersCaseCbB->currentIndex();
         }
 
         { // colors

@@ -31,6 +31,8 @@
 
 #include  "ui_TagEditor.h"
 
+#include  "CommonTypes.h"
+
 
 class CommonData;
 class QSettings;
@@ -199,6 +201,8 @@ class TagEditorDlgImpl : public QDialog, private Ui::TagEditorDlg
     void createPatternButtons();
     std::vector<QToolButton*> m_vpPattButtons;
 
+    TextCaseOptions m_eArtistsCase, m_eOthersCase;
+
 public:
     TagEditorDlgImpl(QWidget* pParent, CommonData* pCommonData, TransfConfig& transfConfig, bool& bDataSaved); // transfConfig is needed both to be able to instantiate the config dialog and for saving ID3V2
     ~TagEditorDlgImpl();
@@ -236,6 +240,7 @@ protected slots:
     void on_m_pToggleAssignedB_clicked();
     void on_m_pReloadB_clicked();
     void on_m_pVarArtistsB_clicked();
+    void on_m_pCaseB_clicked();
     void on_m_pCopyFirstB_clicked();
     void on_m_pSaveB_clicked();
     void on_m_pPasteB_clicked();

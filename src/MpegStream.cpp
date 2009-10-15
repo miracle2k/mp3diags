@@ -941,7 +941,4 @@ const char* getId3V1Genre(int n)
 
 
 
-//ttt0 see how adding a Xing frame affects gapless playing (seems that this can be checked on "Lasa, lasa Nr.5" -> "Dansul codrilor"
-
-
 
