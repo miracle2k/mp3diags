@@ -147,7 +147,7 @@ private:
             genres
                 genre
             //styles
-                //style
+                //style ttt0 use; https://sourceforge.net/apps/mantisbt/mp3diags/view.php?id=41
             released
             notes
             tracklist

@@ -638,7 +638,7 @@ void Id3V230StreamWriter::addNonOwnedFrame(const Id3V2Frame* p)
 
 
 
-// if multiple frames with the same name exist, they are all removed; asserts that nPictureType is -1 for non-APIC frames
+// if multiple frames with the same name exist, they are all removed; asserts that nPictureType is -1 for non-APIC frames; if nPictureType is -1 and strName is APIC, it removes all APIC frames
 void Id3V230StreamWriter::removeFrames(const std::string& strName, int nPictureType /*= -1*/)
 {
     const Id3V2Frame* p;
@@ -647,7 +647,7 @@ void Id3V230StreamWriter::removeFrames(const std::string& strName, int nPictureT
     {
         p = m_vpAllFrames[i];
         CB_ASSERT1 (-1 == nPictureType || KnownFrames::LBL_IMAGE() == strName, m_strDebugFileName);
-        if (p->m_szName == strName && (p->m_nPictureType == nPictureType || m_bKeepOneValidImg))
+        if (p->m_szName == strName && (p->m_nPictureType == nPictureType || m_bKeepOneValidImg || -1 == nPictureType))
         {
             m_vpAllFrames.erase(m_vpAllFrames.begin() + i);
         }
@@ -657,7 +657,7 @@ void Id3V230StreamWriter::removeFrames(const std::string& strName, int nPictureT
     {
         p = m_vpOwnFrames[i];
         CB_ASSERT1 (-1 == nPictureType || KnownFrames::LBL_IMAGE() == strName, m_strDebugFileName);
-        if (p->m_szName == strName && (p->m_nPictureType == nPictureType || m_bKeepOneValidImg))
+        if (p->m_szName == strName && (p->m_nPictureType == nPictureType || m_bKeepOneValidImg || -1 == nPictureType))
         {
             delete p;
             m_vpOwnFrames.erase(m_vpOwnFrames.begin() + i);

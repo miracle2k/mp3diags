@@ -191,6 +191,8 @@ public:
     //const FileRenamer::SequencePattern* getSeq() const { return m_pRoot; }
     std::string getNewName(const Mp3Handler*) const;
 
+    bool isSameDir() const { return m_bSameDir; }
+
     struct InvalidPattern
     {
         const std::string m_strErr;

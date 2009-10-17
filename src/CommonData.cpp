@@ -1885,6 +1885,7 @@ const Mp3Handler* CommonData::getHandler(const std::string& strName) const
 void CommonData::mergeHandlerChanges(const vector<const Mp3Handler*>& vpAdd1, const vector<const Mp3Handler*>& vpDel1, int nKeepWhenUpdate)
 {
     //m_bDirty = m_bDirty || !vpAdd1.empty() || !vpDel1.empty();
+    string strSongInCrtAlbum (m_nSongInCrtAlbum >= 0 && m_nSongInCrtAlbum < cSize(m_vpAllHandlers) ? m_vpAllHandlers[m_nSongInCrtAlbum]->getName() : "");
 
     const string& strCrtName (nKeepWhenUpdate & CURRENT ? getCrtName() : "");
     const vector<string>& vstrSel (nKeepWhenUpdate & SEL ? getSelNames() : vector<string>());
@@ -1925,6 +1926,7 @@ qDebug("1c %d %d %d", cSize(vpAll), cSize(vpFlt), cSize(vpView));*/
     set_difference(m_vpAllHandlers.begin(), m_vpAllHandlers.end(), vpDel.begin(), vpDel.end(), back_inserter(vpAll), CmpMp3HandlerPtrByName());
     set_difference(m_vpFltHandlers.begin(), m_vpFltHandlers.end(), vpDel.begin(), vpDel.end(), back_inserter(vpFlt), CmpMp3HandlerPtrByName());
     set_difference(m_vpViewHandlers.begin(), m_vpViewHandlers.end(), vpDel.begin(), vpDel.end(), back_inserter(vpView), CmpMp3HandlerPtrByName());
+//qDebug("m_vpAllHandlers.z()=%d, m_vpFltHandlers.size()=%d, m_nSongInCrtAlbum=%d, vpDel.sz=%d, vpDel1.sz=%d, vpAdd1.sz=%d", cSize(m_vpAllHandlers), cSize(m_vpFltHandlers), m_nSongInCrtAlbum, cSize(vpDel), cSize(vpDel1), cSize(vpAdd1));
 
     clearPtrContainer(vpDel);
 
@@ -1934,6 +1936,14 @@ qDebug("1c %d %d %d", cSize(vpAll), cSize(vpFlt), cSize(vpView));*/
     set_union(vpView.begin(), vpView.end(), vpAdd.begin(), vpAdd.end(), back_inserter(m_vpViewHandlers), CmpMp3HandlerPtrByName());
 
     updateWidgets(strCrtName, vstrSel);
+
+    if (!strSongInCrtAlbum.empty() && !m_vpFltHandlers.empty())
+    {
+        deque<const Mp3Handler*>::const_iterator it (lower_bound(m_vpFltHandlers.begin(), m_vpFltHandlers.end(), strSongInCrtAlbum, CmpMp3HandlerPtrByName()));
+        if (m_vpFltHandlers.end() == it) { --it; }
+        it = lower_bound(m_vpAllHandlers.begin(), m_vpAllHandlers.end(), *it, CmpMp3HandlerPtrByName());
+        m_nSongInCrtAlbum = it - m_vpAllHandlers.begin();
+    }
 }
 
 
@@ -1954,7 +1964,7 @@ void CommonData::setSongInCrtAlbum()
 deque<const Mp3Handler*> CommonData::getCrtAlbum() const //ttt2 perhaps sort by track, if there's an ID3V2; anyway, this is only used by TagWriter and FileRenamer, and TagWriter does its own sorting (there might be an issue if calling getCrtAlbum() multiple times for the same album returns songs in different order because tracks changed between the calls)
 {
     deque<const Mp3Handler*> v;
-    if (m_vpAllHandlers.empty()) { return v; }
+    if (m_vpFltHandlers.empty()) { return v; }
 
     //CB_ASSERT (m_nSongInCrtAlbum >= 0 && m_nSongInCrtAlbum < cSize(m_vpAllHandlers)); // !!! incorrect assert; files migth have been deleted without updating m_nSongInCrtAlbum (well, one of the purposes of this function is to update m_nSongInCrtAlbum)
     CB_ASSERT (m_nSongInCrtAlbum >= 0);
@@ -1976,10 +1986,11 @@ deque<const Mp3Handler*> CommonData::getCrtAlbum() const //ttt2 perhaps sort by 
 // used for album navigation in tag editor and file renamer
 bool CommonData::nextAlbum() const
 {
-    if (m_vpAllHandlers.empty()) { return false; }
+    if (m_vpFltHandlers.empty()) { return false; }
 
     CB_ASSERT (m_nSongInCrtAlbum >= 0 && m_nSongInCrtAlbum < cSize(m_vpAllHandlers));
     string s (m_vpAllHandlers[m_nSongInCrtAlbum]->getDir());
+//qDebug("m_vpAllHandlers.z()=%d, m_vpFltHandlers.size()=%d, m_nSongInCrtAlbum=%d", cSize(m_vpAllHandlers), cSize(m_vpFltHandlers), m_nSongInCrtAlbum);
 
     deque<const Mp3Handler*>::const_iterator it (lower_bound(m_vpFltHandlers.begin(), m_vpFltHandlers.end(), m_vpAllHandlers[m_nSongInCrtAlbum], CmpMp3HandlerPtrByName()));
     //CB_ASSERT (m_vpAllHandlers[m_nSongInCrtAlbum] == *it); // !!! wrong - getCrtAlbum() moves m_nSongInCrtAlbum to the first song in album regardless of filter
@@ -2002,10 +2013,9 @@ bool CommonData::nextAlbum() const
 
 
 
-
 bool CommonData::prevAlbum() const
 {
-    if (m_vpAllHandlers.empty()) { return false; }
+    if (m_vpFltHandlers.empty()) { return false; }
 
     CB_ASSERT (m_nSongInCrtAlbum >= 0 && m_nSongInCrtAlbum < cSize(m_vpAllHandlers));
     string s (m_vpAllHandlers[m_nSongInCrtAlbum]->getDir());

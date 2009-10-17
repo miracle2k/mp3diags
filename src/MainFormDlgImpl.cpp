@@ -2534,7 +2534,7 @@ void MainFormDlgImpl::on_m_pSessionsB_clicked()
 
 void MainFormDlgImpl::checkForNewVersion() // returns immediately; when the request completes it will send a signal
 {
-    const int MIN_INTERVAL_BETWEEN_CHECKS (4); // hours
+    const int MIN_INTERVAL_BETWEEN_CHECKS (24); // hours
 
     if ("yes" != m_pCommonData->m_strCheckForNewVersions && "no" != m_pCommonData->m_strCheckForNewVersions)
     {
@@ -2546,7 +2546,7 @@ void MainFormDlgImpl::checkForNewVersion() // returns immediately; when the requ
                 "<li>The update is manual. You are told that there is a new version and are offered links to see what's new, but nothing gets downloaded and / or installed automatically</li>"
                 "<li>There is no System Tray process checking periodically for updates</li>"
                 "<li>You can turn the notifications on and off from the configurations dialog</li>"
-                "<li>If you restart the program withing 4 hours after a check, no new check is done</li>"
+                "<li>If you restart the program withing a day after a check, no new check is done</li>"
             "</ul>"
         "</p>"
         /*"

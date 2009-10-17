@@ -1470,7 +1470,7 @@ void Id3V230Writer::setupWriter(Id3V230StreamWriter& wrt, const Mp3HandlerTagDat
     s = pMp3HandlerTagData->getData(TagReader::IMAGE);
     if (s.empty())
     {
-        wrt.removeFrames(KnownFrames::LBL_IMAGE(), Id3V2Frame::PT_COVER);
+        wrt.removeFrames(KnownFrames::LBL_IMAGE(), -1); // !!! this removes all APIC frames, including those non-cover frames that got assigned to Id3V2StreamBase::m_pPicFrame
     }
     else
     {

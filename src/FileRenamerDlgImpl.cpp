@@ -209,9 +209,13 @@ CurrentAlbumDelegate::CurrentAlbumDelegate(QWidget* pParent, HndlrListModel* pHn
         //pPainter->fillRect(option.rect, QColor(255, 226, 236)); //ttt2 perhaps put back, but should work for "missing fields" as well
     }
 
-    if (0 != m_pHndlrListModel->getRenamer() && index.column() == 1 && fileExists(m_pHndlrListModel->getRenamer()->getNewName(p)))
+    if (0 != m_pHndlrListModel->getRenamer() && index.column() == 1)
     {
-        pPainter->fillRect(option.rect, QColor(255, 226, 236));
+        string strNewName (m_pHndlrListModel->getRenamer()->getNewName(p));
+        if (fileExists(strNewName))
+        {
+            pPainter->fillRect(option.rect, strNewName == p->getName() ? QColor(226, 236, 255) : QColor(255, 226, 236));
+        }
     }
 
     QItemDelegate::paint(pPainter, option, index);
@@ -623,7 +627,7 @@ void FileRenamerDlgImpl::on_m_pRenameB_clicked()
 
     m_pCommonData->mergeHandlerChanges(vpAdd, vpDel, CommonData::SEL | CommonData::CURRENT);
 
-    if (!bKeepOrig)
+    if (!bKeepOrig || pRenamer->isSameDir())
     {
         reloadTable();
     }
@@ -1129,3 +1133,5 @@ string Renamer::getNewName(const Mp3Handler* pHndl) const
 //ttt0 should be possible to filter by var/single artists and do the renaming for all; or have a checkbox in the renamer, but that requires the renamer to have the concept of an album
 
 //ttt0 ?? have names editable
+
+

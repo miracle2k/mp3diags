@@ -517,7 +517,7 @@ private:
 
     void updateUniqueNotes(); // updates m_uniqueNotes to reflect the current m_vpAllHandlers and m_vpFltHandlers;
 
-    mutable int m_nSongInCrtAlbum; // something in the "current album" used by the tag editor; might be first, last or in the middle;
+    mutable int m_nSongInCrtAlbum; // index into m_vpAllHandlers; something in the "current album" used by the tag editor; might be first, last or in the middle;
 
     std::string m_strGenFontName;
     int m_nGenFontSize;
