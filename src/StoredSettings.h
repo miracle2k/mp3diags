@@ -56,8 +56,8 @@ public:
     void saveDirFilterSettings(int nWidth, int nHeight);
     void loadDirFilterSettings(int& nWidth, int& nHeight) const;
 
-    void saveDiscogsSettings(int nWidth, int nHeight);
-    void loadDiscogsSettings(int& nWidth, int& nHeight) const;
+    void saveDiscogsSettings(int nWidth, int nHeight, int nStyleOption);
+    void loadDiscogsSettings(int& nWidth, int& nHeight, int& nStyleOption) const;
 
     void saveMusicBrainzSettings(int nWidth, int nHeight);
     void loadMusicBrainzSettings(int& nWidth, int& nHeight) const;

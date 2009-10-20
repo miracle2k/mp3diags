@@ -92,6 +92,16 @@ const deque<const Mp3Handler*> HndlrListModel::getHandlerList() const
 }
 
 
+/*override*/ Qt::ItemFlags HndlrListModel::flags(const QModelIndex& index) const
+{
+    Qt::ItemFlags flg (QAbstractTableModel::flags(index));
+    if (1 == index.column())
+    {
+        flg = flg | Qt::ItemIsEditable;
+    }
+    return flg;
+}
+
 /*override*/ QVariant HndlrListModel::data(const QModelIndex& index, int nRole) const
 {
 LAST_STEP("HndlrListModel::data()");
@@ -99,7 +109,8 @@ LAST_STEP("HndlrListModel::data()");
     int i (index.row());
     int j (index.column());
 
-    if (Qt::DisplayRole != nRole && Qt::ToolTipRole != nRole) { return QVariant(); }
+    if (Qt::DisplayRole != nRole && Qt::ToolTipRole != nRole && Qt::EditRole != nRole) { return QVariant(); }
+
     QString s;
 
     const Mp3Handler* p (getHandlerList().at(i));
@@ -142,7 +153,7 @@ LAST_STEP("HndlrListModel::data()");
         s = convStr(pId3V2->getValue((TagReader::Feature)TagReader::FEATURE_ON_POS[j]));
     }
 
-    if (Qt::DisplayRole == nRole)
+    if (Qt::DisplayRole == nRole || Qt::EditRole == nRole)
     {
         return s;
     }
@@ -160,6 +171,15 @@ LAST_STEP("HndlrListModel::data()");
     }
 
     return s;
+}
+
+
+/*override*/ bool HndlrListModel::setData(const QModelIndex& index, const QVariant& value, int nRole /*= Qt::EditRole*/)
+{
+    if (Qt::EditRole != nRole) { return false; }
+
+    m_pRenamer->m_mValues[getHandlerList().at(index.row())] = convStr(value.toString());
+    return true;
 }
 
 
@@ -209,6 +229,8 @@ CurrentAlbumDelegate::CurrentAlbumDelegate(QWidget* pParent, HndlrListModel* pHn
         //pPainter->fillRect(option.rect, QColor(255, 226, 236)); //ttt2 perhaps put back, but should work for "missing fields" as well
     }
 
+    QStyleOptionViewItemV2 myOption (option);
+
     if (0 != m_pHndlrListModel->getRenamer() && index.column() == 1)
     {
         string strNewName (m_pHndlrListModel->getRenamer()->getNewName(p));
@@ -216,9 +238,14 @@ CurrentAlbumDelegate::CurrentAlbumDelegate(QWidget* pParent, HndlrListModel* pHn
         {
             pPainter->fillRect(option.rect, strNewName == p->getName() ? QColor(226, 236, 255) : QColor(255, 226, 236));
         }
+
+        if (m_pHndlrListModel->getRenamer()->m_mValues.count(p) > 0)
+        {
+            myOption.font.setItalic(true);
+        }
     }
 
-    QItemDelegate::paint(pPainter, option, index);
+    QItemDelegate::paint(pPainter, myOption, index);
 
     pPainter->restore();
 }
@@ -231,7 +258,7 @@ CurrentAlbumDelegate::CurrentAlbumDelegate(QWidget* pParent, HndlrListModel* pHn
 
 
 
-FileRenamerDlgImpl::FileRenamerDlgImpl(QWidget* pParent, CommonData* pCommonData, bool bUseCurrentView) : QDialog(pParent, getDialogWndFlags()), Ui::FileRenamerDlg(), m_pCommonData(pCommonData), m_bUseCurrentView(bUseCurrentView)
+FileRenamerDlgImpl::FileRenamerDlgImpl(QWidget* pParent, CommonData* pCommonData, bool bUseCurrentView) : QDialog(pParent, getDialogWndFlags()), Ui::FileRenamerDlg(), m_pCommonData(pCommonData), m_bUseCurrentView(bUseCurrentView), m_pEditor(0)
 {
     setupUi(this);
 
@@ -248,6 +275,8 @@ FileRenamerDlgImpl::FileRenamerDlgImpl(QWidget* pParent, CommonData* pCommonData
 
         CurrentAlbumDelegate* pDel (new CurrentAlbumDelegate(this, m_pHndlrListModel));
         m_pCurrentAlbumG->setItemDelegate(pDel);
+
+        m_pCurrentAlbumG->viewport()->installEventFilter(this);
     }
 
     m_pButtonGroup = new QButtonGroup(this);
@@ -309,6 +338,7 @@ string FileRenamerDlgImpl::run()
 
 void FileRenamerDlgImpl::on_m_pNextB_clicked()
 {
+    closeEditor();
     if (m_pCommonData->nextAlbum())
     {
         reloadTable();
@@ -317,6 +347,7 @@ void FileRenamerDlgImpl::on_m_pNextB_clicked()
 
 void FileRenamerDlgImpl::on_m_pPrevB_clicked()
 {
+    closeEditor();
     if (m_pCommonData->prevAlbum())
     {
         reloadTable();
@@ -390,6 +421,43 @@ void FileRenamerDlgImpl::onPatternClicked()
         m_nVaButton = nId;
     }
     m_pHndlrListModel->setRenamer(new Renamer(m_vstrPatterns[nId], m_pCommonData, m_pMarkUnratedAsDuplicatesCkB->isChecked()));
+    resizeUi();
+}
+
+
+void FileRenamerDlgImpl::closeEditor()
+{
+    if (0 != m_pEditor)
+    {
+        delete m_pEditor;
+    }
+}
+
+
+/*override*/ bool FileRenamerDlgImpl::eventFilter(QObject* pObj, QEvent* pEvent)
+{
+//qDebug("ev %d", int(pEvent->type()));
+    if (QEvent::ChildAdded == pEvent->type())
+    {
+        //qDebug("add");
+        QObject* pChild (((QChildEvent*)pEvent)->child());
+        if (pChild->isWidgetType())
+        {
+            CB_ASSERT (0 == m_pEditor);
+            m_pEditor = pChild;
+        }
+    }
+    else if (QEvent::ChildRemoved == pEvent->type())
+    {
+        //qDebug("rm");
+        QObject* pChild (((QChildEvent*)pEvent)->child());
+        if (pChild->isWidgetType())
+        {
+            CB_ASSERT (pChild == m_pEditor);
+            m_pEditor = 0;
+        }
+    }
+    return QDialog::eventFilter(pObj, pEvent);
 }
 
 
@@ -817,6 +885,7 @@ void FileRenamerDlgImpl::on_m_pMarkUnratedAsDuplicatesCkB_clicked()
 }
 
 
+
 //======================================================================================================================
 //======================================================================================================================
 //======================================================================================================================
@@ -1117,6 +1186,8 @@ Renamer::~Renamer()
 string Renamer::getNewName(const Mp3Handler* pHndl) const
 {
     if (0 == pHndl->getId3V2Stream()) { return ""; }
+    if (m_mValues.count(pHndl) > 0) { return m_mValues[pHndl]; }
+
     string s (m_pRoot->getVal(pHndl));
     CB_ASSERT (!m_bSameDir ^ (string::npos == s.find(getPathSep())));
     if (m_bSameDir)
@@ -1131,7 +1202,6 @@ string Renamer::getNewName(const Mp3Handler* pHndl) const
 
 
 //ttt0 should be possible to filter by var/single artists and do the renaming for all; or have a checkbox in the renamer, but that requires the renamer to have the concept of an album
-
-//ttt0 ?? have names editable
-
+//ttt0 add "reload()"
+//ttt0 add palette
 

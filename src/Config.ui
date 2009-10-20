@@ -2557,7 +2557,7 @@
                <item>
                 <widget class="QCheckBox" name="m_pTraceToFileCkB" >
                  <property name="text" >
-                  <string>Trace actions to file (for debugging)</string>
+                  <string>Log program state to "_trace" and "_step" files</string>
                  </property>
                 </widget>
                </item>

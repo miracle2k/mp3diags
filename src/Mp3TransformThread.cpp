@@ -102,6 +102,7 @@ struct Mp3TransformThread : public PausableThread
 };
 
 
+
 // the idea is to mark a file for deletion but only rename it, so other things can be done as if the file got erased, but if something goes wrong the file can be restored;
 // the default behavior on the destructor is to restore the file, if the name isn't already used; to prevent the file from being restored, finalize() should be called after the things that could go wrong complete OK
 class FileEraser
@@ -109,7 +110,7 @@ class FileEraser
     string m_strOrigName;
     string m_strChangedName;
 public:
-    void erase(const string strOrigName)
+    void erase(const string& strOrigName)
     {
         CB_ASSERT(m_strOrigName.empty());
         m_strOrigName = strOrigName;
@@ -182,10 +183,41 @@ private:
 };
 
 
+// on destructor erases the file given on constructor, unless release() was called; doesn't throw
+class TempFileEraser
+{
+    string m_strName;
+public:
+    TempFileEraser(const string& strName) : m_strName(strName)
+    {
+    }
+
+    ~TempFileEraser()
+    {
+        if (m_strName.empty()) { return; }
+
+        try
+        {
+            deleteFile(m_strName);
+        }
+        catch (...)
+        { //ttt2 perhaps do something
+        }
+    }
+
+    void release()
+    {
+        m_strName.clear();
+    }
+};
+
+
 void logTransformation(const string& strLogFile, const char* szActionName, const Mp3Handler* pHandler)
 {
     ::logTransformation(strLogFile, szActionName, pHandler->getName());
 }
+
+
 
 bool Mp3TransformThread::transform()
 {
@@ -256,6 +288,7 @@ bool Mp3TransformThread::transform()
                         {
                             pNewHndl.release();
                         }
+                        TempFileEraser er (strTempName);
                         return false; //ttt2 review what happens to pNewHndl
                     }
                     catch (const EndOfFile&) //ttt2 catch other exceptions, perhaps in the outer loop
@@ -266,6 +299,7 @@ bool Mp3TransformThread::transform()
                         {
                             pNewHndl.release();
                         }
+                        TempFileEraser er (strTempName);
                         return false;
                     }
 
@@ -337,6 +371,8 @@ bool Mp3TransformThread::transform()
                     { // at least a processed file exists
                         CB_ASSERT (!strTempName.empty());
 
+                        TempFileEraser tmpEraser (strTempName);
+
                         // first we have to handle the original file;
 
                         switch (m_transfConfig.getProcOrigAction())
@@ -361,7 +397,7 @@ bool Mp3TransformThread::transform()
                         default: CB_ASSERT (false);
                         }
 
-                        // the last processed file exists in the "temp" folder, its name is in strTempName, and we have to see what to do with it (erase, rename, or copy);
+                        // the last processed file exists (usualy in the same folder as the source), its name is in strTempName, and we have to see what to do with it (erase, rename, or copy);
                         switch (m_transfConfig.getProcessedAction())
                         {
                         case TransfConfig::TRANSF_DONT_CREATE: deleteFile(strTempName); break;
@@ -379,6 +415,8 @@ bool Mp3TransformThread::transform()
 
                         default: CB_ASSERT (false);
                         }
+
+                        tmpEraser.release();
                     }
 
                     fileEraser.finalize();
@@ -504,7 +542,7 @@ bool transform(const deque<const Mp3Handler*>& vpHndlr, vector<Transformation*>&
             }
             else
             {
-                QMessageBox::critical(pParent, "Error", "There was an error processing the following file:\n\n" + toNativeSeparators(convStr(strErrorFile)) + "\n\nProbably the file was deleted or modified since the last scan, in which case you should reload / rescan your collection. Or it may be used by another program; if that's the case, you should stop the other program first.\n\nProcessing aborted.");
+                QMessageBox::critical(pParent, "Error", "There was an error processing the following file:\n\n" + toNativeSeparators(convStr(strErrorFile)) + "\n\nProbably the file was deleted or modified since the last scan, in which case you should reload / rescan your collection. Or it may be used by another program; if that's the case, you should stop the other program first.\n\nThis may also be caused by access restrictions or a full disk.\n\nProcessing aborted.");
             }
         }
     }

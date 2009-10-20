@@ -59,6 +59,8 @@ class HndlrListModel : public QAbstractTableModel
 
     bool m_bUseCurrentView;
 
+    /*override*/ Qt::ItemFlags flags(const QModelIndex& index) const;
+    /*override*/ bool setData(const QModelIndex& index, const QVariant& value, int nRole /*= Qt::EditRole*/);
 public:
     HndlrListModel(CommonData* pCommonData, FileRenamerDlgImpl* pFileRenamerDlgImpl, bool bUseCurrentView);
     ~HndlrListModel();
@@ -135,6 +137,9 @@ class FileRenamerDlgImpl : public QDialog, private Ui::FileRenamerDlg
 
     //std::vector<QToolButton
     /*override*/ void resizeEvent(QResizeEvent* pEvent);
+    /*override*/ bool eventFilter(QObject* pObj, QEvent* pEvent);
+    QObject* m_pEditor;
+    void closeEditor();
 
     void resizeIcons();
 
@@ -200,6 +205,7 @@ public:
     };
 
     mutable bool m_bUnratedAsDuplicate;
+    mutable std::map<const Mp3Handler*, std::string> m_mValues; // only has entries for custom-modified values
 };
 
 #endif

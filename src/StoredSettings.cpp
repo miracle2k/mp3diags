@@ -250,16 +250,18 @@ void SessionSettings::loadDirFilterSettings(int& nWidth, int& nHeight) const
 
 
 
-void SessionSettings::saveDiscogsSettings(int nWidth, int nHeight)
+void SessionSettings::saveDiscogsSettings(int nWidth, int nHeight, int nStyleOption)
 {
     m_pSettings->setValue("discogs/width", nWidth);
     m_pSettings->setValue("discogs/height", nHeight);
+    m_pSettings->setValue("discogs/styleOption", nStyleOption);
 }
 
-void SessionSettings::loadDiscogsSettings(int& nWidth, int& nHeight) const
+void SessionSettings::loadDiscogsSettings(int& nWidth, int& nHeight, int& nStyleOption) const
 {
     nWidth = m_pSettings->value("discogs/width").toInt();
     nHeight = m_pSettings->value("discogs/height").toInt();
+    nStyleOption = m_pSettings->value("discogs/styleOption").toInt();
 }
 
 

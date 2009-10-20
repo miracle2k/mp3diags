@@ -222,8 +222,20 @@ void Id3V2Frame::print(ostream& out, bool bFullInfo) const
         //const char* q (pData + 1);
         out << ": ";
         int nBeg (1);
-        for (; nBeg < m_nMemDataSize && 0 != pData[nBeg]; ++nBeg) {}
-        ++nBeg;
+
+        { // skip description
+            if (0 == pData[0] || 3 == pData[0])
+            {
+                for (; nBeg < m_nMemDataSize && 0 != pData[nBeg]; ++nBeg) {}
+                ++nBeg;
+            }
+            else
+            {
+                for (; nBeg < m_nMemDataSize - 1 && (0 != pData[nBeg] || 0 != pData[nBeg + 1]); ++nBeg) {}
+                nBeg += 2;
+            }
+        }
+
         QString qs;
         switch (pData[0])
         {
@@ -232,7 +244,14 @@ void Id3V2Frame::print(ostream& out, bool bFullInfo) const
             break;
 
         case 1:
-            qs = QString::fromUtf8(utf8FromBomUtf16(pData + nBeg, m_nMemDataSize - nBeg).c_str());
+            try
+            {
+                qs = QString::fromUtf8(utf8FromBomUtf16(pData + nBeg, m_nMemDataSize - nBeg).c_str());
+            }
+            catch (const NotId3V2Frame&)
+            {
+                qs = "<< error decoding string >>";
+            }
             break;
 
         case 2:
@@ -389,7 +408,7 @@ double Id3V2Frame::getRating() const // asserts it's POPM
 {
     CB_CHECK1 (nSize > 1, NotId3V2Frame()); // UNICODE string entries must have a size of 3 or more."
     const unsigned char* p (reinterpret_cast<const unsigned char*> (pData));
-    CB_CHECK1 ((0xff == p[0] && 0xfe == p[1]) || (0xff == p[1] && 0xfe == p[0]), NotId3V2Frame());
+    CB_CHECK1 ((0xff == p[0] && 0xfe == p[1]) || (0xff == p[1] && 0xfe == p[0]), NotId3V2Frame()); //ttt2 perhaps use other exception
 
 #if Q_BYTE_ORDER == Q_LITTLE_ENDIAN
     bool bIsFffeOk (true); // x86

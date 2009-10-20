@@ -290,6 +290,8 @@ MusicBrainzDownloader::MusicBrainzDownloader(QWidget* pParent, SessionSettings& 
 
     m_pVolumeL->hide(); m_pVolumeCbB->hide();
 
+    m_pStyleL->hide(); m_pStyleCbB->hide();
+
     m_pImgSizeL->setMinimumHeight(m_pImgSizeL->height()*2);
 
     m_pQHttp->setHost("musicbrainz.org");
