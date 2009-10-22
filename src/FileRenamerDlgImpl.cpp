@@ -178,7 +178,7 @@ LAST_STEP("HndlrListModel::data()");
 {
     if (Qt::EditRole != nRole) { return false; }
 
-    m_pRenamer->m_mValues[getHandlerList().at(index.row())] = convStr(value.toString());
+    m_pRenamer->m_mValues[getHandlerList().at(index.row())] = convStr(fromNativeSeparators(value.toString()));
     return true;
 }
 

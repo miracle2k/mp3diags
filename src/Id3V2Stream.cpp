@@ -921,24 +921,26 @@ e1:
     return out.str();
 }
 
-/*static*/ const char* Id3V2StreamBase::decodeApic(NoteColl& notes, int nDataSize, streampos pos, const char* pData, const char*& szMimeType, int& nPictureType, const char*& szDescription)
+/*static*/ const char* Id3V2StreamBase::decodeApic(NoteColl& notes, int nDataSize, streampos pos, const char* const pData, const char*& szMimeType, int& nPictureType, const char*& szDescription)
 {
     MP3_CHECK (0 == pData[0] || 3 == pData[0], pos, id3v2UnsupApicTextEnc, NotSupTextEnc()); // !!! there's no need for StreamIsUnsupported here, because this error is not fatal, and it isn't allowed to propagate, therefore doesn't cause a stream to be Unsupported; //ttt2 review, support
-    ++pData;
-    szMimeType = pData; // ttt3 type 0 is Latin1, while type 3 is UTF8, so this isn't quite right; however, MIME types should probably be plain ASCII, so it's the same; and anyway, we only recognize JPEG and PNG, which are ASCII
-    int nMimeSize (strnlen(pData, nDataSize));
+    szMimeType = pData + 1; // ttt3 type 0 is Latin1, while type 3 is UTF8, so this isn't quite right; however, MIME types should probably be plain ASCII, so it's the same; and anyway, we only recognize JPEG and PNG, which are ASCII
+    //int nMimeSize (strnlen(pData, nDataSize));
 
-    pData += 1 + nMimeSize;
-    MP3_CHECK (pData < szMimeType + nDataSize - 2, pos, id3v2UnsupApicTextEnc, ErrorDecodingApic()); // "-2" to account for the text encoding and for szDescription
+    const char* p (pData + 1);
+    for (; p < pData + nDataSize && 0 != *p; ++p) {}
+    MP3_CHECK (p < pData + nDataSize - 1, pos, id3v2UnsupApicTextEnc, ErrorDecodingApic()); // "-1" to account for szDescription
+    CB_ASSERT (0 == *p);
+    ++p;
 
-    nPictureType = *pData++;
+    nPictureType = *p++;
 
-    szDescription = pData;
-    for (; pData < szMimeType + nDataSize - 1; ++pData) // "-1" to account for the text encoding
+    szDescription = p;
+    for (; p < pData + nDataSize; ++p)
     {
-        if (0 == *pData)
+        if (0 == *p)
         {
-            return pData + 1;
+            return p + 1;
         }
     }
 

@@ -1105,7 +1105,7 @@ void MainFormDlgImpl::initializeUi()
         int nTitleHeight(GetSystemMetrics(SM_CYSIZE)); // ttt2 actually there's a pixel missing but not obvious where to get it from; nApprox should allow enough tolerance, though
 #endif
 
-        if (r.width() - nWidth < nApprox && r.height() - nHeight - nTitleHeight < nApprox) //ttt0 no idea how this works on Vista (+Aero) //ttt0 w7 test
+        if (r.width() - nWidth < nApprox && r.height() - nHeight - nTitleHeight < nApprox)
         {
             m_bShowMaximized = true;
         }
@@ -2663,7 +2663,7 @@ void MainFormDlgImpl::onNewVersionQueryFinished2()
     /*"<p style=\"margin-bottom:1px; margin-top:12px; \">QQQ</p>"*/
     , 600, 400, "Just close this message", "Don't tell me about version " + m_qstrNewVer + " again", "Disable checking for new versions"));
 
-    qDebug("ret %d", nRes);
+    //qDebug("ret %d", nRes);
     switch (nRes)
     {
     case 0: m_pCommonData->m_strDontTellAboutVer.clear(); break;
@@ -3159,6 +3159,6 @@ Development machine:
 
 
 
-
+//ttt0 tell to rerun after first crash
 
 

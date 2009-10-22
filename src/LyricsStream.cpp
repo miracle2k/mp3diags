@@ -329,7 +329,7 @@ ImageInfo LyricsStream::readImage(const QString& strRelName) const //ttt2 perhap
         QString qs (convStr(m_strImageFiles));
         {
             int k (qs.indexOf("\r\n"));
-            if (-1 != k)  //ttt0 test on w7
+            if (-1 != k)
             {
                 qs.remove(k, qs.size());
             }
@@ -352,7 +352,7 @@ ImageInfo LyricsStream::readImage(const QString& strRelName) const //ttt2 perhap
     for (;;)
     {
         int k (qs.indexOf("\r\n"));
-        if (-1 == k) { return v; }  //ttt0 test on w7
+        if (-1 == k) { return v; }
 
         v.push_back(readImage(qs.left(k)));
         qs.remove(0, k + 2);

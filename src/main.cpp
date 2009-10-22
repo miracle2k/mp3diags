@@ -168,13 +168,14 @@ void visStudioMessageOutput(QtMsgType, const char* szMsg)
 
 #include <sstream>
 
+// http://stackoverflow.com/questions/760323/why-does-my-qt4-5-app-open-a-console-window-under-windows - The option under Visual Studio for setting the subsystem is under Project Settings->Linker->System->SubSystem
 
 int main(int argc, char *argv[])
 {
     //DEFINE_PROF_ROOT("mp3diags");
     //PROF("root");
-
-    //locale::global(locale("")); ttt0 W7
+/*
+    //locale::global(locale(""));
     ostringstream o;
     o << 12345.78;
     cout << o.str() << endl;

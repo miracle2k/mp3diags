@@ -121,7 +121,6 @@ bjam serialization toolset=gcc
 
 bjam toolset=gcc serialization threading=multi release
 
-http://stackoverflow.com/questions/760323/why-does-my-qt4-5-app-open-a-console-window-under-windows
 http://stackoverflow.com/questions/718447/adding-external-library-into-qt-creator-project
 http://stackoverflow.com/questions/199092/compiling-a-qt-program-in-windows-xp-with-mingws-g
 */
@@ -176,6 +175,6 @@ Based on the above two settings, 8dot3 name creation is enabled on c:.
 
 
 
-
+//ttt0 renamer screenshot
 
 
