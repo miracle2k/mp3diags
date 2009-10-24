@@ -175,6 +175,6 @@ Based on the above two settings, 8dot3 name creation is enabled on c:.
 
 
 
-//ttt0 renamer screenshot
 
 
+//ttt0 W7: Qt Command Prompt, WS Command Prompt names

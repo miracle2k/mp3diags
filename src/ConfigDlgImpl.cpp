@@ -1243,3 +1243,5 @@ void ConfigDlgImpl::on_m_pFastSaveCkB_stateChanged()
 //ttt2 Font style is ignored (see DejaVu Sans / Light on machines with antialiased fonts)
 
 //ttt2 proxy: QNetworkProxyFactory::systemProxyForQuery; QNetworkProxy; http://www.dbits.be/index.php/pc-problems/65-vistaproxycfg  https://sourceforge.net/projects/mp3diags/forums/forum/947207/topic/3415940
+
+//ttt0 "simple" file options

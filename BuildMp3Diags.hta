@@ -438,7 +438,7 @@
             fOut.writeLine("PATH=\"" + crtFolderSettings[3] + "\\bin\";%PATH%");
             fOut.writeLine();
 
-            fOut.writeLine("set QMAKESPEC=\"" + crtFolderSettings[3] + "\\mkspecs\\win32-msvc" + msVer + "\"");
+            //fOut.writeLine("set QMAKESPEC=\"" + crtFolderSettings[3] + "\\mkspecs\\win32-msvc" + msVer + "\""); // commented out, because the "mkspecs/default" should be OK
             fOut.writeLine("set QTDIR=\"" + crtFolderSettings[3] + "\"");
             fOut.writeLine();
             fOut.writeLine("qmake -tp vc -r mp3diags.pro");

@@ -93,7 +93,7 @@ Id3V230Frame::Id3V230Frame(NoteColl& notes, istream& in, streampos pos, bool bHa
     }
     if (m_nMemDataSize != nRead)
     {
-        vector<char>().swap(m_vcData);;
+        vector<char>().swap(m_vcData);
         MP3_THROW (pos, id3v2FrameTooShort, StreamIsBroken(Id3V230Stream::getClassDisplayName(), "Truncated ID3V2.3.0 tag."));
     }
 
