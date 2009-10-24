@@ -142,7 +142,11 @@ Linux is the development platform (openSUSE, to be more precise), so the program
 </div>
 
 <div class="NormalText RegFnt ChpCol1">
-It took some fiddling with Qt, GCC, and Boost, to get a Windows version working. The first executable crashed several times for no apparent reason. Later I identified a setting that might have caused the crash; version 0.99.02.013 was the first to include a fix. While I didn't experience the crash after that, I don't feel very confident that the problem is gone, so I recommend using Linux instead, if at all possible. At any rate, I did process some 1600 songs with the Windows port to fix issues in the audio part, and then I corrected the ID3V2 tags and added images for 85 of my albums and everything went OK, no crash whatsoever. But, as they say, your mileage may vary. For one thing, there are some reports of random crashes from Windows users, while others are happily using the program.
+Since this really is a Linux program, there might be some Windows-specific crashes or other issues, so I recommend using Linux instead, if at all possible. At any rate, I did process some 1600 songs with the Windows port to fix issues in the audio part, and then I corrected the ID3V2 tags and added images for 85 of my albums and everything went OK, no crash whatsoever. But, as they say, your mileage may vary. For one thing, there are some reports of crashes from Windows users, while others are happily using the program. I try to fix those crashes, but usually I need more details and quite often those who report the crash don't seem interested in providing those details. OTOH others have been really helpful, so the crashes that affected them got fixed.
+</div>
+
+<div class="NormalText RegFnt ChpCol1">
+There is one outstanding bug causing files to be read-only on Windows 7. There were several reports, and I've seen it myself; however, when I wanted to get a closer look, the files became writable again (or perhaps I didn't remember their location correctly.) This seems to be related to user rights / file permissions, but for now it's an open issue and suggestions about why is this happening and how to make the program work are welcome. Some things that I would expect to help in this situation are running the program as an Administrator, copying files to a FAT partition, or turning off User Account Control. However, at least in one case they didn'do any good.
 </div>
 
 <div class="NormalText RegFnt ChpCol1">
@@ -255,15 +259,88 @@ Uninstallation can be done through <span class="Reference">Uninstall.sh</span>. 
 
 
 <div class="NormalText RegFnt ChpCol1">
-Since there are <a href="#binWindows">binaries</a> available (both setup.exe and zip archive), it's more convenient to just use them. However, if you really want to build the project yourself, it's not that hard, provided that you have the required libraries. There used to be a build.bat that had to be modified manually, and only worked with MinGW. This is replaced by <span class="Reference">BuildMp3Diags.hta</span>, an HTML / JScript application that allows you to do these:
+Since there are <a href="#binWindows">binaries</a> available (both setup.exe and zip archive), it's more convenient to just use them. However, if you really want to build the project yourself, it's not that hard. There used to be a build.bat that had to be modified manually, and only worked with MinGW. This is replaced by <span class="Reference">BuildMp3Diags.hta</span>, an HTML / JScript application that allows you to do these:
 <ul>
     <li>Build the project using MinGW</li>
-    <li>Build the project using Visual Studio</li>
+    <li>Build the project using Visual C++</li>
     <li>Create a .pro file that can be open from Qt Creator</li>
     <li>Create a .sln file that can be open from Visual C++</li>
 </ul>
 
-First you need to download and perhaps compile the required libraries: Qt, Boost Serialization, and zlib. This step is not covered here. After that is done, download and unpack MP3Diags-QQQVERQQQ.tar.gz from <a href="http://sourceforge.net/projects/mp3diags/files/mp3diags-src/MP3Diags-QQQVERQQQ.tar.gz" onClick="javascript: pageTracker._trackPageview('/files/src');">SourceForge</a> or from <a href="http://web.clicknet.ro/mciobanu/mp3diags/MP3Diags-QQQVERQQQ.tar.gz" onClick="javascript: pageTracker._trackPageview('/clicknet/src');">my ISP</a>, run <span class="Reference">BuildMp3Diags.hta</span>, fill in the fields, and create the project files or build the program. BuildMp3Diags.hta has more details about this process.
+First you need to download and perhaps compile the required libraries: zlib, Qt, and Boost Serialization. In case it's not obvious, you cannot mix C++ libraries created by / for different compilers. The default Qt DLLs are for MinGW, and they are of no use to a Visual C++ project; so you have to compile Qt yourself if you want to use Visual C++. (Or, well, get precompiled binaries from somewhere, but I couldn't find such a thing.) Also, care should be taken not to use incompatible flags for various pieces of code. So it may be better to compile from source, even if you find binaries that look like they should work. Well, here's what I do:
+</div>
+
+
+<div class="NormalText RegFnt ChpCol1">
+<table border="1" cellpadding="5" cellspacing="2" class="RegFnt ChpCol2">
+    <tr>
+        <td>zlib for MinGW and Visual C++</td>
+        <td>
+            <ul>
+                <li>Go to <a href="http://www.zlib.net/" onClick="javascript: pageTracker._trackPageview('/zlib');">http://www.zlib.net/</a> and get the "zlib compiled DLL". Unpack it somewhere and you're done. (This is a C DLL, not a C++ one, so it works with all the compilers)</td></li>
+            </ul>
+        </td>
+    </tr>
+
+    <tr>
+        <td>Qt for MinGW</td>
+        <td>
+            <ul>
+                <li>Simply go to <a href="http://qt.nokia.com/downloads/sdk-windows-cpp" onClick="javascript: pageTracker._trackPageview('/nokia/sdk-windows-cpp');">http://qt.nokia.com/downloads/sdk-windows-cpp</a> and the download should start automatically; install, and you're good to go (if the link ceases working, hunt around for LGPL and Qt SDK); note that the "Qt root folder" that BuildMp3Diags.hta wants is called "qt" and is located inside a folder called "2009.04" or something similar</li>
+            </ul>
+        </td>
+    </tr>
+
+    <tr>
+        <td>Boost for MinGW</td>
+        <td>
+            <ul>
+                <li>Go to <a href="http://www.boost.org/users/download/" onClick="javascript: pageTracker._trackPageview('/boost/mingw');">http://www.boost.org/users/download/</a> and click on "Download". Unpack the archive in the folder where you want Boost to be located</li>
+                <li>Go to <a href="https://sourceforge.net/projects/boost/files/boost-jam/" onClick="javascript: pageTracker._trackPageview('/bjam/mingw');">https://sourceforge.net/projects/boost/files/boost-jam/</a> and download the latest ntx86.zip. Unpack the archive and copy bjam.exe to the Boost root folder</li>
+                <li>Open a <b>Qt Command Prompt</b> and go to the Boost root folder</li>
+                <li>run <span class="Reference">bjam toolset=gcc serialization threading=multi release</span> . This will only build the Serialization library, and put it inside a "bin.v2" folder</li>
+            </ul>
+        </td>
+    </tr>
+
+    <tr>
+        <td>Qt for Visual C++</td>
+        <td>
+            <ul>
+                <li>Go to <a href="http://qt.nokia.com/downloads/windows-cpp" onClick="javascript: pageTracker._trackPageview('/nokia/windows-cpp');">http://qt.nokia.com/downloads/windows-cpp</a>, cancel the download that starts automatically and choose qt-win-opensource-src-4.x.y.zip instead</li>
+                <li>Unpack the zip file in the folder where you want Qt to be located</li>
+                <li>Open a <b>Visual C++ Command Prompt</b> and go to the root folder of the unpacked Qt</li>
+                <li>run <span class="Reference">configure.exe</span> (which may take a while)</li>
+                <li>run <span class="Reference">nmake</span> (which will take much longer than configure.exe)</li>
+            </ul>
+            (These are mainly taken from <a href="http://rajorshi.net/blog/2009/01/using-qt-with-msvc-express-2008/" onClick="javascript: pageTracker._trackPageview('/rajorshi');">Rajorshi's blog</a>, where you can find more details)
+        </td>
+    </tr>
+
+    <tr>
+        <td>Boost for Visual C++</td>
+        <td>
+            <ul>
+                <li>Go to <a href="http://www.boost.org/users/download/" onClick="javascript: pageTracker._trackPageview('/boost/msvc');">http://www.boost.org/users/download/</a> and click on "Download". Unpack the archive in the folder where you want Boost to be located</li>
+                <li>Go to <a href="https://sourceforge.net/projects/boost/files/boost-jam/" onClick="javascript: pageTracker._trackPageview('/bjam/msvc');">https://sourceforge.net/projects/boost/files/boost-jam/</a> and download the latest ntx86.zip. Unpack the archive and copy bjam.exe to the Boost root folder</li>
+                <li>Open a <b>Visual C++ Command Prompt</b> and go to the Boost root folder</li>
+                <li>run <span class="Reference">bjam toolset=msvc serialization threading=multi release debug</span> . This will only build the Serialization library, and put it inside a "bin.v2" folder</li>
+            </ul>
+        </td>
+    </tr>
+
+</table>
+
+</div>
+
+
+<div class="NormalText RegFnt ChpCol1">
+In many cases it's possible to choose various options or do things differently, but I won't get into any of that, instead trying to make this as concise as possible. If you care about those options you probably shouldn't be reading this anyway, as you already know what to do.
+</div>
+
+
+<div class="NormalText RegFnt ChpCol1">
+After the libraries are downloaded / buit, download and unpack MP3Diags-QQQVERQQQ.tar.gz from <a href="http://sourceforge.net/projects/mp3diags/files/mp3diags-src/MP3Diags-QQQVERQQQ.tar.gz" onClick="javascript: pageTracker._trackPageview('/files/src');">SourceForge</a> or from <a href="http://web.clicknet.ro/mciobanu/mp3diags/MP3Diags-QQQVERQQQ.tar.gz" onClick="javascript: pageTracker._trackPageview('/clicknet/src');">my ISP</a>, run <span class="Reference">BuildMp3Diags.hta</span>, fill in the fields, and create the project files or build the program. BuildMp3Diags.hta has more details about this process.
 </div>
 
 <div class="NormalText RegFnt ChpCol1">
