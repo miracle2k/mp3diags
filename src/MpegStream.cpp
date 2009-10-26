@@ -845,7 +845,7 @@ const char* getId3V1Genre(int n)
         "Native US",
         "Cabaret",
         "New Wave",
-        "Psychadelic",
+        "Psychadelic", // ttt2 ??? perhaps Psychedelic
         "Rave",
         "Showtunes",
         "Trailer",

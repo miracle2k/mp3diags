@@ -2128,7 +2128,7 @@ void MainFormDlgImpl::transform(std::vector<Transformation*>& vpTransf, Subset e
     QString qstrConf;
     if (vpTransf.empty())
     {
-        if (0 == m_transfConfig.m_options.m_nUnprocOrigChange)
+        if (TransfConfig::Options::UPO_DONT_CHG == m_transfConfig.m_options.m_eUnprocOrigChange)
         {
             QMessageBox::warning(this, "Warning", "The transformation list is empty.\n\nBased on the configuration, it is possible for changes to the files in the list to be performed, even in this case (the files may still be moved, renamed or erased). However, the current settings are to leave the original files unchanged, so currently there's no point in applying an empty transformation list.\n\nExiting ...");
             return;
@@ -2151,18 +2151,18 @@ void MainFormDlgImpl::transform(std::vector<Transformation*>& vpTransf, Subset e
 
     {
         const char* aOrig[] = { "don't change", "erase", "move", "move", "rename", "move if destination doesn't exist" };
-        if (m_transfConfig.m_options.m_nProcOrigChange != 1 || m_transfConfig.m_options.m_nUnprocOrigChange != 0)
+        if ((m_transfConfig.m_options.m_eProcOrigChange != TransfConfig::Options::PO_MOVE_OR_ERASE && m_transfConfig.m_options.m_eProcOrigChange != TransfConfig::Options::PO_ERASE) || m_transfConfig.m_options.m_eUnprocOrigChange != TransfConfig::Options::UPO_DONT_CHG) //ttt2 improve
         {
             qstrConf += "\n\nActions to be taken:";
 
             if (!vpTransf.empty())
             {
                 qstrConf += "\n- original file that has been transformed: ";
-                qstrConf += aOrig[m_transfConfig.m_options.m_nProcOrigChange];
+                qstrConf += aOrig[m_transfConfig.m_options.m_eProcOrigChange];
             }
 
             qstrConf += "\n- original file that has not been transformed: ";
-            qstrConf += aOrig[m_transfConfig.m_options.m_nUnprocOrigChange];
+            qstrConf += aOrig[m_transfConfig.m_options.m_eUnprocOrigChange];
         }
     }
 
@@ -3178,7 +3178,7 @@ Development machine:
 //ttt2 handle symbolic links to ancestors
 
 
-
+//ttt2 fix on right-click for notes table
 
 
 

@@ -65,11 +65,15 @@
 </div>
 
 <div class="FreeNormalText RegFnt NoteCol">
-<span class="NoteCol">You may want to look at change log <a href="015_changelog.html" class="Note">here</a>, especially if you installed an older version before.</span>
+<span class="NoteCol">You may want to look at the change log <a href="015_changelog.html" class="Note">here</a>, especially if you installed an older version before.</span>
 </div>
 
 <div class="NormalText RegFnt NoteCol">
-<span class="NoteCol">While MP3 Diags is quite usable, it is currently in active development and new versions are released once or twice a week. Usually they contain rather minor tweaks, or perhaps changes that would only affect some users, but a more serious bug fix may also be included. I generally don't like the idea of always downloading the latest version just because it's the latest; I'd rather keep using something that I already tested and it seemed to work fine. However, from time to time you may want to check the <a href="http://mp3diags.blogspot.com/" class="Note" onClick="javascript: pageTracker._trackPageview('/mp3diagsblog');">MP3 Diags blog</a>, where announcements about new releases are made. Then you can decide based on what changed in a given release if you want to upgrade or not. (If you use an RSS reader, you can add that page to it, so you see the notifications automatically.)</span>
+<span class="NoteCol">The development for the version 1.0 is basically frozen. There are several outstanding bugs that can't be fixed due to lack of user feedback: I can't reproduce the bug and I can't make a reasonable guess as to what's causing it, so I need more details from the reporter, but the reporter doesn't provide those details. After a while the bugs will be closed and 1.0 declared finished. In the meantime I'll fix any bugs that are found and reported, provided that I can reproduce them or at least have a good idea about what might be causing them. To some extent I'm also willing to add support for some of the various things that are currently unsupported, if such support is requested and the changes would be small and pretty isolated.</span>
+</div>
+
+<div class="NormalText RegFnt NoteCol">
+<span class="NoteCol">So nothing major is going to follow for a while. However, from time to time you may want to check the <a href="http://mp3diags.blogspot.com/" class="Note" onClick="javascript: pageTracker._trackPageview('/mp3diagsblog');">MP3 Diags blog</a>, where announcements about new releases are made. Then you can decide based on what changed in a given release if you want to upgrade or not. (If you use an RSS reader, you can add that page to it, so you see the notifications automatically.)</span>
 </div>
 
 
@@ -150,11 +154,7 @@ There is one outstanding bug causing files to be read-only on Windows 7. There w
 </div>
 
 <div class="NormalText RegFnt ChpCol1">
-Something that bothers me is a 1-second delay between the time when the frame of a window appears and the time the content of that window is shown properly. This makes MP3 Diags appear as running on some emulator. I (sort of) got used to it, though.
-</div>
-
-<div class="NormalText RegFnt ChpCol1">
-I tested a previous version of the executable on XP SP1, XP SP2, XP SP3 and some Vista Home. Currently the build and tests are done on Windows 7 RC.
+I tested previous versions of the executable on XP SP1, XP SP2, XP SP3, and Vista Home. Currently the build and tests are done on Windows 7 RC.
 </div>
 
 
@@ -259,7 +259,7 @@ Uninstallation can be done through <span class="Reference">Uninstall.sh</span>. 
 
 
 <div class="NormalText RegFnt ChpCol1">
-Since there are <a href="#binWindows">binaries</a> available (both setup.exe and zip archive), it's more convenient to just use them. However, if you really want to build the project yourself, it's not that hard. There used to be a build.bat that had to be modified manually, and only worked with MinGW. This is replaced by <span class="Reference">BuildMp3Diags.hta</span>, an HTML / JScript application that allows you to do these:
+Since there are <a href="#binWindows">binaries</a> available (both setup.exe and zip archive), it's more convenient to just use them. However, if you really want to build the project yourself, it's not that hard. You should run <span class="Reference">BuildMp3Diags.hta</span>, an HTML / JScript application that allows you to do these:
 <ul>
     <li>Build the project using MinGW</li>
     <li>Build the project using Visual C++</li>
@@ -267,7 +267,7 @@ Since there are <a href="#binWindows">binaries</a> available (both setup.exe and
     <li>Create a .sln file that can be open from Visual C++</li>
 </ul>
 
-First you need to download and perhaps compile the required libraries: zlib, Qt, and Boost Serialization. In case it's not obvious, you cannot mix C++ libraries created by / for different compilers. The default Qt DLLs are for MinGW, and they are of no use to a Visual C++ project; so you have to compile Qt yourself if you want to use Visual C++. (Or, well, get precompiled binaries from somewhere, but I couldn't find such a thing.) Also, care should be taken not to use incompatible flags for various pieces of code. So it may be better to compile from source, even if you find binaries that look like they should work. Well, here's what I do:
+First you need to download and perhaps compile the required libraries: zlib, Qt, and Boost Serialization. In case it's not obvious, you cannot mix C++ libraries created by / for different compilers. The Qt DLLs that you get from Nokia when downloading Qt SDK are for MinGW, and they are of no use to a Visual C++ project; so you have to compile Qt yourself if you want to use Visual C++. (Or, well, get precompiled binaries from somewhere, but I couldn't find such a thing.) Also, care should be taken not to use incompatible flags for various pieces of code. So it may be better to compile from source, even if you find binaries that look like they should work. Well, here's what I do:
 </div>
 
 
@@ -340,7 +340,7 @@ In many cases it's possible to choose various options or do things differently, 
 
 
 <div class="NormalText RegFnt ChpCol1">
-After the libraries are downloaded / buit, download and unpack MP3Diags-QQQVERQQQ.tar.gz from <a href="http://sourceforge.net/projects/mp3diags/files/mp3diags-src/MP3Diags-QQQVERQQQ.tar.gz" onClick="javascript: pageTracker._trackPageview('/files/src');">SourceForge</a> or from <a href="http://web.clicknet.ro/mciobanu/mp3diags/MP3Diags-QQQVERQQQ.tar.gz" onClick="javascript: pageTracker._trackPageview('/clicknet/src');">my ISP</a>, run <span class="Reference">BuildMp3Diags.hta</span>, fill in the fields, and create the project files or build the program. BuildMp3Diags.hta has more details about this process.
+After the libraries are downloaded / built, download and unpack MP3Diags-QQQVERQQQ.tar.gz from <a href="http://sourceforge.net/projects/mp3diags/files/mp3diags-src/MP3Diags-QQQVERQQQ.tar.gz" onClick="javascript: pageTracker._trackPageview('/files/src');">SourceForge</a> or from <a href="http://web.clicknet.ro/mciobanu/mp3diags/MP3Diags-QQQVERQQQ.tar.gz" onClick="javascript: pageTracker._trackPageview('/clicknet/src');">my ISP</a>, run <span class="Reference">BuildMp3Diags.hta</span>, fill in the fields, and create the project files or build the program. BuildMp3Diags.hta has more details about this process.
 </div>
 
 <div class="NormalText RegFnt ChpCol1">
@@ -408,7 +408,7 @@ My hope is that sometime in the future the program will get included in more wel
 
 
 <div class="NormalText RegFnt ChpCol1">
-For Linux binaries you probably want to install from a repository (or by using 1-Click-Install on openSUSE), rather than install the .rpm or .deb file directly. This way you get new versions automatically.
+For Linux binaries you probably want to install from a repository (or use 1-Click-Install on openSUSE), rather than install the .rpm or .deb file directly. This way you get new versions automatically.
 </div>
 
 
@@ -419,7 +419,7 @@ For Linux binaries you probably want to install from a repository (or by using 1
 </div>
 
 <div class="NormalText RegFnt ChpCol2">
-There is a pretty standard Windows installer, as well as a zip archive with the executable and the DLLs it needs. Either one of these should be OK.
+There is a pretty standard Windows installer, as well as a zip archive with the executable and the DLLs it needs. Either one of these should be OK:
 <ul>
     <li> <a href="http://sourceforge.net/projects/mp3diags/files/mp3diags-windows-setup/MP3DiagsSetup-QQQVERQQQ.exe" onClick="javascript: pageTracker._trackPageview('/files/setup');">Windows 32bit installer</a> (if the link doesn't work, there's a copy at my ISP, <a href="http://web.clicknet.ro/mciobanu/mp3diags/MP3DiagsSetup-QQQVERQQQ.exe" onClick="javascript: pageTracker._trackPageview('/clicknet/setup');">here</a>) </li>
     <li> <a href="http://sourceforge.net/projects/mp3diags/files/mp3diags-windows-exe/Mp3Diags-QQQVERQQQ.zip" onClick="javascript: pageTracker._trackPageview('/files/exe');">Zip archive with Windows 32bit executable and required DLLs</a></li>
@@ -427,7 +427,7 @@ There is a pretty standard Windows installer, as well as a zip archive with the 
 </div>
 
 <div class="NormalText RegFnt ChpCol2">
-The executable that I provide uses Qt 4.5.2 from Qt SDK 2009.03, and was compiled with the MinGW that comes with it (3.4.5.) I did the Windows version more out of curiosity; I have no need to use it. As such, the main way for me to find out about Windows-specific bugs is to have somebody report them.
+The executable that I provide uses Qt 4.5.3 from Qt SDK 2009.04, and was compiled with the MinGW that comes with it (3.4.5.) I did the Windows version more out of curiosity; I have no need to use it. As such, the main way for me to find out about Windows-specific bugs is to have somebody report them.
 </div>
 
 

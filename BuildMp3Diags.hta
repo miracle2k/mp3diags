@@ -365,6 +365,9 @@
         var fOut = fsObj.CreateTextFile("build.bat", true);
         fOut.writeLine("PATH=" + crtFolderSettings[3] + "\\bin;" + crtFolderSettings[2]);
         fOut.writeLine();
+        fOut.writeLine("del /Q src\\Makefile*");
+        fOut.writeLine("del /Q src\\object_script*");
+        fOut.writeLine();
         fOut.writeLine("qmake mp3diags.pro");
         fOut.writeLine("mingw32-make.exe -w release");
         fOut.writeLine();
@@ -535,10 +538,7 @@
 
     function buildProj()
     {
-        if (!fsObj.FileExists("build.bat"))
-        {
-            if (!setUpProj()) { return; }
-        }
+        if (!setUpProj()) { return; }
 
         wsShell.run("build.bat", 1, true);
     }
