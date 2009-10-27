@@ -105,6 +105,7 @@ There are both source files and binaries, for several Linux platforms, as well a
     <tr> <td>
         <table border="0" cellpadding="0" cellspacing="0" class="NoBrdTableText RegFnt ChpCol2 SubtableSpace">
             <tr> <td> <a href="#binWindows">Windows</a> </td> </tr>
+            <tr> <td> <a href="#binLinux">Linux generic</a> </td> </tr>
             <tr> <td> <a href="#binOpenSUSE">openSUSE</a> </td> </tr>
             <tr> <td> <a href="#binFedora">Fedora</a> </td> </tr>
             <tr> <td> <a href="#binUbuntu">Ubuntu</a> </td> </tr>
@@ -408,7 +409,12 @@ My hope is that sometime in the future the program will get included in more wel
 
 
 <div class="NormalText RegFnt ChpCol1">
-For Linux binaries you probably want to install from a repository (or use 1-Click-Install on openSUSE), rather than install the .rpm or .deb file directly. This way you get new versions automatically.
+For Linux binaries you'll probably want to install from a repository (or use 1-Click-Install on openSUSE), rather than install the .rpm or .deb file directly. This way you get new versions automatically.
+</div>
+
+
+<div class="NormalText RegFnt ChpCol1">
+If you can't find a pre-packaged binary for your Linux distribution, or if what you can find is out-of-date, you you may want to try the <a href="#binLinux">generic binaries</a>.
 </div>
 
 
@@ -435,20 +441,44 @@ The executable that I provide uses Qt 4.5.3 from Qt SDK 2009.04, and was compile
 <!-- xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
 
 <div class="NormalText TitleText RegFnt ChpCol1">
+<a name="binLinux">Linux generic</a>
+</div>
+
+<div class="NormalText RegFnt ChpCol1">
+Starting with version 0.99.06.043, "generic" Linux executables are provided. They are supposed to work on any recent distribution on x86 or x86_64 CPUs but very limited testing was done, so some tweaks might be needed (or it may prove impossible to make them work as intended.) The point of having them is to make it easier for more people to run MP3 Diags. Please share your experience if you try them. Note that running these alternatively with pre-packaged MP3 Diags might lead to the MP3 files being rescanned, due to a different serialization library.
+</div>
+
+<div class="NormalText RegFnt ChpCol1">
+This is what's available:
+<ul>
+    <li><a href="http://sourceforge.net/projects/mp3diags/files/mp3diags-linux-bin/i686/MP3Diags-QQQVERQQQ-i686.bz2" onClick="javascript: pageTracker._trackPageview('/files/linux/i686');">Linux i686 binary</a></li>
+    <li><a href="http://sourceforge.net/projects/mp3diags/files/mp3diags-linux-bin/x86_64/MP3Diags-QQQVERQQQ-x86_64.bz2" onClick="javascript: pageTracker._trackPageview('/files/linux/x86_64');">Linux x86-64 binary</a></li>
+</ul>
+</div>
+
+<div class="NormalText RegFnt ChpCol1">
+If you use these, you'll have to make sure that you have the correct dependencies. All you'll need to add is probably Qt 4 (if on your distribution the SVG support in Qt 4 is packaged separately, as it is on Debian-based distributions, you'll need to add that as well.) If you run KDE you probably don't need to add anything.
+</div>
+
+
+
+<!-- xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
+
+<div class="NormalText TitleText RegFnt ChpCol2">
 <a name="binOpenSUSE">openSUSE</a>
 <span class="NormalText">(see also the generic <a href="#binaries">notes about binaries</a>)</span>
 </div>
 
-<div class="NormalText RegFnt ChpCol1">
+<div class="NormalText RegFnt ChpCol2">
 You should probably get MP3 Diags from the <a href="http://packman.links2linux.org/" onClick="javascript: pageTracker._trackPageview('/packman');">PackMan</a> repository. See <a href="http://packman.links2linux.org/package/mp3diags" onClick="javascript: pageTracker._trackPageview('/packman/mp3diags');">this link</a>.
 </div>
 
-<div class="NormalText RegFnt ChpCol1">
+<div class="NormalText RegFnt ChpCol2">
 There are also binaries that I build at openSUSE Build Service:
 </div>
 
-<div class="NormalText RegFnt ChpCol1">
-<table border="1" cellpadding="5" cellspacing="2" class="RegFnt ChpCol2">
+<div class="NormalText RegFnt ChpCol2">
+<table border="1" cellpadding="5" cellspacing="2" class="RegFnt ChpCol1">
     <tr>
         <td> openSUSE 11.1 </td>
         <td> <a class="NoUnderline" href="http://download.opensuse.org/repositories/home:/ciobi/openSUSE_11.1/" onClick="javascript: pageTracker._trackPageview('/obs/suse/11.1');"> Repository </a> </td>
@@ -473,7 +503,7 @@ There are also binaries that I build at openSUSE Build Service:
 </table>
 </div>
 
-<div class="NormalText RegFnt ChpCol1">
+<div class="NormalText RegFnt ChpCol2">
 I will stop building these if the PackMan repository seems to be kept pretty up-to-date.
 </div>
 
@@ -483,17 +513,17 @@ I will stop building these if the PackMan repository seems to be kept pretty up-
 
 <!-- xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
 
-<div class="NormalText TitleText RegFnt ChpCol2">
+<div class="NormalText TitleText RegFnt ChpCol1">
 <a name="binFedora">Fedora</a>
 <span class="NormalText">(see also the generic <a href="#binaries">notes about binaries</a>)</span>
 </div>
 
-<div class="NormalText RegFnt ChpCol2">
+<div class="NormalText RegFnt ChpCol1">
 Binaries that I build at openSUSE Build Service:
 </div>
 
-<div class="NormalText RegFnt ChpCol2">
-<table border="1" cellpadding="5" cellspacing="2" class="RegFnt ChpCol1">
+<div class="NormalText RegFnt ChpCol1">
+<table border="1" cellpadding="5" cellspacing="2" class="RegFnt ChpCol2">
     <tr>
         <td> Fedora 11 </td>
         <td> <a class="NoUnderline" href="http://download.opensuse.org/repositories/home:/ciobi/Fedora_11/" onClick="javascript: pageTracker._trackPageview('/obs/fedora/11');"> Home directory </a> </td>
@@ -515,7 +545,7 @@ Binaries that I build at openSUSE Build Service:
 </table>
 </div>
 
-<div class="NormalText RegFnt ChpCol2">
+<div class="NormalText RegFnt ChpCol1">
 For Fedora there are no repositories, so newer versions can only be installed manually. Perhaps somebody will offer to get me started on creating repositories, or just build the program elsewhere.
 </div>
 
@@ -523,22 +553,22 @@ For Fedora there are no repositories, so newer versions can only be installed ma
 
 <!-- xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
 
-<div class="NormalText TitleText RegFnt ChpCol1">
+<div class="NormalText TitleText RegFnt ChpCol2">
 <a name="binUbuntu">Ubuntu</a>
 <span class="NormalText">(see also the generic <a href="#binaries">notes about binaries</a>)</span>
 </div>
 
-<div class="NormalText RegFnt ChpCol1">
+<div class="NormalText RegFnt ChpCol2">
 Starting with 9.10 (Karmic Koala), MP3 Diags is included in Ubuntu, so you can simply install it from Synaptic. The package's page is <a href="http://packages.ubuntu.com/karmic/mp3diags" onClick="javascript: pageTracker._trackPageview('/karmic/mp3diags');">here</a>. (Note, though, that it won't necessarily be the latest version; that shouldn't matter in most cases, as the program seems stable enough and no major feature changes are planned.)
 </div>
 
 
-<div class="NormalText RegFnt ChpCol1">
+<div class="NormalText RegFnt ChpCol2">
 For the latest version, there are binaries that I build at openSUSE Build Service:
 </div>
 
-<div class="NormalText RegFnt ChpCol1">
-<table border="1" cellpadding="5" cellspacing="2" class="RegFnt ChpCol2">
+<div class="NormalText RegFnt ChpCol2">
+<table border="1" cellpadding="5" cellspacing="2" class="RegFnt ChpCol1">
     <tr>
         <td> Ubuntu 9.04 </td>
         <td> <a class="NoUnderline" href="http://download.opensuse.org/repositories/home:/ciobi/xUbuntu_9.04/" onClick="javascript: pageTracker._trackPageview('/obs/ubuntu/9.04');"> Repository </a> (<a class="NoUnderline" href="http://ftp5.gwdg.de/pub/opensuse/repositories/home:/ciobi/xUbuntu_9.04/" onClick="javascript: pageTracker._trackPageview('/obs/mirror/ubuntu/9.04');">mirror</a>)</td>
@@ -556,25 +586,25 @@ For the latest version, there are binaries that I build at openSUSE Build Servic
 </table>
 </div>
 
-<div class="NormalText RegFnt ChpCol1">
+<div class="NormalText RegFnt ChpCol2">
 Normally you should use the repositories rather than the .deb file, so you are notified automatically about updates. Another issue with the .deb files is that the direct links are broken for a while after running a new build (the link is for the old version, which got replaced by the new version.) You can still get a .deb file from the repository, though.
 </div>
 
 
-<div class="NormalText RegFnt ChpCol1">
+<div class="NormalText RegFnt ChpCol2">
 In my tests, the Ubuntu 9.04 i386 .deb installation was OK except for a warning about the package not being authenticated, because it's not digitally signed. I looked at this and I think I can't sign Ubuntu / Debian packages that are hosted on the openSUSE servers. I might be wrong, though, since I know next to nothing about building .deb files or signing them. However, I'm not going to look any further into this by my own, but merely hope that somebody more experienced would offer to help (or even better, take ownership of the build process, so I don't have to deal with it.) At any rate, the program installs and runs OK if you ignore that warning. You can read about adding repositories on Ubuntu <a href="https://help.ubuntu.com/community/Repositories/Ubuntu" onClick="javascript: pageTracker._trackPageview('/ubuntu');">here</a>. The command I used when prompted for the "APT line" was:
 </div>
 
-<div class="NormalText RegFnt ChpCol1 GenericSpace">
+<div class="NormalText RegFnt ChpCol2 GenericSpace">
 <span class="Reference">deb http://download.opensuse.org/repositories/home:/ciobi/xUbuntu_9.04/ ./</span>
 </div>
 
 
-<div class="NormalText RegFnt ChpCol1">
+<div class="NormalText RegFnt ChpCol2">
 Currently the Ubuntu 8.10 and Debian repositories are on a mirror server, so it takes some time for the latest packages to propagate. This is in the hope that new versions will be found automatically by Synaptic. If new versions don't show up as available, please let me know.
 </div>
 
-<div class="NormalText RegFnt ChpCol1">
+<div class="NormalText RegFnt ChpCol2">
 The repository on the main server uses redirection, which apparently isn't supported by Synaptic (or at least it wasn't until some time ago, because Ubuntu 9.04 works fine with the main server. Maybe the others work too, but I don't have them installed, so I'll just assume that they don't.) Perhaps somebody would like to test if installation and / or automatic updates work for the main repositories for <a href="http://download.opensuse.org/repositories/home:/ciobi/xUbuntu_8.10/" onClick="javascript: pageTracker._trackPageview('/obs/ubuntu/8.10');">Ubuntu_8.10</a> and <a href="http://download.opensuse.org/repositories/home:/ciobi/Debian_5.0/" onClick="javascript: pageTracker._trackPageview('/obs/debian/5.0');">Debian 5.0</a> and then share the results.
 </div>
 
@@ -582,24 +612,24 @@ The repository on the main server uses redirection, which apparently isn't suppo
 
 <!-- xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
 
-<div class="NormalText TitleText RegFnt ChpCol2">
+<div class="NormalText TitleText RegFnt ChpCol1">
 <a name="binDebian">Debian</a>
 <span class="NormalText">(see also the generic <a href="#binaries">notes about binaries</a>)</span>
 </div>
 
 
-<div class="NormalText RegFnt ChpCol2">
+<div class="NormalText RegFnt ChpCol1">
 Christian Marillat from <a href="http://www.debian-multimedia.org/" onClick="javascript: pageTracker._trackPageview('/debian_multimedia');">http://www.debian-multimedia.org/</a> notified me that he's building MP3 Diags for Debian 5.0. It can be found in the "unstable" branch. Besides the program being built by somebody who actually knows something about building and did it many times before, you can find there binaries for many other platforms in addition to x86 and AMD64. You can download the i386 package from <a href="http://www.debian-multimedia.org/dists/unstable/main/binary-i386/package/mp3diags.php" onClick="javascript: pageTracker._trackPageview('/debian_multimedia/mp3diags/i386');">this page</a>, but you probably want to add the repository, so you are notified automatically about new releases (see the debian-multimedia.org <a href="http://www.debian-multimedia.org/" onClick="javascript: pageTracker._trackPageview('/debian_multimedia');">home page</a> for instructions about how to add the repository.)
 </div>
 
 
-<div class="NormalText RegFnt ChpCol2">
+<div class="NormalText RegFnt ChpCol1">
 There are also binaries that I build at openSUSE Build Service:
 </div>
 
 
-<div class="NormalText RegFnt ChpCol2">
-<table border="1" cellpadding="5" cellspacing="2" class="RegFnt ChpCol1">
+<div class="NormalText RegFnt ChpCol1">
+<table border="1" cellpadding="5" cellspacing="2" class="RegFnt ChpCol2">
     <tr>
         <td> Debian 5.0 </td>
         <!-- <td> <a class="NoUnderline" href="http://download.opensuse.org/repositories/home:/ciobi/Debian_5.0/"> Repository </a> (<a class="NoUnderline" href="http://ftp5.gwdg.de/pub/opensuse/repositories/home:/ciobi/Debian_5.0/">mirror</a>)</td> -->
@@ -610,7 +640,7 @@ There are also binaries that I build at openSUSE Build Service:
 </table>
 </div>
 
-<div class="NormalText RegFnt ChpCol2">
+<div class="NormalText RegFnt ChpCol1">
 The repository is a mirror. I'm not sure if the main repository at <a href="http://download.opensuse.org/repositories/home:/ciobi/Debian_5.0/" onClick="javascript: pageTracker._trackPageview('/obs/debian/5.0');">download.opensuse.org</a> can be used, because of redirection issues. (See also the notes for Ubuntu, above.)
 </div>
 
@@ -619,15 +649,15 @@ The repository is a mirror. I'm not sure if the main repository at <a href="http
 
 <!-- xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
 
-<div class="NormalText TitleText RegFnt ChpCol1">
+<div class="NormalText TitleText RegFnt ChpCol2">
 <a name="binGentoo">Gentoo</a>
 </div>
 
-<div class="NormalText RegFnt ChpCol1">
+<div class="NormalText RegFnt ChpCol2">
 I don't package MP3 Diags for Gentoo. There's no need for it, as the project is now included in the distribution, thanks to Dominik Kapusta. The install instructions are rather simple:
 </div>
 
-<div class="NormalText RegFnt ChpCol1 GenericSpace">
+<div class="NormalText RegFnt ChpCol2 GenericSpace">
 <span class="Reference">emerge mp3diags</span>
 </div>
 
@@ -635,20 +665,20 @@ I don't package MP3 Diags for Gentoo. There's no need for it, as the project is 
 <!-- xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
 
 
-<div class="NormalText TitleText RegFnt ChpCol2">
+<div class="NormalText TitleText RegFnt ChpCol1">
 <a name="binMandriva">Mandriva</a>
 <span class="NormalText">(see also the generic <a href="#binaries">notes about binaries</a>)</span>
 </div>
 
 
 
-<div class="NormalText RegFnt ChpCol2">
+<div class="NormalText RegFnt ChpCol1">
 Binaries that I build at openSUSE Build Service:
 </div>
 
 
-<div class="NormalText RegFnt ChpCol2">
-<table border="1" cellpadding="5" cellspacing="2" class="RegFnt ChpCol1">
+<div class="NormalText RegFnt ChpCol1">
+<table border="1" cellpadding="5" cellspacing="2" class="RegFnt ChpCol2">
     <tr>
         <td> Mandriva 2009.0 </td>
         <td> <a class="NoUnderline" href="http://download.opensuse.org/repositories/home:/ciobi/Mandriva_2009/" onClick="javascript: pageTracker._trackPageview('/obs/mandriva/2009.0/');"> Home directory </a> </td>
@@ -664,7 +694,7 @@ Binaries that I build at openSUSE Build Service:
 </table>
 </div>
 
-<div class="NormalText RegFnt ChpCol2">
+<div class="NormalText RegFnt ChpCol1">
 I'm not familiar with Mandriva, so I have no idea if the "Home directories" can be used as repositories or not. Also, I didn't test these RPMs, but they should be OK. At least somebody said they were OK.
 </div>
 
@@ -674,12 +704,17 @@ I'm not familiar with Mandriva, so I have no idea if the "Home directories" can 
 
 <!-- xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
 
-<div class="NormalText TitleText RegFnt ChpCol1">
+<div class="NormalText TitleText RegFnt ChpCol2">
 <a name="binOthers">Others</a>
 </div>
 
 
-<div class="NormalText RegFnt ChpCol1">
+<div class="NormalText RegFnt ChpCol2">
+If you can't find a pre-packaged binary for your Linux distribution / version, and you don't want to build from sources, you you may want to try the <a href="#binLinux">generic binaries</a>.
+</div>
+
+
+<div class="NormalText RegFnt ChpCol2">
 If you want to build binaries for other platforms, please let me know, so I can add the links here.
 </div>
 
@@ -694,11 +729,11 @@ If you want to build binaries for other platforms, please let me know, so I can 
 <!-- ========================================================================================================== -->
 
 
-<div class="SubChapterText RegFnt ChpCol2">
+<div class="SubChapterText RegFnt ChpCol1">
 <a name="documentation">Documentation</a>
 </div>
 
-<div class="NormalText RegFnt ChpCol2">
+<div class="NormalText RegFnt ChpCol1">
 If for some reason you don't want to look at the documentation online, you can download it <a href="http://sourceforge.net/projects/mp3diags/files/mp3diags-doc/" onClick="javascript: pageTracker._trackPageview('/files/doc');">here</a>.
 </div>
 
@@ -750,7 +785,7 @@ http://osdir.com/ml/linux.debian.devel.games.devel/2007-08/msg00211.html
 
 
 
-<div class="NavPadTable RegFnt ChpCol1">
+<div class="NavPadTable RegFnt ChpCol2">
 <div style="width:100%">
 <table border="0" cellpadding="0" cellspacing="0" width="100%" class="NavTable">
     <tr>

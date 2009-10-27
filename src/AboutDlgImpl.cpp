@@ -178,4 +178,3 @@ Based on the above two settings, 8dot3 name creation is enabled on c:.
 
 
 
-//ttt0 try minimize by taskbar click on wnd, gnome, kde4
