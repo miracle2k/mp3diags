@@ -57,9 +57,9 @@ function createSrc
 
     cp -pr desktop $LongDestDir
     cp -pr src $LongDestDir
-    cat $LongDestDir/src/src.pro | sed 's%lboost_serialization%lboost_serialization-mt%' > $LongDestDir/src/src.pro1
+    #cat $LongDestDir/src/src.pro | sed 's%lboost_serialization%lboost_serialization-mt%' > $LongDestDir/src/src.pro1
+    #mv -f $LongDestDir/src/src.pro1 $LongDestDir/src/src.pro
     fixVersion $LongDestDir/src/Helpers.cpp
-    mv -f $LongDestDir/src/src.pro1 $LongDestDir/src/src.pro
 
     rm -f -r $LongDestDir/src/debug
     rm -f -r $LongDestDir/src/release
