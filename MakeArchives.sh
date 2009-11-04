@@ -92,9 +92,9 @@ function createSrc
     cp -p package/out/deb/* $LongDestDir/package/deb
     rm -f -r $LongDestDir/desktop/.svn
 
-    cp -p BuildWithStaticSer.sh $LongDestDir
-    fixVersion $LongDestDir/BuildWithStaticSer.sh
-    chmod a+x $LongDestDir/BuildWithStaticSer.sh
+    cp -p BuildBz2.sh $LongDestDir
+    fixVersion $LongDestDir/BuildBz2.sh
+    chmod a+x $LongDestDir/BuildBz2.sh
 
 
     cd package/out
