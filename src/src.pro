@@ -54,9 +54,9 @@ SOURCES +=  \
  DebugDlgImpl.cpp \
  DirFilterDlgImpl.cpp \
  Version.cpp \
- SerSupport.cpp \
  fstream_unicode.cpp \
-  ExportDlgImpl.cpp
+ ExportDlgImpl.cpp \
+ SerSupport.cpp
 TEMPLATE = app
 CONFIG += warn_on \
 	  thread \
@@ -148,9 +148,10 @@ ThreadRunner.ui \
  Export.ui
 
 
-LIBS += -l:libboost_serialization-mt.a
+LIBS += -lboost_serialization-mt
 
 #CONFIG += console
+
 
 
 
