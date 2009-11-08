@@ -23,7 +23,8 @@ Packager: Ciobi
 #%if 0%{?mdkversion} >= 200900
 BuildRequires:  kdelibs4-devel
 #BuildRequires:  libboost1.37.0-devel
-BuildRequires:  libboost-devel
+#BuildRequires:  libboost-devel libboost-static-devel-1.38.0
+BuildRequires:  boost-devel boost-static-devel
 BuildRequires:  zlib-devel
 Requires:       qt4-common
 #%endif
@@ -47,7 +48,7 @@ Another component is the file renamer, which can rename files based on the field
 
 %build
 
-./AdjustMt.sh
+./AdjustMt.sh STATIC_SER
 
 
 #%if 0%{?mandriva_version} > 2006
