@@ -69,17 +69,19 @@
 </div>
 
 <div class="NormalText RegFnt NoteCol">
-<span class="NoteCol">The development for the version 1.0 is basically frozen. There are several outstanding bugs that can't be fixed due to lack of user feedback: I can't reproduce the bug and I can't make a reasonable guess as to what's causing it, so I need more details from the reporter, but the reporter doesn't provide those details. After a while the bugs will be closed and 1.0 declared finished. In the meantime I'll fix any bugs that are found and reported, provided that I can reproduce them or at least have a good idea about what might be causing them. To some extent I'm also willing to add support for some of the various things that are currently unsupported, if such support is requested and the changes would be small and pretty isolated.</span>
+<span class="NoteCol">While the development for 1.0 is frozen, I'll fix any serious bugs that are found and reported, provided that I can reproduce them or at least have a good idea about what might be causing them. Then I'll release 1.0.01, 1.0.02, ... Minor bugs and feature changes will be addressed in 1.1.
+
+I am aware of several outstanding bugs, which I can't fix due to lack of user feedback: I can't reproduce the bug and I can't make a reasonable guess as to what's causing it, so I need more details from the reporter, but the reporter doesn't provide those details. After a while these bugs will be closed.</span>
 </div>
 
 <div class="NormalText RegFnt NoteCol">
-<span class="NoteCol">So nothing major is going to follow for a while. However, from time to time you may want to check the <a href="http://mp3diags.blogspot.com/" class="Note" onClick="javascript: pageTracker._trackPageview('/mp3diagsblog');">MP3 Diags blog</a>, where announcements about new releases are made. Then you can decide based on what changed in a given release if you want to upgrade or not. (If you use an RSS reader, you can add that page to it, so you see the notifications automatically.)</span>
+<span class="NoteCol">From time to time you may want to check the <a href="http://mp3diags.blogspot.com/" class="Note" onClick="javascript: pageTracker._trackPageview('/mp3diagsblog');">MP3 Diags blog</a>, where announcements about new versions are made, both about bug fixes for the current stable release and about the release under development (i.e. 1.1.) Then you can decide based on what changed in a given version if you want to upgrade or not. (If you use an RSS reader, you can add that page to it, so you see the notifications automatically.)</span>
 </div>
 
 
 
 <div class="FreeNormalText RegFnt ChpCol2">
-There are both source files and binaries, for several Linux platforms, as well as for 32bit Windows. On this page there are all the links to the current packages. If you need some older version, you can go to the <a href="http://sourceforge.net/projects/mp3diags/files/" onClick="javascript: pageTracker._trackPageview('/files');">main download page</a> at SourceForge (note, though, that it doesn't have any Linux binaries.) The Linux binaries that I provide are built and hosted by the <a href="https://build.opensuse.org/" onClick="javascript: pageTracker._trackPageview('/obs');">openSUSE Build Service</a>.
+There are both source files and binaries, for several Linux platforms, as well as for 32bit Windows. On this page there are all the links to the current packages. If you need some older version, you can go to the <a href="http://sourceforge.net/projects/mp3diags/files/" onClick="javascript: pageTracker._trackPageview('/files');">main download page</a> at SourceForge. The packaged Linux binaries that I provide are built and hosted by the <a href="https://build.opensuse.org/" onClick="javascript: pageTracker._trackPageview('/obs');">openSUSE Build Service</a>. There are also "generic Linux binaries", which I build on my own computer.
 </div>
 
 
@@ -196,7 +198,7 @@ You can download MP3Diags.tar.gz from <a href="http://sourceforge.net/projects/m
 </div>
 
 <div class="NormalText RegFnt ChpCol2">
-The development system is openSUSE 10.3. I sometimes compile MP3 Diags on openSUSE 11.1 or Ubuntu 9.04, and it worked fine thus far.
+The development system was openSUSE 10.3, but that will change to 11.2. I sometimes compile MP3 Diags on openSUSE 11.1 or Ubuntu 9.04, and it worked fine thus far.
 </div>
 
 <div class="NormalText RegFnt ChpCol2">
@@ -211,7 +213,7 @@ In order to compile and run the project, these packages should be installed:
         <td> C++ compiler, Qt4 development, zlib development, Boost development, Qt4 SVG, GIF and JPEG plugins (if they are separate packages) </td>
     </tr>
     <tr>
-        <td> <b>openSUSE 10.3, openSUSE 11.1</b> </td>
+        <td> <b>openSUSE 10.3, openSUSE 11.2</b> </td>
         <td> g++, libqt4-devel, zlib-devel, boost-devel </td>
     </tr>
     <tr>
@@ -414,7 +416,7 @@ For Linux binaries you'll probably want to install from a repository (or use 1-C
 
 
 <div class="NormalText RegFnt ChpCol1">
-There used to be specific packages for several versions of a distribution. Building them was a long, tedious process. Starting with 0.99.06.044 there are more generic packages, which are easier to build and should work on all recent versions of a distribution.
+There used to be specific packages for several versions of a distribution. Building them was a long, tedious process. Starting with 0.99.06.044 there are more generic packages, which are easier to build and should work on all recent versions of a distribution. Note that you might need to <b>uninstall the previous version</b> if installing from a new repository doesn't work.
 </div>
 
 
@@ -536,7 +538,7 @@ Starting with 9.10 (Karmic Koala), MP3 Diags is included in Ubuntu, so you can s
 
 
 <div class="NormalText RegFnt ChpCol2">
-For the latest version, there are binaries that I build at openSUSE Build Service:
+For the latest version, there are binaries that I build at openSUSE Build Service, which should be installable on 8.10 (Intrepid) or later:
 </div>
 
 <div class="NormalText RegFnt ChpCol2">
@@ -567,7 +569,7 @@ In my tests, the Ubuntu 9.04 i386 .deb installation was OK except for a warning 
 
 
 <div class="NormalText RegFnt ChpCol2">
-The repository on the main server uses redirection, which apparently isn't supported by Synaptic (or at least it wasn't until some time ago, because Ubuntu 9.04 works fine with the main server. Maybe the others work too, but I don't have them installed, so I'll just assume that they don't.) Perhaps somebody would like to test if installation and / or automatic updates work for the main repositories and then share the results.
+The repository on the main server uses redirection, which apparently isn't supported by Synaptic (or at least it wasn't until some time ago, because Ubuntu 9.04 works fine with the main server; maybe the others work too, but I don't have them installed.) Perhaps somebody would like to test if installation and / or automatic updates work for the main repositories and then share the results.
 </div>
 
 

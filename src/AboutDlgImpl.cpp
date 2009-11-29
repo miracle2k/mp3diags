@@ -178,56 +178,5 @@ Based on the above two settings, 8dot3 name creation is enabled on c:.
 //ttt2 mutt rips: https://sourceforge.net/projects/mp3diags/forums/forum/947206/topic/3441516 ; also, check for missing tracks and other album-related issues;
 
 
-/*
-
-ttt0
-
-Nov 2009 *  	165  	6,179  	992  	19,738  	0 (0)  	8
-Oct 2009 	200 	23,315 	4,160 	73,627 	0 (0) 	31
-Sep 2009 	168 	26,310 	4,024 	78,554 	0 (0) 	42
-Aug 2009 	363 	52,294 	8,370 	178,317 	0 (0) 	30
-Jul 2009 	286 	8,977 	1,003 	17,427 	0 (0) 	24
-Jun 2009 	590 	7,147 	642 	9,181 	0 (0) 	22
-May 2009 	23,525 	145 	0 	32 	0 (0) 	0
-Apr 2009 	115,159 	3 	0 	0 	0 (0) 	0
-*/
-
-/*
-ttt0
-
-http://svnbook.red-bean.com/en/1.1/ch07s02.html
-http://subversion.tigris.org/ds/viewMessage.do?dsForumId=462&dsMessageId=228197
-#include <svn_io.h>
-subversion bindings
-http://subversion.tigris.org/ds/viewMessage.do?dsForumId=462&dsMessageId=224944
-*/
-
-
-/*
-
-[ciobi07@shell-24008 ~]$ ls /home/frs/project/m/mp/mp3diags
-mp3diags-doc  mp3diags-linux-bin  mp3diags-src  mp3diags-windows-exe  mp3diags-windows-setup  obsolete
-[ciobi07@shell-24008 ~]$ ls /home/frs/project/m/mp/mp3diags/
-mp3diags-doc/           mp3diags-src/           mp3diags-windows-setup/
-mp3diags-linux-bin/     mp3diags-windows-exe/   obsolete/
-[ciobi07@shell-24008 ~]$ ls /home/frs/project/m/mp/mp3diags/mp3diags-src/
-MP3Diags-0.99.02.011.tar.gz  MP3Diags-0.99.03.022.tar.gz  MP3Diags-0.99.05.033.tar.gz  MP3Diags-0.99.06.042.tar.gz
-MP3Diags-0.99.02.012.tar.gz  MP3Diags-0.99.04.026.tar.gz  MP3Diags-0.99.05.034.tar.gz  MP3Diags-0.99.06.043.tar.gz
-MP3Diags-0.99.02.014.tar.gz  MP3Diags-0.99.05.029.tar.gz  MP3Diags-0.99.05.037.tar.gz  MP3Diags-0.99.06.044.tar.gz
-MP3Diags-0.99.02.016.tar.gz  MP3Diags-0.99.05.030.tar.gz  MP3Diags-0.99.05.038.tar.gz  MP3Diags.tar.gz
-MP3Diags-0.99.02.018.tar.gz  MP3Diags-0.99.05.031.tar.gz  MP3Diags-0.99.06.040.tar.gz  last
-MP3Diags-0.99.02.020.tar.gz  MP3Diags-0.99.05.032.tar.gz  MP3Diags-0.99.06.041.tar.gz
-[ciobi07@shell-24008 ~]$ cp /home/frs/project/m/mp/mp3diags/mp3diags-src/MP3Diags-0.99.06.044.tar.gz  /home/frs/project/m/mp/mp3diags/mp3diags-src/MP3Diags-0.99.06.044.tgz
-[ciobi07@shell-24008 ~]$ ls /home/frs/project/m/mp/mp3diags/mp3diags-src/
-MP3Diags-0.99.02.011.tar.gz  MP3Diags-0.99.03.022.tar.gz  MP3Diags-0.99.05.033.tar.gz  MP3Diags-0.99.06.042.tar.gz
-MP3Diags-0.99.02.012.tar.gz  MP3Diags-0.99.04.026.tar.gz  MP3Diags-0.99.05.034.tar.gz  MP3Diags-0.99.06.043.tar.gz
-MP3Diags-0.99.02.014.tar.gz  MP3Diags-0.99.05.029.tar.gz  MP3Diags-0.99.05.037.tar.gz  MP3Diags-0.99.06.044.tar.gz
-MP3Diags-0.99.02.016.tar.gz  MP3Diags-0.99.05.030.tar.gz  MP3Diags-0.99.05.038.tar.gz  MP3Diags-0.99.06.044.tgz
-MP3Diags-0.99.02.018.tar.gz  MP3Diags-0.99.05.031.tar.gz  MP3Diags-0.99.06.040.tar.gz  MP3Diags.tar.gz
-MP3Diags-0.99.02.020.tar.gz  MP3Diags-0.99.05.032.tar.gz  MP3Diags-0.99.06.041.tar.gz  last
-[ciobi07@shell-24008 ~]$ rm /home/frs/project/m/mp/mp3diags/mp3diags-windows-setup/
-MP3DiagsSetup-0.99.06.043.exe  MP3DiagsSetup-0.99.06.044.exe  older/
-[ciobi07@shell-24008 ~]$ rm /home/frs/project/m/mp/mp3diags/mp3diags-windows-setup/older/MP3DiagsSetup-0.99.05.029.exe
-[ciobi07@shell-24008 ~]$
-*/
+//ttt0 might have to remove the program before switching packages; - in the fake mp3diags
 

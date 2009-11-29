@@ -7,7 +7,7 @@ Name: MP3Diags
 #Provides: MP3Diags
 Release: 1
 Source: MP3Diags-%{version}.tar.gz
-URL: http://mp3diags
+URL: http://mp3diags.sourceforge.net/
 Version: %{version}
 BuildRoot: %{_tmppath}/%{name}-%{version}-build
 

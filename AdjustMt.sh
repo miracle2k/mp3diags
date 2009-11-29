@@ -29,7 +29,7 @@ function tryLib
 
 if [[ "STATIC_SER" == $1 ]] ; then
     tryLib :libboost_serialization-mt.a
-    #tryLib :libboost_serialization.a # ttt0 not sure if this should be considered
+    tryLib :libboost_serialization.a # ttt0 not sure if this should be considered
     tryLib boost_serialization-mt
     tryLib boost_serialization
 else
