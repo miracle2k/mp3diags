@@ -239,13 +239,20 @@ TransfConfig::TransfConfig()
 // last '/' goes to dir; last '.' goes to ext (if extension present)
 void TransfConfig::splitOrigName(const string& strOrigSrcName, std::string& strRelDir, std::string& strBaseName, std::string& strExt) const
 {
+//TRACER1A("splitOrigName ", 1);
+//Tracer t1 (strOrigName);
+    //TRACER1A("splitOrigName ", 1);
+    //TRACER1(strOrigSrcName.c_str(), 2);
     CB_CHECK1 (beginsWith(strOrigSrcName, m_strSrcDir), IncorrectPath());
+    //TRACER1A("splitOrigName ", 3);
 
     strRelDir = strOrigSrcName.substr(m_strSrcDir.size());
-#ifndef WIN32
-    CB_CHECK1 (beginsWith(strRelDir, getPathSepAsStr()), IncorrectPath());
-#else
+#if defined(WIN32)
     //CB_CHECK1 (beginsWith(strRelDir, getPathSepAsStr()), IncorrectPath()); //ttt2 see if it's OK to skip this test on Windows; it probably is, because it's more of an assert and the fact that it's not triggered on Linux should be enough
+#elif defined(OS2) || defined(__OS2__)
+    //nothing
+#else
+    CB_CHECK1 (beginsWith(strRelDir, getPathSepAsStr()), IncorrectPath());
 #endif
 
 
@@ -260,6 +267,7 @@ void TransfConfig::splitOrigName(const string& strOrigSrcName, std::string& strR
 
     strBaseName = strRelDir.substr(nLastSep + 1);
     strRelDir.erase(nLastSep + 1, string::npos);
+    //TRACER1A("splitOrigName ", 6);
 }
 
 /*
@@ -275,13 +283,18 @@ int TransfConfig::getOptionValue(Option eOption) const
 // adds a counter and/or a label, such that a file with the resulting name doesn't exist;
 /*static*/ string TransfConfig::addLabelAndCounter(const string& s1, const string& s2, const string& strLabel, bool bAlwaysUseCounter, bool bAlwaysRename)
 {
+    //TRACER1A("addLabelAndCounter ", 1);
     string strRes;
     if (!bAlwaysRename)
     {
+        //TRACER1A("addLabelAndCounter ", 2);
         strRes = replaceDriveLetter(s1 + s2);
+        //TRACER1A("addLabelAndCounter ", 3);
         if (!fileExists(strRes))
         {
+            //TRACER1A("addLabelAndCounter ", 4);
             createDirForFile(strRes);
+            //TRACER1A("addLabelAndCounter ", 5);
             return strRes;
         }
     }
@@ -289,27 +302,38 @@ int TransfConfig::getOptionValue(Option eOption) const
     string strLabel2 (strLabel);
     if (!strLabel2.empty()) { strLabel2.insert(0, "."); }
 
+    //TRACER1A("addLabelAndCounter ", 6);
     if (!bAlwaysUseCounter && !strLabel2.empty())
     {
+        //TRACER1A("addLabelAndCounter ", 7);
         strRes = replaceDriveLetter(s1 + strLabel2 + s2);
+        //TRACER1A("addLabelAndCounter ", 8);
         if (!fileExists(strRes))
         {
+            //TRACER1A("addLabelAndCounter ", 9);
             createDirForFile(strRes);
+            //TRACER1A("addLabelAndCounter ", 10);
             return strRes;
         }
     }
+    //TRACER1A("addLabelAndCounter ", 11);
 
     for (int i = 1; ; ++i)
     {
         {
             ostringstream out;
             out << "." << setfill('0') << setw(3) << i;
+            //TRACER1A("addLabelAndCounter ", 12);
             strRes = replaceDriveLetter(s1 + strLabel2 + out.str() + s2);
+            //TRACER1A("addLabelAndCounter ", 13);
         }
 
+        //TRACER1A("addLabelAndCounter ", 14);
         if (!fileExists(strRes))
         {
+            //TRACER1A("addLabelAndCounter ", 15);
             createDirForFile(strRes);
+            //TRACER1A("addLabelAndCounter ", 16);
             return strRes;
         }
     }
@@ -330,19 +354,25 @@ string TransfConfig::getRenamedName(const std::string& strOrigSrcName, const std
     string strRelDir;
     string strBaseName;
     string strExt;
+    //TRACER1A("getRenamedName ", 1);
     splitOrigName(strOrigSrcName, strRelDir, strBaseName, strExt);
 
     string strRes;
+    //TRACER1A("getRenamedName ", 2);
 
     if (!bAlwaysRename)
     { // aside from the new folder, no renaming takes places if this new name isn't in use
+        //TRACER1A("getRenamedName ", 3);
         strRes = replaceDriveLetter(strNewRootDir + strRelDir + strBaseName + strExt);
         if (!fileExists(strRes) || bAllowDup)
         {
+            //TRACER1A("getRenamedName ", 4);
             createDirForFile(strRes);
+            //TRACER1A("getRenamedName ", 5);
             return strRes;
         }
     }
+    //TRACER1A("getRenamedName ", 6);
 
     /*if (!bAlwayUseCounter && !strLabel.empty())
     { // now try to use the label but not the counter
@@ -506,19 +536,34 @@ void TransfConfig::testRemoveSuffix() const
 
 TransfConfig::TransfFile TransfConfig::getProcessedName(string strOrigSrcName, std::string& strName) const
 {
+//TRACER1A("getProcessedName ", 1);
+//Tracer t1 (strOrigSrcName);
     removeSuffix(strOrigSrcName);
+    //TRACER1A("getProcessedName ", 2);
+    //Tracer t2 (strOrigSrcName);
     switch (m_options.m_eProcessedCreate)
     {
     case Options::PR_DONT_CREATE: // don't create proc files
-        strName.clear(); return TRANSF_DONT_CREATE;
+        {
+            //TRACER1A("getProcessedName ", 3);
+            strName.clear(); return TRANSF_DONT_CREATE;
+        }
 
     case Options::PR_CREATE_ALWAYS_RENAME: // create proc files and always rename
-        strName = getRenamedName(strOrigSrcName, m_options.m_bProcessedUseSeparateDir ? m_strProcessedDir : m_strSrcDir, m_options.m_bProcessedUseLabel ? "proc" : "", m_options.m_bProcessedAlwayUseCounter, ALWAYS_RENAME);
-        return TRANSF_CREATE;
+        {
+            //TRACER1A("getProcessedName ", 4);
+            strName = getRenamedName(strOrigSrcName, m_options.m_bProcessedUseSeparateDir ? m_strProcessedDir : m_strSrcDir, m_options.m_bProcessedUseLabel ? "proc" : "", m_options.m_bProcessedAlwayUseCounter, ALWAYS_RENAME);
+            //Tracer t1 (strName);
+            return TRANSF_CREATE;
+        }
 
     case Options::PR_CREATE_RENAME_IF_USED: // create proc files and rename if the name is in use
-        strName = getRenamedName(strOrigSrcName, m_options.m_bProcessedUseSeparateDir ? m_strProcessedDir : m_strSrcDir, m_options.m_bProcessedUseLabel ? "proc" : "", m_options.m_bProcessedAlwayUseCounter, RENAME_IF_NEEDED);
-        return TRANSF_CREATE;
+        {
+            //TRACER1A("getProcessedName ", 5);
+            strName = getRenamedName(strOrigSrcName, m_options.m_bProcessedUseSeparateDir ? m_strProcessedDir : m_strSrcDir, m_options.m_bProcessedUseLabel ? "proc" : "", m_options.m_bProcessedAlwayUseCounter, RENAME_IF_NEEDED);
+            //Tracer t1 (strName);
+            return TRANSF_CREATE;
+        }
 
     default:
         CB_ASSERT(false);
