@@ -728,7 +728,7 @@ struct SerSaveThread : public PausableThread
         {
             CompleteNotif notif(this);
 
-            bool bAborted (!load());
+            bool bAborted (!save());
 
             notif.setSuccess(!bAborted);
         }
@@ -739,14 +739,14 @@ struct SerSaveThread : public PausableThread
         }
     }
 
-    bool load()
+    bool save()
     {
         m_strErr = m_pCommonData->save(SessionEditorDlgImpl::getDataFileName(m_strSession));
         return true;
     }
 };
 
-
+//ttt0 "unstable" in html for analytics
 
 void listKnownFormats()
 {
