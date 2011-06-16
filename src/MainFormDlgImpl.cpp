@@ -3220,3 +3220,5 @@ Development machine:
 //ttt0 look at /d/test_mp3/1/tmp4/tmp2/unsupported/bad-decoding
 
 // favicon.ico : not sure how to create it; currently it's done with GIMP, with 8bpp/1 bit alpha, not compressed; however, konqueror doesn't show it when using a local page
+
+//ttt0 run CppCheck
